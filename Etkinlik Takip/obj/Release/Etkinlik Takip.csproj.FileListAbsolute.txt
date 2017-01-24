@@ -1,0 +1,60 @@
+C:\Users\mup\Desktop\EtkinlikTakip\Etkinlik_Takip\Etkinlik Takip\bin\Release\Etkinlik Takip.exe.config
+C:\Users\mup\Desktop\EtkinlikTakip\Etkinlik_Takip\Etkinlik Takip\bin\Release\Etkinlik Takip.exe
+C:\Users\mup\Desktop\EtkinlikTakip\Etkinlik_Takip\Etkinlik Takip\bin\Release\Etkinlik Takip.pdb
+C:\Users\mup\Desktop\EtkinlikTakip\Etkinlik_Takip\Etkinlik Takip\bin\Release\EntityFramework.dll
+C:\Users\mup\Desktop\EtkinlikTakip\Etkinlik_Takip\Etkinlik Takip\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\mup\Desktop\EtkinlikTakip\Etkinlik_Takip\Etkinlik Takip\bin\Release\System.Data.SQLite.dll
+C:\Users\mup\Desktop\EtkinlikTakip\Etkinlik_Takip\Etkinlik Takip\bin\Release\System.Data.SQLite.EF6.dll
+C:\Users\mup\Desktop\EtkinlikTakip\Etkinlik_Takip\Etkinlik Takip\bin\Release\System.Data.SQLite.Linq.dll
+C:\Users\mup\Desktop\EtkinlikTakip\Etkinlik_Takip\Etkinlik Takip\bin\Release\EntityFramework.xml
+C:\Users\mup\Desktop\EtkinlikTakip\Etkinlik_Takip\Etkinlik Takip\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\mup\Desktop\EtkinlikTakip\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik_Takip.Form1.resources
+C:\Users\mup\Desktop\EtkinlikTakip\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik_Takip.Properties.Resources.resources
+C:\Users\mup\Desktop\EtkinlikTakip\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik Takip.csproj.GenerateResource.Cache
+C:\Users\mup\Desktop\EtkinlikTakip\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik Takip.exe
+C:\Users\mup\Desktop\EtkinlikTakip\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik Takip.pdb
+C:\Users\mup\Desktop\Etkinlik_Takip\Etkinlik Takip\bin\Release\Etkinlik Takip.exe.config
+C:\Users\mup\Desktop\Etkinlik_Takip\Etkinlik Takip\bin\Release\Etkinlik Takip.exe
+C:\Users\mup\Desktop\Etkinlik_Takip\Etkinlik Takip\bin\Release\Etkinlik Takip.pdb
+C:\Users\mup\Desktop\Etkinlik_Takip\Etkinlik Takip\bin\Release\EntityFramework.dll
+C:\Users\mup\Desktop\Etkinlik_Takip\Etkinlik Takip\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\mup\Desktop\Etkinlik_Takip\Etkinlik Takip\bin\Release\System.Data.SQLite.EF6.dll
+C:\Users\mup\Desktop\Etkinlik_Takip\Etkinlik Takip\bin\Release\System.Data.SQLite.Linq.dll
+C:\Users\mup\Desktop\Etkinlik_Takip\Etkinlik Takip\bin\Release\EntityFramework.xml
+C:\Users\mup\Desktop\Etkinlik_Takip\Etkinlik Takip\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\mup\Desktop\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik_Takip.AnaEkran.resources
+C:\Users\mup\Desktop\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik_Takip.Properties.Resources.resources
+C:\Users\mup\Desktop\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik Takip.csproj.GenerateResource.Cache
+C:\Users\mup\Desktop\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik Takip.exe
+C:\Users\mup\Desktop\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik Takip.pdb
+E:\Elektronik\Proje\Kendim\Etkinlik_Takip\Etkinlik Takip\bin\Release\Etkinlik Takip.exe.config
+E:\Elektronik\Proje\Kendim\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik Takip.exe
+E:\Elektronik\Proje\Kendim\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik Takip.pdb
+E:\Elektronik\Proje\Kendim\Etkinlik_Takip\Etkinlik Takip\bin\Release\Etkinlik Takip.exe
+E:\Elektronik\Proje\Kendim\Etkinlik_Takip\Etkinlik Takip\bin\Release\Etkinlik Takip.pdb
+E:\Elektronik\Proje\Kendim\Etkinlik_Takip\Etkinlik Takip\bin\Release\EntityFramework.dll
+E:\Elektronik\Proje\Kendim\Etkinlik_Takip\Etkinlik Takip\bin\Release\EntityFramework.SqlServer.dll
+E:\Elektronik\Proje\Kendim\Etkinlik_Takip\Etkinlik Takip\bin\Release\System.Data.SQLite.EF6.dll
+E:\Elektronik\Proje\Kendim\Etkinlik_Takip\Etkinlik Takip\bin\Release\System.Data.SQLite.Linq.dll
+E:\Elektronik\Proje\Kendim\Etkinlik_Takip\Etkinlik Takip\bin\Release\EntityFramework.xml
+E:\Elektronik\Proje\Kendim\Etkinlik_Takip\Etkinlik Takip\bin\Release\EntityFramework.SqlServer.xml
+E:\Elektronik\Proje\Kendim\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik_Takip.AnaEkran.resources
+E:\Elektronik\Proje\Kendim\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik_Takip.Properties.Resources.resources
+E:\Elektronik\Proje\Kendim\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik Takip.csproj.GenerateResource.Cache
+C:\Users\mup\Desktop\uuu\2\Etkinlik_Takip\Etkinlik Takip\bin\Release\Etkinlik Takip.exe.config
+C:\Users\mup\Desktop\uuu\2\Etkinlik_Takip\Etkinlik Takip\bin\Release\Etkinlik Takip.exe
+C:\Users\mup\Desktop\uuu\2\Etkinlik_Takip\Etkinlik Takip\bin\Release\Etkinlik Takip.pdb
+C:\Users\mup\Desktop\uuu\2\Etkinlik_Takip\Etkinlik Takip\bin\Release\EntityFramework.dll
+C:\Users\mup\Desktop\uuu\2\Etkinlik_Takip\Etkinlik Takip\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\mup\Desktop\uuu\2\Etkinlik_Takip\Etkinlik Takip\bin\Release\System.Data.SQLite.EF6.dll
+C:\Users\mup\Desktop\uuu\2\Etkinlik_Takip\Etkinlik Takip\bin\Release\System.Data.SQLite.Linq.dll
+C:\Users\mup\Desktop\uuu\2\Etkinlik_Takip\Etkinlik Takip\bin\Release\EntityFramework.xml
+C:\Users\mup\Desktop\uuu\2\Etkinlik_Takip\Etkinlik Takip\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\mup\Desktop\uuu\2\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik_Takip.AnaEkran.resources
+C:\Users\mup\Desktop\uuu\2\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik_Takip.Properties.Resources.resources
+C:\Users\mup\Desktop\uuu\2\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik Takip.csproj.GenerateResource.Cache
+C:\Users\mup\Desktop\uuu\2\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik Takip.exe
+C:\Users\mup\Desktop\uuu\2\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik Takip.pdb
+C:\Users\mup\Desktop\uuu\1\Etkinlik_Takip\Etkinlik Takip\bin\Release\Etkinlik Takip.exe.config
+C:\Users\mup\Desktop\uuu\1\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik Takip.exe
+C:\Users\mup\Desktop\uuu\1\Etkinlik_Takip\Etkinlik Takip\obj\Release\Etkinlik Takip.pdb
