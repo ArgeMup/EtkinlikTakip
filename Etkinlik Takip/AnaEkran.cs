@@ -53,8 +53,6 @@ namespace Etkinlik_Takip
 
             public FormWindowState Pencere;
 
-            public Mutex Mutex_;
-
             public bool Menu_Ağac_Açık;
 
             public int AnlıkFarePozisyonu_X, AnlıkFarePozisyonu_Y;
@@ -70,6 +68,8 @@ namespace Etkinlik_Takip
         Sql_ Sql = new Sql_();
 
         KelimeTamamlayıcı[] KeTa = new KelimeTamamlayıcı[6];
+
+        ArgeMup.HazirKod.UygulamaOncedenCalistirildiMi_ UygulamaOncedenCalistirildiMi;
         #endregion
 
         public AnaEkran()
@@ -88,18 +88,13 @@ namespace Etkinlik_Takip
                 Genel.AğacMenüFiltrelemeSayac = new int[Genel.AğacMenüFiltreleme.Length];
                 this.Text = "Mup " + Application.ProductName + " V" + Application.ProductVersion;
 
-                string geci = Sql_Ayarlar_Oku("ikiz", 0).ToString();
-                if (geci != "")
+                string geci = ("Mup" + Application.ProductName + pak).Replace('\\', '.').Replace(':', '.').Replace(' ', '.');
+                UygulamaOncedenCalistirildiMi = new ArgeMup.HazirKod.UygulamaOncedenCalistirildiMi_(this);
+                if (UygulamaOncedenCalistirildiMi.KontrolEt(geci))
                 {
-                    bool yeni;
-                    Genel.Mutex_ = new Mutex(false, geci, out yeni);
-                    if (!yeni) { MessageBox.Show("Aynı veribankası ile ikinci uygulama çalıştırılamamaktadır."); Environment.Exit(1); return; }
-                }
-                else
-                {
-                    geci = "EtkinlikTakip_Acilis_" + DateTime.Now.ToString("yyyyMMddhhmmss") + "_";
-                    Genel.Mutex_ = new Mutex(false, geci);
-                    Sql_Ayarlar_Yaz("ikiz", geci);
+                    UygulamaOncedenCalistirildiMi.DiğerUygulamayıÖneGetir();
+                    Environment.Exit(1);
+                    return;
                 }
 
                 while (splitContainer1.Panel2.Controls.Count > 0) splitContainer1.Panel2.Controls.RemoveAt(0);
@@ -743,6 +738,11 @@ namespace Etkinlik_Takip
             {
                 this.Show();
                 this.WindowState = Genel.Pencere;
+
+                if (!Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(new Rectangle(this.Left, this.Top, this.Width, this.Height))))
+                {
+                    this.Left = 0; this.Top = 0; this.Width = 400; this.Height = 300;
+                }
             }
             else
             {
