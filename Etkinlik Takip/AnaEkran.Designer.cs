@@ -1,7 +1,7 @@
 ﻿namespace Etkinlik_Takip
 {
     partial class AnaEkran
-    {
+    {sddsd
         /// <summary>
         /// Required designer variable.
         /// </summary>
