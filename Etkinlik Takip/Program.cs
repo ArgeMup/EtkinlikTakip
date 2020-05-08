@@ -24,7 +24,6 @@ namespace Etkinlik_Takip
             Directory.CreateDirectory(pak + "Yedekler");
             Directory.CreateDirectory(pak + "Kutuphane");
 
-            AnaEkran_GerekliDosyaKontrolü(Etkinlik_Takip.Properties.Resources.KelimeTamamlayıcı, "KelimeTamamlayıcı.dll");
             AnaEkran_GerekliDosyaKontrolü(Etkinlik_Takip.Properties.Resources.System_Data_SQLite, "System.Data.SQLite.dll");
             if ( Environment.Is64BitOperatingSystem &&  //.net > 4.0
                  IntPtr.Size == 8                       //.net < 4.0

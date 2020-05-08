@@ -6,12 +6,13 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Forms.ArgeMup;
 using System.Windows.Forms;
 
 using System.Data.SQLite;
-using System.Threading;
 using System.IO;
+
+
+using ArgeMup.HazirKod;
 
 namespace Etkinlik_Takip
 {
@@ -67,9 +68,9 @@ namespace Etkinlik_Takip
         };
         Sql_ Sql = new Sql_();
 
-        KelimeTamamlayıcı[] KeTa = new KelimeTamamlayıcı[6];
+        KelimeTamamlayici_[] KeTa = new KelimeTamamlayici_[6];
 
-        ArgeMup.HazirKod.UygulamaOncedenCalistirildiMi_ UygulamaOncedenCalistirildiMi;
+        UygulamaOncedenCalistirildiMi_ UygulamaOncedenCalistirildiMi;
         #endregion
 
         public AnaEkran()
@@ -80,7 +81,8 @@ namespace Etkinlik_Takip
         {
             try
             {
-                this.Opacity = 0;
+                Visible = false;
+                Application.DoEvents();
                 pak = Directory.GetCurrentDirectory() + "\\EtkinlikTakipDosyalari\\";
 
                 Sql_Başlat();
@@ -89,7 +91,7 @@ namespace Etkinlik_Takip
                 this.Text = "Mup " + Application.ProductName + " V" + Application.ProductVersion;
 
                 string geci = ("Mup" + Application.ProductName + pak).Replace('\\', '.').Replace(':', '.').Replace(' ', '.');
-                UygulamaOncedenCalistirildiMi = new ArgeMup.HazirKod.UygulamaOncedenCalistirildiMi_(this);
+                UygulamaOncedenCalistirildiMi = new UygulamaOncedenCalistirildiMi_();
                 if (UygulamaOncedenCalistirildiMi.KontrolEt(geci))
                 {
                     UygulamaOncedenCalistirildiMi.DiğerUygulamayıÖneGetir();
@@ -120,7 +122,6 @@ namespace Etkinlik_Takip
 
                 numericUpDown1.Value = (int)Sql_Ayarlar_Oku("Punto", 1, (object)8);
                 PuntoDeğişti(null, null);
-                Application.DoEvents();
                 KullanıcıAdı.Text = (string)Sql_Ayarlar_Oku("KullanıcıAdı", 0, Environment.UserName);
 
                 this.Location = new Point((int)Sql_Ayarlar_Oku("Form_Poz_X", 1, (object)20), (int)Sql_Ayarlar_Oku("Form_Poz_Y", 1, (object)20));
@@ -157,15 +158,6 @@ namespace Etkinlik_Takip
                 catch (Exception) { }
 
                 Genel.AğaçGüncelleniyor = false;
-                Filtreleme_DurumDeğişikliği(null, null);
-                splitContainer1.SplitterDistance = (int)Sql_Ayarlar_Oku("Ayıraç1", 1);
-                splitContainer2.SplitterDistance = (int)Sql_Ayarlar_Oku("Ayıraç2", 1);
-                Panel_Aç(Panel2Durumu.Arama);
-                Application.DoEvents();
-                this.Opacity = 1;
-
-                Üç_Değiştir.CheckState = (CheckState)Sql_Ayarlar_Oku("ÜzerindeÇalışılıyorDurumu", 1, (object)1);
-                Genel.AğaçGüncelleniyor = true;
                 Filtreleme_D0.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_YeniGörev", 1);
                 Filtreleme_D1.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_ÜzerindeÇalışılıyor", 1);
                 Filtreleme_D2.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_DüşükÖncelikli", 1);
@@ -175,6 +167,13 @@ namespace Etkinlik_Takip
                 Filtreleme_D6.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_Tamamlandı", 1);
                 Filtreleme_D7.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_İptalEdildi", 1);
                 Filtreleme_ÇöpKutusu.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_ÇöpKutusu", 1);
+                Filtreleme_DurumDeğişikliği(null, null);
+                splitContainer1.SplitterDistance = (int)Sql_Ayarlar_Oku("Ayıraç1", 1);
+                splitContainer2.SplitterDistance = (int)Sql_Ayarlar_Oku("Ayıraç2", 1);
+                Panel_Aç(Panel2Durumu.Arama);
+
+                Üç_Değiştir.CheckState = (CheckState)Sql_Ayarlar_Oku("ÜzerindeÇalışılıyorDurumu", 1, (object)1);
+                Genel.AğaçGüncelleniyor = true;
 
                 MenuItem_Grid_Etk_Sütünlar_Durum.CheckState = (CheckState)Sql_Ayarlar_Oku("Sutunlar_Durum", 1);
                 MenuItem_Grid_Etk_Sütünlar_İçerik.CheckState = (CheckState)Sql_Ayarlar_Oku("Sutunlar_İçerik", 1);
@@ -199,25 +198,36 @@ namespace Etkinlik_Takip
                 comboBox_Etkinlik_Durum.Items.RemoveAt((int)EtkinlikDurumu.Güncellenen_Görev);
                 comboBox_Etkinlik_Durum.Items.RemoveAt((int)EtkinlikDurumu.Yeni_Görev);
 
-                KeTa[0] = new KelimeTamamlayıcı(this, pak + "Banka\\" + Application.ProductName + ".KelimeTamamlayıcı", null);
-                KeTa[0].Başlat(textBox_Görev_Tanım);
+                KeTa[0] = new KelimeTamamlayici_(this, pak + "Banka\\" + Application.ProductName + ".KelimeTamamlayıcı", null);
+                KeTa[0].Başlat(textBox_Görev_Tanım); KeTa[0].İmlaKuralları.CümleSonlarınaNoktaEkle = false;
+                KeTa[0].İmlaKuralları.CümleSonlarınaNoktaEkle = false;
+                char[] cc = new char[2]; cc[0] = '%'; cc[1] = '?'; 
+                KeTa[0].İmlaKuralları.BaşındanSonundanSilinecekKarakterler = cc;
 
-                KeTa[1] = new KelimeTamamlayıcı(this, "", KeTa[0].ÖnerilenKelimeler);
-                KeTa[2] = new KelimeTamamlayıcı(this, "", KeTa[0].ÖnerilenKelimeler);
-                KeTa[3] = new KelimeTamamlayıcı(this, "", KeTa[0].ÖnerilenKelimeler);
-                KeTa[4] = new KelimeTamamlayıcı(this, "", KeTa[0].ÖnerilenKelimeler);
-                KeTa[5] = new KelimeTamamlayıcı(this, "", KeTa[0].ÖnerilenKelimeler);
+                KeTa[1] = new KelimeTamamlayici_(this, "", KeTa[0].ÖnerilenKelimeler);
+                KeTa[2] = new KelimeTamamlayici_(this, "", KeTa[0].ÖnerilenKelimeler);
+                KeTa[3] = new KelimeTamamlayici_(this, "", KeTa[0].ÖnerilenKelimeler);
+                KeTa[4] = new KelimeTamamlayici_(this, "", KeTa[0].ÖnerilenKelimeler);
+                KeTa[5] = new KelimeTamamlayici_(this, "", KeTa[0].ÖnerilenKelimeler);
 
-                KeTa[1].Başlat(textBox_Görev_Açıklama);               
-                KeTa[2].Başlat(textBox_Etkinlik_Açıklama);                
+                KeTa[1].Başlat(textBox_Görev_Açıklama); KeTa[1].İmlaKurallarınıKopyala(KeTa[0].İmlaKuralları);
+                KeTa[2].Başlat(textBox_Etkinlik_Açıklama); KeTa[2].İmlaKurallarınıKopyala(KeTa[0].İmlaKuralları);
                 KeTa[3].Başlat(textBox_Arama); KeTa[3].İmlaKuralları.Anaİzin = false;
-                KeTa[4].Başlat(Menu_Ağaç, MenuItem_Ağaç_Tanım);               
-                KeTa[5].Başlat(Menu_Ağaç, MenuItem_Ağaç_Açıklama);
+                KeTa[4].Başlat(Menu_Ağaç, MenuItem_Ağaç_Tanım); KeTa[4].İmlaKurallarınıKopyala(KeTa[0].İmlaKuralları);
+                KeTa[5].Başlat(Menu_Ağaç, MenuItem_Ağaç_Açıklama); KeTa[5].İmlaKurallarınıKopyala(KeTa[0].İmlaKuralları);
 
                 Genel.KaydedilmemişBilgiVar = false;
                 Genel.AğaçGüncelleniyor = false;
-                Application.DoEvents();
                 textBox_Arama.Focus();
+
+                Visible = true;
+                while (Opacity < 1)
+                {
+                    Opacity += 0.05;
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(25);
+                }
+                Opacity = 1;
             }
             catch (Exception) { }
         }
@@ -1072,7 +1082,7 @@ namespace Etkinlik_Takip
                 }
                 else if (Genel.KaydedilmemişBilgiVar)
                 {
-                    DialogResult Dr = MessageBox.Show("Kaydetmeden kapatmak istediğinize emin misiniz?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+                    DialogResult Dr = MessageBox.Show("Kaydetmeden kapatmak istediğinize emin misiniz? %1", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
                     if (Dr == DialogResult.No) return;
                     Ağaç_AfterSelect(null, null);
                 }
@@ -1081,7 +1091,7 @@ namespace Etkinlik_Takip
             {
                 if (Genel.KaydedilmemişBilgiVar)
                 {
-                    DialogResult Dr = MessageBox.Show("Kaydetmeden kapatmak istediğinize emin misiniz?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+                    DialogResult Dr = MessageBox.Show("Kaydetmeden kapatmak istediğinize emin misiniz? %2", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
                     if (Dr == DialogResult.No) return;           
                 }
             }
@@ -1093,6 +1103,10 @@ namespace Etkinlik_Takip
             Genel.KaydedilmemişBilgiVar = false;
         }
 
+        private void Ağaç_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            Ağaç.SelectedNode = e.Node;
+        }
         private void Ağaç_MouseMove(object sender, MouseEventArgs e)
         {
             Genel.AnlıkFarePozisyonu_X = e.X;
@@ -1155,7 +1169,7 @@ namespace Etkinlik_Takip
                     //Göz Gezdirme
                     if (Genel.KaydedilmemişBilgiVar)
                     {
-                        DialogResult Dr = MessageBox.Show("Kaydetmeden kapatmak istediğinize emin misiniz?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+                        DialogResult Dr = MessageBox.Show("Kaydetmeden kapatmak istediğinize emin misiniz? %3", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
                         if (Dr == DialogResult.No) return;
                     }
 
