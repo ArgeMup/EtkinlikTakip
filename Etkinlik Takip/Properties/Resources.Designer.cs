@@ -213,6 +213,16 @@ namespace Etkinlik_Takip.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Sablon {
+            get {
+                object obj = ResourceManager.GetObject("Sablon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Secili {
             get {
                 object obj = ResourceManager.GetObject("Secili", resourceCulture);

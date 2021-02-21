@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnaEkran));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Ağaç = new System.Windows.Forms.TreeView();
             this.Menu_Ağaç = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -68,6 +68,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.Grid_Listele = new System.Windows.Forms.CheckBox();
             this.Grid_Etkinlikler = new System.Windows.Forms.DataGridView();
             this.Sutun_Gorev = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Sutun_An = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -132,11 +133,11 @@
             this.Filtreleme_ÇöpKutusu = new System.Windows.Forms.CheckBox();
             this.Filtreleme_D7 = new System.Windows.Forms.CheckBox();
             this.Filtreleme_D6 = new System.Windows.Forms.CheckBox();
-            this.Filtreleme_D0 = new System.Windows.Forms.CheckBox();
+            this.Filtreleme_D1 = new System.Windows.Forms.CheckBox();
             this.Filtreleme_D3 = new System.Windows.Forms.CheckBox();
             this.Filtreleme_D4 = new System.Windows.Forms.CheckBox();
             this.Filtreleme_D2 = new System.Windows.Forms.CheckBox();
-            this.Filtreleme_D1 = new System.Windows.Forms.CheckBox();
+            this.Filtreleme_D0 = new System.Windows.Forms.CheckBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripEkle = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripEkle_Görev = new System.Windows.Forms.ToolStripMenuItem();
@@ -147,6 +148,9 @@
             this.toolStripAyarlar = new System.Windows.Forms.ToolStripDropDownButton();
             this.BaloncukluUyari = new System.Windows.Forms.ToolTip(this.components);
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.Sql_Zamanlayıcı = new System.Windows.Forms.Timer(this.components);
+            this.MenuItem_Ağaç_PanoyaKopyala = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_Ağaç_PanodanAl = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -241,10 +245,12 @@
             this.MenuItem_Ağaç_TümünüAç,
             this.MenuItem_Ağaç_TümünüDaralt,
             this.toolStripSeparator3,
+            this.MenuItem_Ağaç_PanoyaKopyala,
+            this.MenuItem_Ağaç_PanodanAl,
             this.MenuItem_Ağaç_GeriAl,
             this.MenuItem_Ağaç_Sil});
             this.Menu_Ağaç.Name = "Menu_Ağaç";
-            this.Menu_Ağaç.Size = new System.Drawing.Size(272, 470);
+            this.Menu_Ağaç.Size = new System.Drawing.Size(272, 522);
             this.Menu_Ağaç.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.Menu_Ağaç_Closed);
             this.Menu_Ağaç.Opening += new System.ComponentModel.CancelEventHandler(this.Menu_Ağaç_Opening);
             this.Menu_Ağaç.Opened += new System.EventHandler(this.Menu_Ağaç_Opened);
@@ -272,6 +278,7 @@
             this.MenuItem_Ağaç_Tanım.Name = "MenuItem_Ağaç_Tanım";
             this.MenuItem_Ağaç_Tanım.Size = new System.Drawing.Size(100, 27);
             this.MenuItem_Ağaç_Tanım.ToolTipText = "Yeni görevin tanımı *Mecburi.";
+            this.MenuItem_Ağaç_Tanım.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MenuItem_Ağaç_Tanım_KeyPress);
             // 
             // MenuItem_Ağaç_Açıklama
             // 
@@ -280,6 +287,7 @@
             this.MenuItem_Ağaç_Açıklama.Name = "MenuItem_Ağaç_Açıklama";
             this.MenuItem_Ağaç_Açıklama.Size = new System.Drawing.Size(100, 27);
             this.MenuItem_Ağaç_Açıklama.ToolTipText = "Yeni oluşumun açıklaması *İsteğe bağlı.";
+            this.MenuItem_Ağaç_Açıklama.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MenuItem_Ağaç_Tanım_KeyPress);
             // 
             // toolStripSeparator1
             // 
@@ -296,7 +304,7 @@
             // 
             // MenuItem_Ağaç_ÜzerindeÇalışılıyor
             // 
-            this.MenuItem_Ağaç_ÜzerindeÇalışılıyor.Image = global::Etkinlik_Takip.Properties.Resources.G_Durum_1;
+            this.MenuItem_Ağaç_ÜzerindeÇalışılıyor.Image = global::Etkinlik_Takip.Properties.Resources.G_Durum_0;
             this.MenuItem_Ağaç_ÜzerindeÇalışılıyor.Name = "MenuItem_Ağaç_ÜzerindeÇalışılıyor";
             this.MenuItem_Ağaç_ÜzerindeÇalışılıyor.Size = new System.Drawing.Size(271, 26);
             this.MenuItem_Ağaç_ÜzerindeÇalışılıyor.Text = "Üzerinde çalışılıyor";
@@ -422,7 +430,7 @@
             this.tabPage1.Controls.Add(this.panel_Görev);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(471, 315);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Görev";
@@ -452,6 +460,7 @@
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.Grid_Listele);
             this.splitContainer2.Panel2.Controls.Add(this.Grid_Etkinlikler);
             this.splitContainer2.Size = new System.Drawing.Size(465, 309);
             this.splitContainer2.SplitterDistance = 214;
@@ -484,6 +493,7 @@
             this.Görev_TarihSeçici.Name = "Görev_TarihSeçici";
             this.Görev_TarihSeçici.Size = new System.Drawing.Size(215, 23);
             this.Görev_TarihSeçici.TabIndex = 14;
+            this.BaloncukluUyari.SetToolTip(this.Görev_TarihSeçici, "İsteğe bağlı görev başlama süresi girişi");
             this.Görev_TarihSeçici.Value = new System.DateTime(1938, 11, 10, 9, 5, 0, 0);
             // 
             // label_Görev_Tarih
@@ -551,6 +561,18 @@
             this.label1.Size = new System.Drawing.Size(84, 17);
             this.label1.TabIndex = 0;
             this.label1.Text = "Oluşturulma";
+            // 
+            // Grid_Listele
+            // 
+            this.Grid_Listele.AutoSize = true;
+            this.Grid_Listele.Checked = true;
+            this.Grid_Listele.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.Grid_Listele.Location = new System.Drawing.Point(1, 1);
+            this.Grid_Listele.Name = "Grid_Listele";
+            this.Grid_Listele.Size = new System.Drawing.Size(18, 17);
+            this.Grid_Listele.TabIndex = 13;
+            this.BaloncukluUyari.SetToolTip(this.Grid_Listele, "Listele");
+            this.Grid_Listele.UseVisualStyleBackColor = true;
             // 
             // Grid_Etkinlikler
             // 
@@ -629,8 +651,8 @@
             // Sutun_Açıklama
             // 
             this.Sutun_Açıklama.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.Sutun_Açıklama.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.Sutun_Açıklama.DefaultCellStyle = dataGridViewCellStyle6;
             this.Sutun_Açıklama.HeaderText = "Açıklama";
             this.Sutun_Açıklama.MinimumWidth = 8;
             this.Sutun_Açıklama.Name = "Sutun_Açıklama";
@@ -894,7 +916,7 @@
             this.tabPage2.Controls.Add(this.panel_Etkinlik);
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(471, 315);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Etkinlik";
@@ -1007,7 +1029,7 @@
             this.tabPage3.Controls.Add(this.panel_Arama);
             this.tabPage3.Location = new System.Drawing.Point(4, 25);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(471, 315);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Arama";
@@ -1070,7 +1092,7 @@
             this.tabPage4.Controls.Add(this.panel_Ayarlar);
             this.tabPage4.Location = new System.Drawing.Point(4, 25);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage4.Size = new System.Drawing.Size(471, 315);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Ayarlar";
@@ -1155,11 +1177,11 @@
             this.groupBox1.Controls.Add(this.Filtreleme_ÇöpKutusu);
             this.groupBox1.Controls.Add(this.Filtreleme_D7);
             this.groupBox1.Controls.Add(this.Filtreleme_D6);
-            this.groupBox1.Controls.Add(this.Filtreleme_D0);
+            this.groupBox1.Controls.Add(this.Filtreleme_D1);
             this.groupBox1.Controls.Add(this.Filtreleme_D3);
             this.groupBox1.Controls.Add(this.Filtreleme_D4);
             this.groupBox1.Controls.Add(this.Filtreleme_D2);
-            this.groupBox1.Controls.Add(this.Filtreleme_D1);
+            this.groupBox1.Controls.Add(this.Filtreleme_D0);
             this.groupBox1.Location = new System.Drawing.Point(3, 116);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(396, 168);
@@ -1232,18 +1254,18 @@
             this.Filtreleme_D6.UseVisualStyleBackColor = true;
             this.Filtreleme_D6.CheckedChanged += new System.EventHandler(this.Filtreleme_DurumDeğişikliği);
             // 
-            // Filtreleme_D0
+            // Filtreleme_D1
             // 
-            this.Filtreleme_D0.AutoSize = true;
-            this.Filtreleme_D0.Checked = true;
-            this.Filtreleme_D0.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.Filtreleme_D0.Location = new System.Drawing.Point(8, 26);
-            this.Filtreleme_D0.Name = "Filtreleme_D0";
-            this.Filtreleme_D0.Size = new System.Drawing.Size(98, 21);
-            this.Filtreleme_D0.TabIndex = 17;
-            this.Filtreleme_D0.Text = "Yeni görev";
-            this.Filtreleme_D0.UseVisualStyleBackColor = true;
-            this.Filtreleme_D0.CheckedChanged += new System.EventHandler(this.Filtreleme_DurumDeğişikliği);
+            this.Filtreleme_D1.AutoSize = true;
+            this.Filtreleme_D1.Checked = true;
+            this.Filtreleme_D1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.Filtreleme_D1.Location = new System.Drawing.Point(8, 53);
+            this.Filtreleme_D1.Name = "Filtreleme_D1";
+            this.Filtreleme_D1.Size = new System.Drawing.Size(98, 21);
+            this.Filtreleme_D1.TabIndex = 17;
+            this.Filtreleme_D1.Text = "Yeni görev";
+            this.Filtreleme_D1.UseVisualStyleBackColor = true;
+            this.Filtreleme_D1.CheckedChanged += new System.EventHandler(this.Filtreleme_DurumDeğişikliği);
             // 
             // Filtreleme_D3
             // 
@@ -1284,18 +1306,18 @@
             this.Filtreleme_D2.UseVisualStyleBackColor = true;
             this.Filtreleme_D2.CheckedChanged += new System.EventHandler(this.Filtreleme_DurumDeğişikliği);
             // 
-            // Filtreleme_D1
+            // Filtreleme_D0
             // 
-            this.Filtreleme_D1.AutoSize = true;
-            this.Filtreleme_D1.Checked = true;
-            this.Filtreleme_D1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.Filtreleme_D1.Location = new System.Drawing.Point(8, 53);
-            this.Filtreleme_D1.Name = "Filtreleme_D1";
-            this.Filtreleme_D1.Size = new System.Drawing.Size(148, 21);
-            this.Filtreleme_D1.TabIndex = 18;
-            this.Filtreleme_D1.Text = "Üzerinde çalışılıyor";
-            this.Filtreleme_D1.UseVisualStyleBackColor = true;
-            this.Filtreleme_D1.CheckedChanged += new System.EventHandler(this.Filtreleme_DurumDeğişikliği);
+            this.Filtreleme_D0.AutoSize = true;
+            this.Filtreleme_D0.Checked = true;
+            this.Filtreleme_D0.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.Filtreleme_D0.Location = new System.Drawing.Point(8, 26);
+            this.Filtreleme_D0.Name = "Filtreleme_D0";
+            this.Filtreleme_D0.Size = new System.Drawing.Size(148, 21);
+            this.Filtreleme_D0.TabIndex = 18;
+            this.Filtreleme_D0.Text = "Üzerinde çalışılıyor";
+            this.Filtreleme_D0.UseVisualStyleBackColor = true;
+            this.Filtreleme_D0.CheckedChanged += new System.EventHandler(this.Filtreleme_DurumDeğişikliği);
             // 
             // statusStrip1
             // 
@@ -1356,7 +1378,7 @@
             // 
             this.toolStripİlerleme.AutoSize = false;
             this.toolStripİlerleme.Name = "toolStripİlerleme";
-            this.toolStripİlerleme.Size = new System.Drawing.Size(100, 19);
+            this.toolStripİlerleme.Size = new System.Drawing.Size(100, 18);
             this.toolStripİlerleme.Visible = false;
             // 
             // toolStripEtiket
@@ -1388,6 +1410,25 @@
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_Click);
             // 
+            // Sql_Zamanlayıcı
+            // 
+            this.Sql_Zamanlayıcı.Interval = 60000;
+            this.Sql_Zamanlayıcı.Tick += new System.EventHandler(this.Sql_Zamanlayıcı_Tick);
+            // 
+            // MenuItem_Ağaç_PanoyaKopyala
+            // 
+            this.MenuItem_Ağaç_PanoyaKopyala.Name = "MenuItem_Ağaç_PanoyaKopyala";
+            this.MenuItem_Ağaç_PanoyaKopyala.Size = new System.Drawing.Size(271, 26);
+            this.MenuItem_Ağaç_PanoyaKopyala.Text = "Panoya Kopyala";
+            this.MenuItem_Ağaç_PanoyaKopyala.Click += new System.EventHandler(this.MenuItem_Ağaç_PanoyaKopyala_Click);
+            // 
+            // MenuItem_Ağaç_PanodanAl
+            // 
+            this.MenuItem_Ağaç_PanodanAl.Name = "MenuItem_Ağaç_PanodanAl";
+            this.MenuItem_Ağaç_PanodanAl.Size = new System.Drawing.Size(271, 26);
+            this.MenuItem_Ağaç_PanodanAl.Text = "Panodan Al";
+            this.MenuItem_Ağaç_PanodanAl.Click += new System.EventHandler(this.MenuItem_Ağaç_PanodanAl_Click);
+            // 
             // AnaEkran
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1417,6 +1458,7 @@
             this.panel_Görev.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.panel_Görev__.ResumeLayout(false);
@@ -1518,8 +1560,8 @@
         private System.Windows.Forms.CheckBox Filtreleme_D6;
         private System.Windows.Forms.CheckBox Filtreleme_D4;
         private System.Windows.Forms.CheckBox Filtreleme_D3;
-        private System.Windows.Forms.CheckBox Filtreleme_D1;
         private System.Windows.Forms.CheckBox Filtreleme_D0;
+        private System.Windows.Forms.CheckBox Filtreleme_D1;
         private System.Windows.Forms.DataGridViewLinkColumn Arama_Bulunan_adı;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Ağaç_Sil;
         private System.Windows.Forms.CheckBox Filtreleme_ÇöpKutusu;
@@ -1561,6 +1603,10 @@
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Ağaç_Etkinlik;
         private System.Windows.Forms.DateTimePicker Görev_TarihSeçici;
         private System.Windows.Forms.DateTimePicker Etkinlik_TarihSeçici;
+        private System.Windows.Forms.CheckBox Grid_Listele;
+        private System.Windows.Forms.Timer Sql_Zamanlayıcı;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_Ağaç_PanodanAl;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_Ağaç_PanoyaKopyala;
     }
 }
 
