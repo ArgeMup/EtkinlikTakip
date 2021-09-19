@@ -18,14 +18,15 @@ namespace Etkinlik_Takip
     public partial class AnaEkran : Form
     {
         #region Tanımlar
+        YeniYazılımKontrolü_ YeniYazılımKontrolü = new YeniYazılımKontrolü_();
         string pak = Directory.GetCurrentDirectory() + "\\EtkinlikTakipDosyalari\\"; //programanaklasör
         public enum Panel2Durumu { Görev, Etkinlik, Boş_Aralık, Arama, Ayarlar };
-        public enum EtkinlikDurumu { Üzerinde_Çalışılıyor, Yeni_Görev, Düşük_Öncelikli, Beklemede, Bitti_Geri_Bildirim_Bekleniyor, Diğer, Tamamlandı, İptal_Edildi, Güncellenen_Görev, Geçersiz };
+        public enum EtkinlikDurumu { Üzerinde_Çalışılıyor, Düşük_Öncelikli, Yeni_Görev, Beklemede, Bitti_Geri_Bildirim_Bekleniyor, Diğer, Tamamlandı, İptal_Edildi, Güncellenen_Görev, Geçersiz };
         public string[] EtkinlikDurumu_OkunabilirListe =
         {
             "Üzerinde çalışılıyor",
-            "Yeni görev",
             "Düşük öncelikli",
+            "Yeni görev",
             "Beklemede",
             "Bitti, geri bildirim bekleniyor",
             "Diğer",
@@ -40,14 +41,15 @@ namespace Etkinlik_Takip
             public Panel2Durumu Panel2;
             public bool KaydedilmemişBilgiVar;
             public string ex;
-            public int Tick;
+            public int Tik;
+
+            public List<TreeNode> Ağaç_TamListe;
 
             public bool AğaçGüncelleniyor;
             public bool GözGezdirmeÇalışıyor;
             public bool GözGezdirmeKapatmaTalebi;
 
             public int[] AğacMenüFiltreleme;
-            public int[] AğacMenüFiltrelemeSayac;
             public int AğacMenüFiltrelemeSayacGizli;
 
             public bool[] _AğaçDallarıDurumu;
@@ -83,15 +85,15 @@ namespace Etkinlik_Takip
                 //}
             }
 
-            public FormWindowState Pencere;
-
             public bool Menu_Ağac_Açık;
 
             public int AnlıkFarePozisyonu_X, AnlıkFarePozisyonu_Y;
             public int AçıldığındakiFarePozisyonu_X, AçıldığındakiFarePozisyonu_Y;
+
+            //public int Kısayol_Ağaç_AçıldığıKonum_X;
+            //public int Kısayol_Ağaç_AçıldığıKonum_Y;
         };
         Genel_ Genel = new Genel_();
-        int tick;
 
         struct Sql_
         {
@@ -100,13 +102,25 @@ namespace Etkinlik_Takip
         };
         Sql_ Sql = new Sql_();
 
-        KelimeTamamlayici_[] KeTa = new KelimeTamamlayici_[6];
+        //KelimeTamamlayici_[] KeTa = new KelimeTamamlayici_[6];
 
         UygulamaOncedenCalistirildiMi_ UygulamaOncedenCalistirildiMi;
         #endregion
 
         public AnaEkran()
         {
+            pak = Directory.GetCurrentDirectory() + "\\EtkinlikTakipDosyalari\\";
+
+            string geci = ("Mup" + Application.ProductName + pak).Replace('\\', '.').Replace(':', '.').Replace(' ', '.');
+            UygulamaOncedenCalistirildiMi = new UygulamaOncedenCalistirildiMi_();
+            if (UygulamaOncedenCalistirildiMi.KontrolEt(geci))
+            {
+                UygulamaOncedenCalistirildiMi.DiğerUygulamayıÖneGetir();
+                notifyIcon1.Dispose();
+                Environment.Exit(1);
+                return;
+            }
+
             InitializeComponent();
         }
         private void AnaEkran_Load(object sender, EventArgs e)
@@ -115,22 +129,10 @@ namespace Etkinlik_Takip
             {
                 Visible = false;
                 Application.DoEvents();
-                pak = Directory.GetCurrentDirectory() + "\\EtkinlikTakipDosyalari\\";
 
                 Sql_Başlat();
                 Genel.AğacMenüFiltreleme = new int[EtkinlikDurumu_OkunabilirListe.Length];
-                Genel.AğacMenüFiltrelemeSayac = new int[Genel.AğacMenüFiltreleme.Length];
                 this.Text = "Mup " + Application.ProductName + " V" + Application.ProductVersion;
-
-                string geci = ("Mup" + Application.ProductName + pak).Replace('\\', '.').Replace(':', '.').Replace(' ', '.');
-                UygulamaOncedenCalistirildiMi = new UygulamaOncedenCalistirildiMi_();
-                if (UygulamaOncedenCalistirildiMi.KontrolEt(geci))
-                {
-                    UygulamaOncedenCalistirildiMi.DiğerUygulamayıÖneGetir();
-                    notifyIcon1.Dispose();
-                    Environment.Exit(1);
-                    return;
-                }
 
                 while (splitContainer1.Panel2.Controls.Count > 0) splitContainer1.Panel2.Controls.RemoveAt(0);
                 splitContainer1.Panel2.Controls.Add(panel_Görev);
@@ -169,7 +171,7 @@ namespace Etkinlik_Takip
 
                 Ağaç.SelectedImageIndex = 9;
                 Ağaç.TreeViewNodeSorter = new Ağaç_NodeSorter();
-                int adt = 0; try { adt = Convert.ToInt32(Sql_SorÖğren("select max(No) from Gorev")); } catch (Exception) { }
+                //int adt = 0; try { adt = Convert.ToInt32(Sql_SorÖğren("select max(No) from Gorev")); } catch (Exception) { }
 
                 try
                 {
@@ -177,27 +179,28 @@ namespace Etkinlik_Takip
                     for (int i = 0; i < dallar.Length; i++)
                     {
                         if (dallar[i] == '1') Genel.AğaçDallarıDurumu_Yaz(i, true);
+
+                        if (Genel.Tik < Environment.TickCount) { Application.DoEvents(); Genel.Tik = Environment.TickCount + 1000; }
                     }
                 }
-                catch (Exception) { }
+                catch (Exception) { Genel.AğaçDallarıDurumu_Yaz(0, true); }
 
-                Genel.AğaçGüncelleniyor = false;
+                Genel.AğaçGüncelleniyor = true;
                 Filtreleme_D0.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_ÜzerindeÇalışılıyor", 1);
-                Filtreleme_D1.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_YeniGörev", 1);
-                Filtreleme_D2.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_DüşükÖncelikli", 1);
+                Filtreleme_D1.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_DüşükÖncelikli", 1);
+                Filtreleme_D2.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_YeniGörev", 1);
                 Filtreleme_D3.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_Beklemede", 1);
                 Filtreleme_D4.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_BittiGeriBildirimBekleniyor", 1);
                 Filtreleme_D5.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_Diğer", 1);
                 Filtreleme_D6.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_Tamamlandı", 1);
                 Filtreleme_D7.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_İptalEdildi", 1);
-                Filtreleme_ÇöpKutusu.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_ÇöpKutusu", 1);
-                Filtreleme_DurumDeğişikliği(null, null);
+                Grid_Listele_Tarihçe.CheckState = (CheckState)Sql_Ayarlar_Oku("Grid_Listele_Tarihçe", 1);
+
                 splitContainer1.SplitterDistance = (int)Sql_Ayarlar_Oku("Ayıraç1", 1);
                 splitContainer2.SplitterDistance = (int)Sql_Ayarlar_Oku("Ayıraç2", 1);
                 Panel_Aç(Panel2Durumu.Arama);
 
                 Üç_Değiştir.CheckState = (CheckState)Sql_Ayarlar_Oku("ÜzerindeÇalışılıyorDurumu", 1, (object)1);
-                Genel.AğaçGüncelleniyor = true;
 
                 MenuItem_Grid_Etk_Sütünlar_Durum.CheckState = (CheckState)Sql_Ayarlar_Oku("Sutunlar_Durum", 1);
                 MenuItem_Grid_Etk_Sütünlar_İçerik.CheckState = (CheckState)Sql_Ayarlar_Oku("Sutunlar_İçerik", 1);
@@ -222,27 +225,35 @@ namespace Etkinlik_Takip
                 comboBox_Etkinlik_Durum.Items.RemoveAt((int)EtkinlikDurumu.Güncellenen_Görev);
                 comboBox_Etkinlik_Durum.Items.RemoveAt((int)EtkinlikDurumu.Yeni_Görev);
 
-                KeTa[0] = new KelimeTamamlayici_(this, pak + "Banka\\" + Application.ProductName + ".KelimeTamamlayıcı", null);
-                KeTa[0].Başlat(textBox_Görev_Tanım); KeTa[0].İmlaKuralları.CümleSonlarınaNoktaEkle = false;
-                KeTa[0].İmlaKuralları.CümleSonlarınaNoktaEkle = false;
-                char[] cc = new char[2]; cc[0] = '%'; cc[1] = '?'; 
-                KeTa[0].İmlaKuralları.BaşındanSonundanSilinecekKarakterler = cc;
+                //KeTa[0] = new KelimeTamamlayici_(this, pak + "Banka\\" + Application.ProductName + ".KelimeTamamlayıcı", null);
+                //KeTa[0].Başlat(textBox_Görev_Tanım); KeTa[0].İmlaKuralları.CümleSonlarınaNoktaEkle = false;
+                //KeTa[0].İmlaKuralları.CümleSonlarınaNoktaEkle = false;
+                //char[] cc = new char[2]; cc[0] = '%'; cc[1] = '?'; 
+                //KeTa[0].İmlaKuralları.BaşındanSonundanSilinecekKarakterler = cc;
 
-                KeTa[1] = new KelimeTamamlayici_(this, "", KeTa[0].ÖnerilenKelimeler);
-                KeTa[2] = new KelimeTamamlayici_(this, "", KeTa[0].ÖnerilenKelimeler);
-                KeTa[3] = new KelimeTamamlayici_(this, "", KeTa[0].ÖnerilenKelimeler);
-                KeTa[4] = new KelimeTamamlayici_(this, "", KeTa[0].ÖnerilenKelimeler);
-                KeTa[5] = new KelimeTamamlayici_(this, "", KeTa[0].ÖnerilenKelimeler);
+                //KeTa[1] = new KelimeTamamlayici_(this, "", KeTa[0].ÖnerilenKelimeler);
+                //KeTa[2] = new KelimeTamamlayici_(this, "", KeTa[0].ÖnerilenKelimeler);
+                //KeTa[3] = new KelimeTamamlayici_(this, "", KeTa[0].ÖnerilenKelimeler);
+                //KeTa[4] = new KelimeTamamlayici_(this, "", KeTa[0].ÖnerilenKelimeler);
+                //KeTa[5] = new KelimeTamamlayici_(this, "", KeTa[0].ÖnerilenKelimeler);
 
-                KeTa[1].Başlat(textBox_Görev_Açıklama); KeTa[1].İmlaKurallarınıKopyala(KeTa[0].İmlaKuralları);
-                KeTa[2].Başlat(textBox_Etkinlik_Açıklama); KeTa[2].İmlaKurallarınıKopyala(KeTa[0].İmlaKuralları);
-                KeTa[3].Başlat(textBox_Arama); KeTa[3].İmlaKuralları.Anaİzin = false;
-                KeTa[4].Başlat(Menu_Ağaç, MenuItem_Ağaç_Tanım); KeTa[4].İmlaKurallarınıKopyala(KeTa[0].İmlaKuralları);
-                KeTa[5].Başlat(Menu_Ağaç, MenuItem_Ağaç_Açıklama); KeTa[5].İmlaKurallarınıKopyala(KeTa[0].İmlaKuralları);
+                //KeTa[1].Başlat(textBox_Görev_Açıklama); KeTa[1].İmlaKurallarınıKopyala(KeTa[0].İmlaKuralları);
+                //KeTa[2].Başlat(textBox_Etkinlik_Açıklama); KeTa[2].İmlaKurallarınıKopyala(KeTa[0].İmlaKuralları);
+                //KeTa[3].Başlat(textBox_Arama); KeTa[3].İmlaKuralları.Anaİzin = false;
+                //KeTa[4].Başlat(Menu_Ağaç, MenuItem_Ağaç_Tanım); KeTa[4].İmlaKurallarınıKopyala(KeTa[0].İmlaKuralları);
+                //KeTa[5].Başlat(Menu_Ağaç, MenuItem_Ağaç_Açıklama); KeTa[5].İmlaKurallarınıKopyala(KeTa[0].İmlaKuralları);
 
                 Genel.KaydedilmemişBilgiVar = false;
                 Genel.AğaçGüncelleniyor = false;
                 textBox_Arama.Focus();
+
+                Ağaç.Nodes.AddRange(new TreeNode[] {
+                new TreeNode("Görevler"),
+                new TreeNode("Şablonlar"),
+                new TreeNode("Çöp Kutusu")
+                });
+                Ağaç_Güncelle(true, true, true);
+                Filtreleme_DurumDeğişikliği(null, null);
 
                 Visible = true;
                 while (Opacity < 1)
@@ -252,13 +263,25 @@ namespace Etkinlik_Takip
                     System.Threading.Thread.Sleep(25);
                 }
                 Opacity = 1;
+
+                Sql_GeçersizÜyeleriSil();
+
+                YeniYazılımKontrolü.Başlat(new Uri("https://github.com/ArgeMup/EtkinlikTakip/blob/master/Etkinlik%20Takip/bin/Release/Etkinlik%20Takip.exe?raw=true"));
             }
             catch (Exception) { }
         }
         private void AnaEkran_FormClosing(object sender, FormClosingEventArgs e)
         {
-            toolStripSil_Click(null, null);
-            if (Genel.KaydedilmemişBilgiVar) e.Cancel = true;
+            if (e.CloseReason == CloseReason.ApplicationExitCall)
+            {
+                toolStripSil_Click(null, null);
+                if (Genel.KaydedilmemişBilgiVar) e.Cancel = true;
+            }
+            else
+            {
+                notifyIcon1_MouseClick(null, new MouseEventArgs(MouseButtons.Left, 0, 0, 0, 0));
+                e.Cancel = true;
+            }
         }
         private void AnaEkran_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -280,14 +303,14 @@ namespace Etkinlik_Takip
             Sql_Ayarlar_Yaz("ÜzerindeÇalışılıyorDurumu", Convert.ToInt32(Üç_Değiştir.CheckState));
 
             Sql_Ayarlar_Yaz("Filtreleme_ÜzerindeÇalışılıyor", (int)Filtreleme_D0.CheckState);
-            Sql_Ayarlar_Yaz("Filtreleme_YeniGörev", (int)Filtreleme_D1.CheckState);
-            Sql_Ayarlar_Yaz("Filtreleme_DüşükÖncelikli", (int)Filtreleme_D2.CheckState);
+            Sql_Ayarlar_Yaz("Filtreleme_DüşükÖncelikli", (int)Filtreleme_D1.CheckState);
+            Sql_Ayarlar_Yaz("Filtreleme_YeniGörev", (int)Filtreleme_D2.CheckState);
             Sql_Ayarlar_Yaz("Filtreleme_Beklemede", (int)Filtreleme_D3.CheckState);
             Sql_Ayarlar_Yaz("Filtreleme_BittiGeriBildirimBekleniyor", (int)Filtreleme_D4.CheckState);
             Sql_Ayarlar_Yaz("Filtreleme_Diğer", (int)Filtreleme_D5.CheckState);
             Sql_Ayarlar_Yaz("Filtreleme_Tamamlandı", (int)Filtreleme_D6.CheckState);
             Sql_Ayarlar_Yaz("Filtreleme_İptalEdildi", (int)Filtreleme_D7.CheckState);
-            Sql_Ayarlar_Yaz("Filtreleme_ÇöpKutusu", (int)Filtreleme_ÇöpKutusu.CheckState);
+            Sql_Ayarlar_Yaz("Grid_Listele_Tarihçe", (int)Grid_Listele_Tarihçe.CheckState);
 
             Sql_Ayarlar_Yaz("Sutunlar_Durum", (int)MenuItem_Grid_Etk_Sütünlar_Durum.CheckState);
             Sql_Ayarlar_Yaz("Sutunlar_İçerik", (int)MenuItem_Grid_Etk_Sütünlar_İçerik.CheckState);
@@ -321,12 +344,14 @@ namespace Etkinlik_Takip
             }
             catch (Exception) { }
 
-            foreach (var nesne in KeTa) nesne.Durdur();
+            //foreach (var nesne in KeTa) nesne.Durdur();
+
+            YeniYazılımKontrolü.Durdur();
         }
         private void AnaEkran_Resize(object sender, EventArgs e)
         {
-            if (this.WindowState == FormWindowState.Minimized) this.Hide();
-            else Genel.Pencere = this.WindowState;
+            if (WindowState == FormWindowState.Minimized) Hide();
+            else Show();
         }
         private void AnaEkran_KeyDown(object sender, KeyEventArgs e)
         {
@@ -408,7 +433,7 @@ namespace Etkinlik_Takip
                     Sql_Sorgula("insert into Ayarlar values ('Filtreleme_Tamamlandı', '1')");
                     Sql_Sorgula("insert into Ayarlar values ('Filtreleme_İptalEdildi', '1')");
                     Sql_Sorgula("insert into Ayarlar values ('Filtreleme_Diğer', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('Filtreleme_ÇöpKutusu', '1')");
+                    Sql_Sorgula("insert into Ayarlar values ('Grid_Listele_Tarihçe', '1')");
 
                     Sql_Sorgula("insert into Ayarlar values ('ikiz', '')");
 
@@ -417,8 +442,6 @@ namespace Etkinlik_Takip
                     Sql_Ayarlar_Yaz("DOGRULAMA", "DOGrulama_" + Application.ProductVersion);
                     Sql_Ayarlar_Yaz("dogrulama", "dogRULAMA_" + Application.ProductVersion);
                 }
-
-                Sql_GeçersizÜyeleriSil();
 
                 Sql_Zamanlayıcı.Start();
 
@@ -538,18 +561,22 @@ namespace Etkinlik_Takip
                         L_TrNo = Sql_ÜyeleriAl((int)Nosu);
                         TrNo = new TreeNode(Tanımı, L_TrNo.ToArray());
                         TrNo.Tag = Nosu;
-                        if (Genel.AğaçDallarıDurumu_Oku(Nosu)) TrNo.Expand();
                         
-                        Dizi = new int[L_TrNo.Count + 1];
-                        for (int i = 0; i < L_TrNo.Count; i++) Dizi[i] = L_TrNo[i].ImageIndex;
-                        Dizi[Dizi.Length - 1] = Convert.ToInt32(Sql_GörevÖzelliği(Nosu, EtkinlikÖzellikleri.Durumu));
-                        if (Dizi[Dizi.Length - 1] == (int)EtkinlikDurumu.Yeni_Görev) Dizi[Dizi.Length - 1] = Dizi[0];
-                        TrNo.ImageIndex = Dizi.Min();
+                        if (L_TrNo.Count > 0)
+                        {
+                            //alt dalların durumunu yansıt
+                            Dizi = new int[L_TrNo.Count];
+                            for (int i = 0; i < L_TrNo.Count; i++) Dizi[i] = L_TrNo[i].ImageIndex;
+                            //kendi durumunu ekleme iptal //Dizi[Dizi.Length - 1] = KendiDurumu;
+                            //kendi durumunu ekleme iptal //if (Dizi[Dizi.Length - 1] == (int)EtkinlikDurumu.Yeni_Görev) Dizi[Dizi.Length - 1] = Dizi[0];
+                            TrNo.ImageIndex = Dizi.Min();
+                        }
+                        else TrNo.ImageIndex = Convert.ToInt32(Sql_GörevÖzelliği(Nosu, EtkinlikÖzellikleri.Durumu));
 
-                        if (Genel.AğacMenüFiltreleme[TrNo.ImageIndex] == 1) Liste.Add(TrNo);
-                        else Genel.AğacMenüFiltrelemeSayacGizli++;
-                        Genel.AğacMenüFiltrelemeSayac[TrNo.ImageIndex]++;
+                        Liste.Add(TrNo);
                     }
+
+                    if (Genel.Tik < Environment.TickCount) { Application.DoEvents(); Genel.Tik = Environment.TickCount + 1000; }
                 }
                 SQLiteDataReader_.Close();
             }
@@ -615,6 +642,8 @@ namespace Etkinlik_Takip
                     }
 
                     Adet++;
+
+                    if (Genel.Tik < Environment.TickCount) { Application.DoEvents(); Genel.Tik = Environment.TickCount + 1000; }
                 }
                 SQLiteDataReader_.Close();
             }
@@ -652,11 +681,36 @@ namespace Etkinlik_Takip
                 Sql.Bağlantı.Open();
             }
         }
-        private void Ağaç_Güncelle()
+        List<TreeNode> Ağaç_FilrelemeyiÇalıştır(List<TreeNode> Dallar)
         {
-            for (int i = 0; i < Genel.AğacMenüFiltrelemeSayac.Length; i++) Genel.AğacMenüFiltrelemeSayac[i] = 0;
-            Genel.AğacMenüFiltrelemeSayacGizli = 0;
+            List<TreeNode> yeni_liste = new List<TreeNode>();
 
+            foreach (var biri in Dallar)
+            {
+                if (Genel.AğacMenüFiltreleme[biri.ImageIndex] == 1)
+                {
+                    TreeNode kopyası = (TreeNode)biri.Clone();
+                    yeni_liste.Add(kopyası);
+
+                    if (kopyası.Nodes.Count > 0)
+                    {
+                        List<TreeNode> alttakiler = Ağaç_FilrelemeyiÇalıştır(kopyası.Nodes.Cast<TreeNode>().ToList());
+                        kopyası.Nodes.Clear();
+                        if (alttakiler.Count > 0)
+                        {
+                            kopyası.Nodes.AddRange(alttakiler.ToArray());
+
+                            if (Genel.AğaçDallarıDurumu_Oku((int)kopyası.Tag)) kopyası.Expand();
+                        }
+                    }
+                }
+                else Genel.AğacMenüFiltrelemeSayacGizli++;
+            }
+
+            return yeni_liste;
+        }
+        private void Ağaç_Güncelle(bool Görevler, bool Şablonlar, bool ÇöpKutusu, bool SadeceFiltreleme = false)
+        {
             bool Şablonlar_Açık_Kalsın = false;
             if (Ağaç.Nodes.Count >= 2) 
             {
@@ -665,41 +719,58 @@ namespace Etkinlik_Takip
 
             Genel.AğaçGüncelleniyor = true;
             Ağaç.BeginUpdate();
+
+            TreeNode[] tümü = new TreeNode[Ağaç.Nodes.Count]; 
+            Ağaç.Nodes.CopyTo(tümü, 0);
+
             Ağaç.Nodes.Clear();
 
-            TreeNode gecici = new TreeNode(KullanıcıAdı.Text, Sql_ÜyeleriAl((int)DalTürü.Görevler).ToArray());
-            gecici.Tag = 0;
-            gecici.ImageIndex = 10;
-            Ağaç.Nodes.Add(gecici);
-
-            toolStripEtiket.Text = "";
-            if (Genel.AğacMenüFiltrelemeSayac[(int)EtkinlikDurumu.Yeni_Görev] > 0) toolStripEtiket.Text += Genel.AğacMenüFiltrelemeSayac[(int)EtkinlikDurumu.Yeni_Görev].ToString() + " yeni ";
-            if (Genel.AğacMenüFiltrelemeSayac[(int)EtkinlikDurumu.Üzerinde_Çalışılıyor] > 0) toolStripEtiket.Text += Genel.AğacMenüFiltrelemeSayac[(int)EtkinlikDurumu.Üzerinde_Çalışılıyor].ToString() + " çalışılan ";
-            if (Genel.AğacMenüFiltrelemeSayac[(int)EtkinlikDurumu.Düşük_Öncelikli] > 0) toolStripEtiket.Text += Genel.AğacMenüFiltrelemeSayac[(int)EtkinlikDurumu.Düşük_Öncelikli].ToString() + " düşük önc. ";
-            Genel.AğacMenüFiltrelemeSayac[(int)EtkinlikDurumu.Beklemede] += Genel.AğacMenüFiltrelemeSayac[(int)EtkinlikDurumu.Bitti_Geri_Bildirim_Bekleniyor];
-            if (Genel.AğacMenüFiltrelemeSayac[(int)EtkinlikDurumu.Beklemede] > 0) toolStripEtiket.Text += Genel.AğacMenüFiltrelemeSayac[(int)EtkinlikDurumu.Beklemede].ToString() + " beklenen ";
-            if (Genel.AğacMenüFiltrelemeSayac[(int)EtkinlikDurumu.Diğer] > 0) toolStripEtiket.Text += Genel.AğacMenüFiltrelemeSayac[(int)EtkinlikDurumu.Diğer].ToString() + " diğer ";
-            if (Genel.AğacMenüFiltrelemeSayacGizli > 0) toolStripEtiket.Text += Genel.AğacMenüFiltrelemeSayacGizli.ToString() + " gizli ";
-
-            gecici = new TreeNode("Şablonlar", Sql_ÜyeleriAl((int)DalTürü.Şablonlar).ToArray());
-            gecici.Tag = DalTürü.Şablonlar;
-            gecici.ImageIndex = 11;
-            if (Şablonlar_Açık_Kalsın) gecici.Expand();
-            Ağaç.Nodes.Add(gecici);
-
-            if (Filtreleme_ÇöpKutusu.Checked)
+            if (Görevler || SadeceFiltreleme)
             {
-                gecici = new TreeNode("Çöp Kutusu", Sql_ÜyeleriAl((int)DalTürü.ÇöpKutusu).ToArray());
+                if (!SadeceFiltreleme) Genel.Ağaç_TamListe = Sql_ÜyeleriAl((int)DalTürü.Görevler);
+                
+                Genel.AğacMenüFiltrelemeSayacGizli = 0;
+                TreeNode gecici = new TreeNode(KullanıcıAdı.Text, Ağaç_FilrelemeyiÇalıştır(Genel.Ağaç_TamListe).ToArray())
+                {
+                    Tag = 0,
+                    ImageIndex = 10
+                };
+
+                Ağaç.Nodes.Add(gecici);
+                
+                toolStripEtiket.Text = "";
+                if (Genel.AğacMenüFiltrelemeSayacGizli > 0) toolStripEtiket.Text += Genel.AğacMenüFiltrelemeSayacGizli.ToString() + " gizli ";
+
+                gecici.Expand();
+            }
+            else Ağaç.Nodes.Add(tümü[0]);
+
+            if (Şablonlar)
+            {
+                TreeNode gecici = new TreeNode("Şablonlar", Sql_ÜyeleriAl((int)DalTürü.Şablonlar).ToArray());
+                
+                gecici.Tag = DalTürü.Şablonlar;
+                gecici.ImageIndex = 11;
+                if (Şablonlar_Açık_Kalsın) gecici.Expand();
+
+                Ağaç.Nodes.Add(gecici);
+            }
+            else Ağaç.Nodes.Add(tümü[1]);
+
+            if (ÇöpKutusu)
+            {
+                TreeNode gecici = new TreeNode("Çöp Kutusu", Sql_ÜyeleriAl((int)DalTürü.ÇöpKutusu).ToArray());
                 if (gecici.Nodes.Count > 0)
                 {
                     gecici.Tag = DalTürü.ÇöpKutusu;
                     gecici.ImageIndex = 12;
+
                     Ağaç.Nodes.Add(gecici);
                 }
             }
+            else if (tümü.Length > 2 && tümü[2].Nodes.Count > 0) Ağaç.Nodes.Add(tümü[2]);
 
             Ağaç.Sort();
-            Ağaç.Nodes[0].Expand();
             Ağaç.EndUpdate();
 
             Genel.AğaçGüncelleniyor = false;
@@ -760,7 +831,7 @@ namespace Etkinlik_Takip
             Genel.AğacMenüFiltreleme[5] = (int)Filtreleme_D5.CheckState;
             Genel.AğacMenüFiltreleme[6] = (int)Filtreleme_D6.CheckState;
             Genel.AğacMenüFiltreleme[7] = (int)Filtreleme_D7.CheckState;
-            Ağaç_Güncelle();
+            Ağaç_Güncelle(false, false, false, true);
         }
         private void FiltrelemeTumu_CheckedChanged(object sender, EventArgs e)
         {
@@ -774,7 +845,6 @@ namespace Etkinlik_Takip
             Filtreleme_D6.CheckState = FiltrelemeTumu.CheckState;
             Filtreleme_D7.CheckState = FiltrelemeTumu.CheckState;
             Genel.AğaçGüncelleniyor = false;
-            Filtreleme_ÇöpKutusu.CheckState = FiltrelemeTumu.CheckState;
         }
         private void textBox_Arama_TextChanged(object sender, EventArgs e)
         {
@@ -782,7 +852,7 @@ namespace Etkinlik_Takip
             if (Genel.GözGezdirmeÇalışıyor) { Genel.GözGezdirmeKapatmaTalebi = true; return; }
             Genel.GözGezdirmeÇalışıyor = true;
             Genel.GözGezdirmeKapatmaTalebi = false;
-            Genel.Tick = Environment.TickCount + 100;
+            Genel.Tik = Environment.TickCount + 100;
 
             Arama.RowCount = 0;
             TreeNodeCollection nodes = Ağaç.Nodes;
@@ -792,7 +862,7 @@ namespace Etkinlik_Takip
         private void textBox_Arama_TextChanged_2(TreeNode treeNode)
         {
             if (Genel.GözGezdirmeKapatmaTalebi) return;
-            if (Genel.Tick < Environment.TickCount) { Genel.Tick = Environment.TickCount + 100; Application.DoEvents(); }
+            if (Genel.Tik < Environment.TickCount) { Application.DoEvents(); Genel.Tik = Environment.TickCount + 100; }
 
             SQLiteDataReader Dr; bool içeriktebulundu = false;
             string Sorgu = "select Aciklama from _t" + ((int)treeNode.Tag).ToString() + " where Zaman is not null";
@@ -800,7 +870,7 @@ namespace Etkinlik_Takip
             {
                 while (Dr.Read())
                 {
-                    if (Genel.Tick < Environment.TickCount) { Genel.Tick = Environment.TickCount + 100; Application.DoEvents(); }
+                    if (Genel.Tik < Environment.TickCount) { Application.DoEvents(); Genel.Tik = Environment.TickCount + 100; }
                     if (((string)Dr["Aciklama"]).ToLower().Contains(textBox_Arama.Text.ToLower())) { içeriktebulundu = true; break; }
                 }
                 Dr.Close();
@@ -862,7 +932,7 @@ namespace Etkinlik_Takip
             else if (e.KeyCode == Keys.Enter)
             {
                 if (Arama.SelectedCells.Count == 0) return;
-                if (KeTa[3].ListeGörünüyorMu()) return;
+                //if (KeTa[3].ListeGörünüyorMu()) return;
 
                 Ağaç.SelectedNode = null;
                 Ağaç.SelectedNode = (TreeNode)Arama.SelectedCells[0].Tag;
@@ -882,24 +952,6 @@ namespace Etkinlik_Takip
             if (e.RowIndex < 0) return;
             Ağaç.SelectedNode = null;
             Ağaç.SelectedNode = (TreeNode)Arama[0, e.RowIndex].Tag;
-        }
-        private void notifyIcon1_Click(object sender, EventArgs e)
-        {
-            if (this.WindowState == FormWindowState.Minimized)
-            {
-                this.Show();
-                this.WindowState = Genel.Pencere;
-
-                if (!Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(new Rectangle(this.Left, this.Top, this.Width, this.Height))))
-                {
-                    this.Left = 0; this.Top = 0; this.Width = 400; this.Height = 300;
-                }
-            }
-            else
-            {
-                this.WindowState = FormWindowState.Minimized;
-                this.Hide();
-            }
         }
 
         private void Panel_Aç(Panel2Durumu Panel2)
@@ -932,21 +984,29 @@ namespace Etkinlik_Takip
         }
         private void SayfaDüzeni_Normal()
         {
-            toolStripEkle.Image = Etkinlik_Takip.Properties.Resources.Ekle;
-            toolStripArama.Image = Etkinlik_Takip.Properties.Resources.Arama;
+            statusStrip1.SuspendLayout();
+
+            toolStripEkle.Image = Properties.Resources.Ekle;
+            toolStripArama.Image = Properties.Resources.Arama;
 
             for (int i = 0; i < toolStripEkle.DropDownItems.Count; i++) toolStripEkle.DropDownItems[i].Visible = true;
             toolStripEkle.Visible = true;
             toolStripAyarlar.Visible = true;
+
+            statusStrip1.ResumeLayout();
         }
         private void SayfaDüzeni_OnayRet()
         {
-            toolStripEkle.Image = Etkinlik_Takip.Properties.Resources.Onay;
-            toolStripArama.Image = Etkinlik_Takip.Properties.Resources.Ret;
+            statusStrip1.SuspendLayout();
+
+            toolStripEkle.Image = Properties.Resources.Onay;
+            toolStripArama.Image = Properties.Resources.Ret;
 
             for (int i = 0; i < toolStripEkle.DropDownItems.Count; i++) toolStripEkle.DropDownItems[i].Visible = false;
             toolStripEkle.Visible = false;
             toolStripAyarlar.Visible = false;
+
+            statusStrip1.ResumeLayout();
         }
         private void PuntoDeğişti(object sender, EventArgs e)
         {
@@ -1176,7 +1236,7 @@ namespace Etkinlik_Takip
                     }
                 }
 
-                Ağaç_Güncelle();
+                Ağaç_Güncelle(true, false, false);
                 Panel_Aç(Panel2Durumu.Arama);
                 SayfaDüzeni_Normal();
                 Genel.KaydedilmemişBilgiVar = false;
@@ -1229,6 +1289,8 @@ namespace Etkinlik_Takip
                 {
                     DialogResult Dr = MessageBox.Show("Kaydetmeden kapatmak istediğinize emin misiniz? %1", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
                     if (Dr == DialogResult.No) return;
+                    Genel.KaydedilmemişBilgiVar = false;
+
                     Ağaç_AfterSelect(null, null);
                 }
             }
@@ -1237,7 +1299,8 @@ namespace Etkinlik_Takip
                 if (Genel.KaydedilmemişBilgiVar)
                 {
                     DialogResult Dr = MessageBox.Show("Kaydetmeden kapatmak istediğinize emin misiniz? %2", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
-                    if (Dr == DialogResult.No) return;           
+                    if (Dr == DialogResult.No) return;
+                    Genel.KaydedilmemişBilgiVar = false;
                 }
             }
 
@@ -1245,7 +1308,6 @@ namespace Etkinlik_Takip
             Panel_Aç(Panel2Durumu.Arama);
             textBox_Arama.SelectAll();
             textBox_Arama.Focus();
-            Genel.KaydedilmemişBilgiVar = false;
         }
 
         private void Ağaç_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -1255,7 +1317,13 @@ namespace Etkinlik_Takip
         private void Ağaç_MouseMove(object sender, MouseEventArgs e)
         {
             Genel.AnlıkFarePozisyonu_X = e.X;
-            Genel.AnlıkFarePozisyonu_Y = e.Y;
+            Genel.AnlıkFarePozisyonu_Y = e.Y;   
+
+            //if (Kısayol_Ağaç.Visible)
+            //{
+            //    if (/*Math.Abs(Genel.Kısayol_Ağaç_AçıldığıKonum_X - e.X) > 35 || */
+            //        Math.Abs(Genel.Kısayol_Ağaç_AçıldığıKonum_Y - e.Y) > 35) Kısayol_Ağaç.Visible = false;
+            //}
         }
         private void Ağaç_ItemDrag(object sender, ItemDragEventArgs e)
         {
@@ -1316,24 +1384,38 @@ namespace Etkinlik_Takip
                 Genel.AğaçDallarıDurumu_Yaz((int)Hedef.Tag, true);
             }
 
-            Ağaç_Güncelle();
+            Ağaç_Güncelle(true, true, true);
         }
         void Ağaç_Kopyala(int Kaynak, int Hedef)
         {
             Hedef = YeniGörevOluştur(Hedef, DateTime.Now, Sql_GörevÖzelliği(Kaynak, EtkinlikÖzellikleri.Tanımı), Sql_GörevÖzelliği(Kaynak, EtkinlikÖzellikleri.Açıklaması));
 
             var dizi = Sql_ÜyeleriAl(Kaynak);
+
+            toolStripİlerleme.Value = 0;
+            toolStripİlerleme.Maximum = dizi.Count;
+            toolStripİlerleme.Visible = true;
+
             foreach (var biri in dizi)
             {
                 Ağaç_Kopyala_2(biri, Hedef);
+
+                toolStripİlerleme.Value++;
+                if (Genel.Tik < Environment.TickCount) { Application.DoEvents(); Genel.Tik = Environment.TickCount + 1000; }
             }
+
+            toolStripİlerleme.Visible = false;
         }
         void Ağaç_Kopyala_2(TreeNode Kaynak, int Hedef)
         {
             Hedef = YeniGörevOluştur(Hedef, DateTime.Now, Sql_GörevÖzelliği((int)Kaynak.Tag, EtkinlikÖzellikleri.Tanımı), Sql_GörevÖzelliği((int)Kaynak.Tag, EtkinlikÖzellikleri.Açıklaması));
+            toolStripİlerleme.Maximum += Kaynak.Nodes.Count;
 
             foreach (TreeNode biri in Kaynak.Nodes)
             {
+                toolStripİlerleme.Value++;
+                if (Genel.Tik < Environment.TickCount) { Application.DoEvents(); Genel.Tik = Environment.TickCount + 1000; }
+               
                 Ağaç_Kopyala_2(biri, Hedef);
             }
         }
@@ -1348,6 +1430,8 @@ namespace Etkinlik_Takip
                     {
                         DialogResult Dr = MessageBox.Show("Kaydetmeden kapatmak istediğinize emin misiniz? %3", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
                         if (Dr == DialogResult.No) return;
+
+                        Genel.KaydedilmemişBilgiVar = false;
                     }
 
                     Sutun_Gorev.Visible = false;
@@ -1357,7 +1441,6 @@ namespace Etkinlik_Takip
                         if (Genel.GözGezdirmeÇalışıyor) return;
 
                         Görev_TarihSeçici.Visible = false;
-                        splitContainer2.Panel2Collapsed = false;
                         Panel_Aç(Panel2Durumu.Görev);
                         label_Görev_Tarih.Text = "Bekleyiniz";
                         int Tablo = (int)Ağaç.SelectedNode.Tag;
@@ -1573,6 +1656,7 @@ namespace Etkinlik_Takip
                     string Sorgu = "SELECT name FROM sqlite_master where name like '_t%' and name is not '_t" + Sahip.ToString() + "' UNION SELECT name FROM sqlite_temp_master where name like '_t%' and name is not '_t" + Sahip.ToString() + "'";
                     if (!Sql_Sorgula(Sorgu, out Dr)) { MessageBox.Show("Beklenmeyen durum oluştu. Tekrar deneyiniz"); goto HatalıÇıkış; }
 
+					Genel.Tik = Environment.TickCount + 1000;
                     while (Dr.Read())
                     {
                         string tablo = Dr["name"].ToString();
@@ -1582,6 +1666,8 @@ namespace Etkinlik_Takip
                         {
                             if (!Sql_Sorgula("insert into " + tablo + " values (DATETIME('" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "'), " + ((int)EtkinlikDurumu.Düşük_Öncelikli).ToString() + ", '" + st + "')")) { MessageBox.Show("Beklenmeyen durum oluştu. Tekrar deneyiniz"); goto HatalıÇıkış; }
                         }
+
+                        if (Genel.Tik < Environment.TickCount) { Application.DoEvents(); Genel.Tik = Environment.TickCount + 1000; }
                     }
                     Dr.Close();
                 }
@@ -1592,7 +1678,7 @@ namespace Etkinlik_Takip
             
             HatalıÇıkış:
             Menu_Ağaç.Close();
-            Ağaç_Güncelle();
+            Ağaç_Güncelle(true, false, false);
         }
         private void MenuItem_Ağaç_TümünüAç_Click(object sender, EventArgs e)
         {
@@ -1623,6 +1709,7 @@ namespace Etkinlik_Takip
                 if (Dr == DialogResult.No) return;
 
                 Ağaç_TamamenSil((int)Ağaç.SelectedNode.Tag);
+                Ağaç_Güncelle(false, false, true);
             }
             else
             {
@@ -1631,9 +1718,8 @@ namespace Etkinlik_Takip
                 if (!Sql_Sorgula("insert into _t" + (int)Ağaç.SelectedNode.Tag + " values (null, " + (int)EtkinlikÖzellikleri.SilinmedenÖncekiSahibi + ", '" + sahip + "')")) { MessageBox.Show("Beklenmeyen durum oluştu. Tekrar deneyiniz"); return; }
                 if (!Sql_Sorgula("insert into _t" + (int)Ağaç.SelectedNode.Tag + " values (DATETIME('" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "'), " + (int)EtkinlikDurumu.Güncellenen_Görev + ", 'Silindi')")) { MessageBox.Show("Beklenmeyen durum oluştu. Tekrar deneyiniz"); return; }
                 if (!Sql_Sorgula("update Gorev set Sahip = " + (int)DalTürü.ÇöpKutusu + " where No = " + (int)Ağaç.SelectedNode.Tag)) { MessageBox.Show("Beklenmeyen durum oluştu. Tekrar deneyiniz"); return; }
+                Ağaç_Güncelle(true, true, true);
             }
-            
-            Ağaç_Güncelle();
         }
         void Ağaç_TamamenSil(int Kaynak)
         {
@@ -1664,7 +1750,7 @@ namespace Etkinlik_Takip
             string sahip = Sql_GörevÖzelliği((int)Ağaç.SelectedNode.Tag, EtkinlikÖzellikleri.SilinmedenÖncekiSahibi);
             if (!Sql_Sorgula("delete from _t" + (int)Ağaç.SelectedNode.Tag + " where Durum = " + (int)EtkinlikÖzellikleri.SilinmedenÖncekiSahibi)) { MessageBox.Show("Beklenmeyen durum oluştu. Tekrar deneyiniz"); return; }
             if (!Sql_Sorgula("update Gorev set Sahip = " + sahip + " where No = " + ((int)Ağaç.SelectedNode.Tag).ToString())) { MessageBox.Show("Beklenmeyen durum oluştu. Tekrar deneyiniz"); return; }
-            Ağaç_Güncelle();
+            Ağaç_Güncelle(true, true, true);
         }
         private void MenuItem_Ağaç_PanodanAl_Click(object sender, EventArgs e)
         {
@@ -1676,12 +1762,17 @@ namespace Etkinlik_Takip
             Hedefler.Add((int)Ağaç.SelectedNode.Tag); //ikinci kez eklenmesinin sebebi indeksin 1 den başlayacak şekilde olması 
 
             List<string> satırlar = okunan.Split('\r').ToList();
-            while(satırlar.Count > 0)
+
+            toolStripİlerleme.Value = 0;
+            toolStripİlerleme.Maximum = satırlar.Count;
+            toolStripİlerleme.Visible = true;
+
+            while (satırlar.Count > 0)
             {
                 string[] bölümler = satırlar[0].Trim('\n', ' ').Replace("|", Environment.NewLine).Split(';');
                 satırlar.RemoveAt(0);
 
-                if (bölümler.Length < 3) continue;
+                if (bölümler.Length <= 3) continue;
                 if (!bölümler[0].StartsWith(">") || !bölümler[0].EndsWith(">")) continue;
 
                 int Durum = (int)EtkinlikDurumu.Geçersiz;
@@ -1717,9 +1808,13 @@ namespace Etkinlik_Takip
                     while (Hedefler.Count > Seviye + 2) Hedefler.RemoveAt(Hedefler.Count - 1);
                     goto YenidenDene;
                 }
+
+                toolStripİlerleme.Value++;
+                if (Genel.Tik < Environment.TickCount) { Application.DoEvents(); Genel.Tik = Environment.TickCount + 1000; }
             }
 
-            Ağaç_Güncelle();
+            toolStripİlerleme.Visible = false;
+            Ağaç_Güncelle(true, true, false);
         }
         private void MenuItem_Ağaç_PanoyaKopyala_Click(object sender, EventArgs e)
         {
@@ -1784,10 +1879,10 @@ namespace Etkinlik_Takip
                     label_Görev_Tarih.Text = "";
                 }
 
-                tick = Environment.TickCount + 1000;
+                Genel.Tik = Environment.TickCount + 1000;
                 MenuItem_Ağaç_TümEtkinliklerinListele_2(Ağaç.SelectedNode, textBox_Görev_Tanım.Text);
                 Sutun_Gorev.Visible = true;
-                Grid_Listele.Checked = true;
+                Grid_Listele_Tarihçe.Checked = true;
                 MenuItem_Grid_Etk_ZaAr_Filtrele_Click(null, null);
             }
             catch (Exception) { }
@@ -1801,11 +1896,11 @@ namespace Etkinlik_Takip
             Sql_Sorgula("insert into gecici (Zaman, Durum, Aciklama) values ('" + dt.ToString("yyyy-MM-dd HH:mm:ss") + "', " + ((int)EtkinlikDurumu.Yeni_Görev).ToString() + ", 'Oluşturuldu')");
             Sql_Sorgula("update gecici set Tanim = '" + Tanım + "' where Tanim is null");
 
-            if (tick < Environment.TickCount)
+            if (Genel.Tik < Environment.TickCount)
             {
                 Grid_Etkinlikler.TopLeftHeaderCell.Value = Sql_SorÖğren("select count(Durum) from gecici").ToString();
                 Application.DoEvents();
-                tick = Environment.TickCount + 1000;
+                Genel.Tik = Environment.TickCount + 1000;
             }
 
             foreach (TreeNode Dal in Dallar.Nodes) MenuItem_Ağaç_TümEtkinliklerinListele_2(Dal, Tanım + " -> " + Sql_GörevÖzelliği((int)Dal.Tag, EtkinlikÖzellikleri.Tanımı));
@@ -1916,7 +2011,7 @@ namespace Etkinlik_Takip
         
         private void MenuItem_Grid_Etk_ZaAr_Filtrele_Click(object sender, EventArgs e)
         {
-            if (Grid_Listele.Checked)
+            if (Grid_Listele_Tarihçe.Checked)
             {
                 try
                 {
@@ -1924,10 +2019,9 @@ namespace Etkinlik_Takip
                     Genel.GözGezdirmeÇalışıyor = true;
                     Genel.GözGezdirmeKapatmaTalebi = false;
                     Genel.KaydedilmemişBilgiVar = true;
+                    splitContainer2.Panel2Collapsed = false;
 
-                    int İstenenÇıktıAdedi = 0;
-                    int.TryParse(MenuItem_Grid_Etk_GörüntülenecekEtkinlikSayısı_Adet.Text, out İstenenÇıktıAdedi);
-                    if (İstenenÇıktıAdedi == 0) İstenenÇıktıAdedi = int.MaxValue;
+                    if (!int.TryParse(MenuItem_Grid_Etk_GörüntülenecekEtkinlikSayısı_Adet.Text, out int İstenenÇıktıAdedi)) İstenenÇıktıAdedi = int.MaxValue;
 
                     DateTime dt;
                     string baslangıc, bitiş;
@@ -1944,7 +2038,6 @@ namespace Etkinlik_Takip
                     if (toolStripİlerleme.Maximum > 0)
                     {
                         toolStripEtiket.Visible = false;
-                        toolStripİlerleme.Width = toolStripEtiket.Width + 100;
                         toolStripİlerleme.Visible = true;
                         SayfaDüzeni_OnayRet();
 
@@ -1952,7 +2045,7 @@ namespace Etkinlik_Takip
                         string Sorgu = "select * from gecici where Zaman between " + baslangıc + " and " + bitiş + " order by Zaman";
                         if (MenuItem_Grid_Etk_Sıralama_YeniUstte.Checked) Sorgu += " desc";
                         if (!Sql_Sorgula(Sorgu, out Dr)) { label_Görev_Tarih.Text = "Beklenmeyen durum oluştu. Tekrar deneyiniz"; return; }
-                        tick = Environment.TickCount + 1000;
+                        Genel.Tik = Environment.TickCount + 1000;
                         int filrelendi = 0;
                         while (Dr.Read())
                         {
@@ -1978,11 +2071,11 @@ namespace Etkinlik_Takip
 
                             devam:
                             toolStripİlerleme.Value++;
-                            if (tick < Environment.TickCount) 
+                            if (Genel.Tik < Environment.TickCount) 
                             {
                                 Grid_Etkinlikler.TopLeftHeaderCell.Value = Grid_Etkinlikler.RowCount.ToString();
-                                tick = Environment.TickCount + 1000; 
                                 Application.DoEvents(); 
+                                Genel.Tik = Environment.TickCount + 1000; 
                             }
                             if (Genel.GözGezdirmeKapatmaTalebi) break;
                             if (Grid_Etkinlikler.RowCount == İstenenÇıktıAdedi) break;
@@ -1995,7 +2088,7 @@ namespace Etkinlik_Takip
                 }
                 catch (Exception) { label_Görev_Tarih.Text = "Beklenmeyen durum oluştu. Tekrar deneyiniz"; }
             }
-
+            
             label_Görev_Tarih.Enabled = false;
             Genel.KaydedilmemişBilgiVar = false;
             toolStripİlerleme.Visible = false;
@@ -2084,5 +2177,43 @@ namespace Etkinlik_Takip
         {
             MenuItem_Grid_Etk_ZaAr_Filtrele_Click(null, null);
         }
+
+        private void Menu_İkon_Çıkış_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void notifyIcon1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                if (WindowState == FormWindowState.Minimized)
+                {
+                    Show();
+                    WindowState = FormWindowState.Normal;
+                   
+                    if (!Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(new Rectangle(this.Left, this.Top, this.Width, this.Height))))
+                    {
+                        Left = 0; Top = 0; Width = 400; Height = 300;
+                    }
+                }
+                else
+                {
+                    WindowState = FormWindowState.Minimized;
+                    Hide();
+                }
+            }
+        }
+
+        //private void Ağaç_NodeMouseHover(object sender, TreeNodeMouseHoverEventArgs e)
+        //{
+        //    Genel.Kısayol_Ağaç_AçıldığıKonum_X = e.Node.Bounds.X + e.Node.Bounds.Width + 15;
+        //    Genel.Kısayol_Ağaç_AçıldığıKonum_Y = e.Node.Bounds.Y;
+
+        //    Kısayol_Ağaç.Location = new Point(Genel.Kısayol_Ağaç_AçıldığıKonum_X, Genel.Kısayol_Ağaç_AçıldığıKonum_Y);
+        //    Kısayol_Ağaç_DalAdı.Text = e.Node.Text;
+
+        //    Kısayol_Ağaç.Visible = true;
+        //}
     }
 }

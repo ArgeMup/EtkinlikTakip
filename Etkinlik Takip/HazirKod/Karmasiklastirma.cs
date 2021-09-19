@@ -118,6 +118,13 @@ namespace ArgeMup.HazirKod.Dönüştürme
         {
             return new SHA256Managed().ComputeHash(Dizi);
         }
+
+        public static string Metinden(string Girdi, int ÇıktıKarakterSayısı = 32)
+        {
+            byte[] Dizi1 = D_Metin.BaytDizisine(Girdi);
+            byte[] Dizi2 = BaytDizisinden(Dizi1, ÇıktıKarakterSayısı);
+            return D_HexMetin.BaytDizisinden(Dizi2);
+        }
     }
 }
 

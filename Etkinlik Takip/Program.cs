@@ -19,7 +19,7 @@ namespace Etkinlik_Takip
         {
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.AssemblyResolve += new ResolveEventHandler(MyResolveEventHandler);
-            
+
             Directory.CreateDirectory(pak + "Banka");
             Directory.CreateDirectory(pak + "Yedekler");
             Directory.CreateDirectory(pak + "Kutuphane");
