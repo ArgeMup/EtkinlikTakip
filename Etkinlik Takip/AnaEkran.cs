@@ -201,6 +201,7 @@ namespace Etkinlik_Takip
                 Panel_Aç(Panel2Durumu.Arama);
 
                 Üç_Değiştir.CheckState = (CheckState)Sql_Ayarlar_Oku("ÜzerindeÇalışılıyorDurumu", 1, (object)1);
+                OdaklanmışGörünüm.CheckState = (CheckState)Sql_Ayarlar_Oku("OdaklanmışGörünüm", 1, (object)1);
 
                 MenuItem_Grid_Etk_Sütünlar_Durum.CheckState = (CheckState)Sql_Ayarlar_Oku("Sutunlar_Durum", 1);
                 MenuItem_Grid_Etk_Sütünlar_İçerik.CheckState = (CheckState)Sql_Ayarlar_Oku("Sutunlar_İçerik", 1);
@@ -272,15 +273,18 @@ namespace Etkinlik_Takip
         }
         private void AnaEkran_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.ApplicationExitCall)
+            if (e.CloseReason == CloseReason.UserClosing)
             {
-                toolStripSil_Click(null, null);
-                if (Genel.KaydedilmemişBilgiVar) e.Cancel = true;
+                notifyIcon1_MouseClick(null, new MouseEventArgs(MouseButtons.Left, 0, 0, 0, 0));
+                
+                #if !DEBUG
+                    e.Cancel = true;
+                #endif
             }
             else
             {
-                notifyIcon1_MouseClick(null, new MouseEventArgs(MouseButtons.Left, 0, 0, 0, 0));
-                e.Cancel = true;
+                toolStripSil_Click(null, null);
+                if (Genel.KaydedilmemişBilgiVar) e.Cancel = true;
             }
         }
         private void AnaEkran_FormClosed(object sender, FormClosedEventArgs e)
@@ -301,6 +305,7 @@ namespace Etkinlik_Takip
                 Sql_Ayarlar_Yaz("Form_Yükseklik", this.Height);
             }
             Sql_Ayarlar_Yaz("ÜzerindeÇalışılıyorDurumu", Convert.ToInt32(Üç_Değiştir.CheckState));
+            Sql_Ayarlar_Yaz("OdaklanmışGörünüm", Convert.ToInt32(OdaklanmışGörünüm.CheckState));
 
             Sql_Ayarlar_Yaz("Filtreleme_ÜzerindeÇalışılıyor", (int)Filtreleme_D0.CheckState);
             Sql_Ayarlar_Yaz("Filtreleme_DüşükÖncelikli", (int)Filtreleme_D1.CheckState);
@@ -359,15 +364,15 @@ namespace Etkinlik_Takip
             {
                 switch (e.KeyCode)
                 {
-                    case (Keys.F):
+                    case (Keys.F)://arama
                         toolStripSil_Click(null, null);
                         break;
 
-                    case (Keys.N):
+                    case (Keys.N)://Yeni görev etkinlik seçme kısayolu
                         toolStripEkle.ShowDropDown();
                         break;
 
-                    case (Keys.S):
+                    case (Keys.S)://kaydet
                         toolStripEkle_Click(null, null);
                         break;
                 }
@@ -779,33 +784,33 @@ namespace Etkinlik_Takip
             if (not.Length > 63) notifyIcon1.Text = not.Substring(0, 63);
             else notifyIcon1.Text = not;
         }
-		#region Ağaç_NodeSorter
-        private class Ağaç_NodeSorter : System.Collections.IComparer
-        {   // Your sorting logic here... return -1 if tx < ty, 1 if tx > ty, 0 otherwise
-            public int Compare(object x_, object y_)
-            {
-                int x = ((TreeNode)x_).ImageIndex;
-                int y = ((TreeNode)y_).ImageIndex;
-
-                if (x == y)
+        #region Ağaç_NodeSorter
+            private class Ağaç_NodeSorter : System.Collections.IComparer
+            {   // Your sorting logic here... return -1 if tx < ty, 1 if tx > ty, 0 otherwise
+                public int Compare(object x_, object y_)
                 {
-                    if (!int.TryParse(((TreeNode)x_).Text.Split('-')[0], out x)) return 0;
-                    if (!int.TryParse(((TreeNode)y_).Text.Split('-')[0], out y)) return 0;
+                    int x = ((TreeNode)x_).ImageIndex;
+                    int y = ((TreeNode)y_).ImageIndex;
 
-                    if (x == y) return 0;
+                    if (x == y)
+                    {
+                        if (!int.TryParse(((TreeNode)x_).Text.Split('-')[0], out x)) return 0;
+                        if (!int.TryParse(((TreeNode)y_).Text.Split('-')[0], out y)) return 0;
+
+                        if (x == y) return 0;
+
+                        if (x < y) return -1;
+                        else return 1;
+                    }
+
+                    if (x == (int)EtkinlikDurumu.Üzerinde_Çalışılıyor) return -1;
+                    if (y == (int)EtkinlikDurumu.Üzerinde_Çalışılıyor) return 1;
 
                     if (x < y) return -1;
                     else return 1;
                 }
-
-                if (x == (int)EtkinlikDurumu.Üzerinde_Çalışılıyor) return -1;
-                if (y == (int)EtkinlikDurumu.Üzerinde_Çalışılıyor) return 1;
-
-                if (x < y) return -1;
-                else return 1;
             }
-        }
-		#endregion
+        #endregion
         
         private void comboBox_Etkinlik_Durum_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1312,6 +1317,20 @@ namespace Etkinlik_Takip
 
         private void Ağaç_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+            if (OdaklanmışGörünüm.Checked)
+            {
+                Ağaç.BeginUpdate();
+                Ağaç.CollapseAll();
+
+                TreeNode tn = e.Node;
+                while (tn != null)
+                {
+                    tn.Expand();
+                    tn = tn.Parent;
+                }
+                Ağaç.EndUpdate();
+            }
+
             Ağaç.SelectedNode = e.Node;
         }
         private void Ağaç_MouseMove(object sender, MouseEventArgs e)
@@ -2182,7 +2201,6 @@ namespace Etkinlik_Takip
         {
             Application.Exit();
         }
-
         private void notifyIcon1_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -2203,6 +2221,16 @@ namespace Etkinlik_Takip
                     Hide();
                 }
             }
+        }
+        private void Grid_Listele_Tarihçe_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Grid_Listele_Tarihçe.Checked)
+            {
+                TreeNode tn = Ağaç.SelectedNode;
+                Ağaç.SelectedNode = null;
+                Ağaç.SelectedNode = tn;
+            }
+            else splitContainer2.Panel2Collapsed = true;
         }
 
         //private void Ağaç_NodeMouseHover(object sender, TreeNodeMouseHoverEventArgs e)
