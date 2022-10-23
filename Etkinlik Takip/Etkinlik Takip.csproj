@@ -57,7 +57,7 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Etkinlik Takip.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Etkinlik Takip.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -78,6 +78,8 @@
     <Reference Include="System.Data.SQLite.Linq, Version=1.0.113.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.113.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -110,7 +112,9 @@
     <Compile Include="HazirKod_Cdiyez\Karmasiklastirma.cs" />
     <Compile Include="HazirKod_Cdiyez\KayitDefteri.cs" />
     <Compile Include="HazirKod_Cdiyez\KelimeTamamlayici.cs" />
+    <Compile Include="HazirKod_Cdiyez\EşZamanlı.cs" />
     <Compile Include="HazirKod_Cdiyez\Kendi.cs" />
+    <Compile Include="HazirKod_Cdiyez\Sıkıştırma.cs" />
     <Compile Include="HazirKod_Cdiyez\KlasörDosya.cs" />
     <Compile Include="HazirKod_Cdiyez\KlavyeFareGozlemcisi.cs" />
     <Compile Include="HazirKod_Cdiyez\KodKümesi.cs" />
@@ -132,15 +136,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <None Include="HazirKod_Cdiyez\.git" />
     <None Include="HazirKod_Cdiyez\LICENSE" />
     <None Include="HazirKod_Cdiyez\README.md" />
     <None Include="packages.config" />
@@ -148,6 +146,11 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -176,14 +179,6 @@
     <None Include="Resources\Onay.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\G_Durum_7.png" />
-    <None Include="Resources\G_Durum_6.png" />
-    <None Include="Resources\G_Durum_5.png" />
-    <None Include="Resources\G_Durum_4.png" />
-    <None Include="Resources\G_Durum_3.png" />
-    <None Include="Resources\G_Durum_2.png" />
-    <None Include="Resources\G_Durum_1.png" />
-    <None Include="Resources\G_Durum_0.png" />
     <None Include="Resources\Arama.png" />
     <None Include="Resources\System.Data.SQLite.dll" />
     <None Include="Resources\SQLite.Interop_x86.dll" />
@@ -213,7 +208,19 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Etkinlik Takip.ico" />
+    <None Include="Resources\Etkinlik Takip Hatırlatıcı.ico" />
+    <None Include="Etkinlik Takip Hatırlatıcı.ico" />
     <Content Include="Etkinlik Takip.ico" />
+    <None Include="Resources\G_Durum_2.png" />
+    <None Include="Resources\G_Durum_1.png" />
+    <None Include="Resources\G_Durum_0.png" />
+    <None Include="Resources\G_Durum_8.png" />
+    <None Include="Resources\G_Durum_7.png" />
+    <None Include="Resources\G_Durum_6.png" />
+    <None Include="Resources\G_Durum_5.png" />
+    <None Include="Resources\G_Durum_4.png" />
+    <None Include="Resources\G_Durum_3.png" />
     <None Include="Resources\Sablon.png" />
   </ItemGroup>
   <ItemGroup />

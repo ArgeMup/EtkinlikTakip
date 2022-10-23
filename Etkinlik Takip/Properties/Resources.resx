@@ -151,6 +151,9 @@
   <data name="Arama" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Arama.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Sablon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Sablon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="G_Durum_0" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\G_Durum_0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -175,7 +178,13 @@
   <data name="G_Durum_7" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\G_Durum_7.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Sablon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Sablon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="G_Durum_8" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\G_Durum_8.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Etkinlik_Takip" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Etkinlik Takip.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Etkinlik_Takip_Hatırlatıcı" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Etkinlik Takip Hatırlatıcı.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
