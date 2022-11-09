@@ -97,34 +97,15 @@
       <DependentUpon>AnaEkran.cs</DependentUpon>
     </Compile>
     <Compile Include="HazirKod_Cdiyez\ArkaPlan.cs" />
-    <Compile Include="HazirKod_Cdiyez\Ayarlar.cs" />
-    <Compile Include="HazirKod_Cdiyez\Degiskenler.cs" />
-    <Compile Include="HazirKod_Cdiyez\Deneysel.cs" />
     <Compile Include="HazirKod_Cdiyez\DonanımHaberleşmesi.cs" />
-    <Compile Include="HazirKod_Cdiyez\DonanımHaberleşmesi_KomutSatırıUygulaması.cs" />
-    <Compile Include="HazirKod_Cdiyez\DonanımHaberleşmesi_SeriPort.cs" />
-    <Compile Include="HazirKod_Cdiyez\DonanımHaberleşmesi_Tcp.cs" />
     <Compile Include="HazirKod_Cdiyez\DonanımHaberleşmesi_Udp.cs" />
-    <Compile Include="HazirKod_Cdiyez\Donusturme.cs" />
     <Compile Include="HazirKod_Cdiyez\DoğrulamaKodu.cs" />
-    <Compile Include="HazirKod_Cdiyez\DurumBildirimi.cs" />
+    <Compile Include="HazirKod_Cdiyez\Dönüştürme.cs" />
+    <Compile Include="HazirKod_Cdiyez\EşZamanlı.cs" />
     <Compile Include="HazirKod_Cdiyez\Günlük.cs" />
     <Compile Include="HazirKod_Cdiyez\Karmasiklastirma.cs" />
-    <Compile Include="HazirKod_Cdiyez\KayitDefteri.cs" />
-    <Compile Include="HazirKod_Cdiyez\KelimeTamamlayici.cs" />
-    <Compile Include="HazirKod_Cdiyez\EşZamanlı.cs" />
     <Compile Include="HazirKod_Cdiyez\Kendi.cs" />
-    <Compile Include="HazirKod_Cdiyez\Sıkıştırma.cs" />
     <Compile Include="HazirKod_Cdiyez\KlasörDosya.cs" />
-    <Compile Include="HazirKod_Cdiyez\KlavyeFareGozlemcisi.cs" />
-    <Compile Include="HazirKod_Cdiyez\KodKümesi.cs" />
-    <Compile Include="HazirKod_Cdiyez\Matematiksel.cs" />
-    <Compile Include="HazirKod_Cdiyez\MesajPanosu.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="HazirKod_Cdiyez\PencereVeTepsiIkonuKontrolu.cs" />
-    <Compile Include="HazirKod_Cdiyez\UygulamaBostaBekliyor.cs" />
-    <Compile Include="HazirKod_Cdiyez\UygulamalarArasiHaberlesme.cs" />
     <Compile Include="HazirKod_Cdiyez\UygulamaOncedenCalistirildiMi.cs" />
     <Compile Include="HazirKod_Cdiyez\Win32Kutuphaneleri.cs" />
     <Compile Include="HazirKod_Cdiyez\YeniYazılımKontrolü.cs" />
@@ -210,8 +191,6 @@
   <ItemGroup>
     <None Include="Resources\Etkinlik Takip.ico" />
     <None Include="Resources\Etkinlik Takip Hatırlatıcı.ico" />
-    <None Include="Etkinlik Takip Hatırlatıcı.ico" />
-    <Content Include="Etkinlik Takip.ico" />
     <None Include="Resources\G_Durum_2.png" />
     <None Include="Resources\G_Durum_1.png" />
     <None Include="Resources\G_Durum_0.png" />

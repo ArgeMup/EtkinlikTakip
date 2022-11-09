@@ -15,7 +15,6 @@ using ArgeMup.HazirKod;
 using ArgeMup.HazirKod.ArkaPlan;
 using ArgeMup.HazirKod.Dönüştürme;
 using System.Threading;
-using static ArgeMup.HazirKod.Depo;
 
 namespace Etkinlik_Takip
 {
@@ -162,6 +161,7 @@ namespace Etkinlik_Takip
                 this.Width = (int)Sql_Ayarlar_Oku("Form_Genişlik", 1, (object)400);
                 this.Height = (int)Sql_Ayarlar_Oku("Form_Yükseklik", 1, (object)300);
                 this.WindowState = (FormWindowState)Sql_Ayarlar_Oku("Pencere", 1, (object)0);
+                this.Tag = this.WindowState;
 
                 if (!Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(new Rectangle(this.Left, this.Top, this.Width, this.Height))))
                 {
@@ -199,8 +199,16 @@ namespace Etkinlik_Takip
                 splitContainer2.SplitterDistance = (int)Sql_Ayarlar_Oku("Ayıraç2", 1);
                 Panel_Aç(Panel2Durumu.Arama);
 
-                Üç_Değiştir.CheckState = (CheckState)Sql_Ayarlar_Oku("ÜzerindeÇalışılıyorDurumu", 1, (object)1);
-                OdaklanmışGörünüm.CheckState = (CheckState)Sql_Ayarlar_Oku("OdaklanmışGörünüm", 1, (object)1);
+                Üç_Değiştir.CheckState = (CheckState)Sql_Ayarlar_Oku("ÜzerindeÇalışılıyorDurumu", 1, 1);
+                OdaklanmışGörünüm.CheckState = (CheckState)Sql_Ayarlar_Oku("OdaklanmışGörünüm", 1, 1);
+                Hatırlatıcı_Hatırlat_Bugün_aa.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Bugün_aa", 1, 9);
+                Hatırlatıcı_Hatırlat_Bugün_bb.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Bugün_bb", 1, 11);
+                Hatırlatıcı_Hatırlat_Bugün_cc.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Bugün_cc", 1, 13);
+                Hatırlatıcı_Hatırlat_Bugün_dd.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Bugün_dd", 1, 17);
+                Hatırlatıcı_Hatırlat_Yarın_aa.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Yarın_aa", 1, 9);
+                Hatırlatıcı_Hatırlat_Yarın_bb.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Yarın_bb", 1, 11);
+                Hatırlatıcı_Hatırlat_Yarın_cc.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Yarın_cc", 1, 13);
+                Hatırlatıcı_Hatırlat_Yarın_dd.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Yarın_dd", 1, 17);
 
                 MenuItem_Grid_Etk_Sütünlar_Durum.CheckState = (CheckState)Sql_Ayarlar_Oku("Sutunlar_Durum", 1);
                 MenuItem_Grid_Etk_Sütünlar_İçerik.CheckState = (CheckState)Sql_Ayarlar_Oku("Sutunlar_İçerik", 1);
@@ -242,31 +250,23 @@ namespace Etkinlik_Takip
                 {
                     Opacity += 0.05;
                     Application.DoEvents();
-                    System.Threading.Thread.Sleep(25);
+                    Thread.Sleep(25);
                 }
                 Opacity = 1;
 
                 Sql_GeçersizÜyeleriSil();
 
-                YeniYazılımKontrolü.Başlat(new Uri("https://github.com/ArgeMup/EtkinlikTakip/blob/master/Etkinlik%20Takip/bin/Release/Etkinlik%20Takip.exe?raw=true"));
+                #if !DEBUG
+                    YeniYazılımKontrolü.Başlat(new Uri("https://github.com/ArgeMup/EtkinlikTakip/blob/master/Etkinlik%20Takip/bin/Release/Etkinlik%20Takip.exe?raw=true"));
+                #endif
 
-                string SüresiDolanlar = "";
                 Hatırlatıcı_.Durum_[] Hatırlatıcılar = Hatırlatıcı.Bul(false);
                 foreach (var b in Hatırlatıcılar)
                 {
-                    int sahibi = int.Parse(b.TakmaAdı);
-                    while (sahibi > 0) sahibi = int.Parse(Sql_GörevÖzelliği(sahibi, EtkinlikÖzellikleri.Sahibi));
-                    if (sahibi == (int)DalTürü.Görevler && !b.TetiklenmesiBekleniyor)
-                    {
-                        SüresiDolanlar += Environment.NewLine + Sql_Görev_TanımVeHatırlatıcıDetayı(int.Parse(b.TakmaAdı));
-                    }
-
-                    Hatırlatıcı.Kur(b.TakmaAdı, Hatırlatıcı_GeriBildirim_İşlemi);
+                    if (int.TryParse(b.TakmaAdı, out _)) Hatırlatıcı.Kur(b.TakmaAdı, Hatırlatıcı_GeriBildirim_İşlemi);
                 }
-                if (!string.IsNullOrEmpty(SüresiDolanlar))
-                {
-                    notifyIcon1.ShowBalloonTip(15000, Kendi.Adı() + Environment.NewLine + "Süresi geçen hatırlatıcılar", SüresiDolanlar, ToolTipIcon.Warning);
-                }
+                Hatırlatıcı.Sil("Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar");
+                Hatırlatıcı.Kur("Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar", DateTime.Now.AddSeconds(15), GeriBildirim_Islemi: Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar);
             }
             catch (Exception) { }
         }
@@ -275,14 +275,18 @@ namespace Etkinlik_Takip
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 #if !DEBUG
-                    notifyIcon1_MouseClick(null, new MouseEventArgs(MouseButtons.Left, 0, 0, 0, 0));
                     e.Cancel = true;
+
+                    if (WindowState != FormWindowState.Minimized) Tag = WindowState;
+                    WindowState = FormWindowState.Minimized;
                 #endif
             }
             else
             {
                 toolStripSil_Click(null, null);
                 if (Genel.KaydedilmemişBilgiVar) e.Cancel = true;
+
+                Göster();
             }
         }
         private void AnaEkran_FormClosed(object sender, FormClosedEventArgs e)
@@ -294,16 +298,28 @@ namespace Etkinlik_Takip
             Sql_Ayarlar_Yaz("Ayıraç2", (int)splitContainer2.SplitterDistance);
 
             Sql_Ayarlar_Yaz("Punto", (int)numericUpDown1.Value);
-            if (this.WindowState != FormWindowState.Minimized) Sql_Ayarlar_Yaz("Pencere", Convert.ToInt32(this.WindowState));
-            if (this.WindowState == FormWindowState.Normal)
+            if (this.WindowState != FormWindowState.Minimized)
             {
-                Sql_Ayarlar_Yaz("Form_Poz_X", this.Location.X);
-                Sql_Ayarlar_Yaz("Form_Poz_Y", this.Location.Y);
-                Sql_Ayarlar_Yaz("Form_Genişlik", this.Width);
-                Sql_Ayarlar_Yaz("Form_Yükseklik", this.Height);
+                Sql_Ayarlar_Yaz("Pencere", Convert.ToInt32(this.WindowState));
+
+                if (this.WindowState == FormWindowState.Normal)
+                {
+                    Sql_Ayarlar_Yaz("Form_Poz_X", this.Location.X);
+                    Sql_Ayarlar_Yaz("Form_Poz_Y", this.Location.Y);
+                    Sql_Ayarlar_Yaz("Form_Genişlik", this.Width);
+                    Sql_Ayarlar_Yaz("Form_Yükseklik", this.Height);
+                }
             }
             Sql_Ayarlar_Yaz("ÜzerindeÇalışılıyorDurumu", Convert.ToInt32(Üç_Değiştir.CheckState));
             Sql_Ayarlar_Yaz("OdaklanmışGörünüm", Convert.ToInt32(OdaklanmışGörünüm.CheckState));
+            Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Bugün_aa", Convert.ToInt32(Hatırlatıcı_Hatırlat_Bugün_aa.Value));
+            Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Bugün_bb", Convert.ToInt32(Hatırlatıcı_Hatırlat_Bugün_bb.Value));
+            Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Bugün_cc", Convert.ToInt32(Hatırlatıcı_Hatırlat_Bugün_cc.Value));
+            Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Bugün_dd", Convert.ToInt32(Hatırlatıcı_Hatırlat_Bugün_dd.Value));
+            Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Yarın_aa", Convert.ToInt32(Hatırlatıcı_Hatırlat_Yarın_aa.Value));
+            Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Yarın_bb", Convert.ToInt32(Hatırlatıcı_Hatırlat_Yarın_bb.Value));
+            Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Yarın_cc", Convert.ToInt32(Hatırlatıcı_Hatırlat_Yarın_cc.Value));
+            Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Yarın_dd", Convert.ToInt32(Hatırlatıcı_Hatırlat_Yarın_dd.Value));
             Sql_Ayarlar_Yaz("Hatırlatıcılar", Hatırlatıcı.AyarlarıOku(true));
 
             Sql_Ayarlar_Yaz("Filtreleme_ÜzerindeÇalışılıyor", (int)Filtreleme_D1.CheckState);
@@ -353,8 +369,21 @@ namespace Etkinlik_Takip
         }
         private void AnaEkran_Resize(object sender, EventArgs e)
         {
-            if (WindowState == FormWindowState.Minimized) Hide();
-            else Show();
+            if (WindowState == FormWindowState.Minimized)
+            {
+                if (Genel.KaydedilmemişBilgiVar)
+                {
+                    DialogResult Dr = MessageBox.Show("Kaydetmeden devam etmek istediğinize emin misiniz? %1", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+                    if (Dr == DialogResult.No)
+                    {
+                        Göster();
+                        return;
+                    }
+                }
+
+                Hide();
+            }
+            else Tag = WindowState;
         }
         private void AnaEkran_KeyDown(object sender, KeyEventArgs e)
         {
@@ -373,7 +402,32 @@ namespace Etkinlik_Takip
             }
             else if (e.KeyCode == Keys.Escape) Menu_Ağaç.Close();
         }
-        
+        void Göster()
+        {
+            TopMost = true;
+            Show();
+            WindowState = (FormWindowState)Tag;
+            BringToFront();
+
+            Application.DoEvents();
+            Thread.Sleep(1);
+
+            TopMost = false;
+
+            if (!Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(new Rectangle(this.Left, this.Top, this.Width, this.Height))))
+            {
+                Left = 0; Top = 0; Width = 400; Height = 300;
+            }
+        }
+        private void Menu_İkon_Çıkış_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+        private void notifyIcon1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left) Göster();
+        }
+
         private bool Sql_Başlat()
         {
             try
@@ -414,6 +468,15 @@ namespace Etkinlik_Takip
                     Sql_Sorgula("insert into Ayarlar values ('Pencere', '" + Convert.ToString((int)FormWindowState.Normal) + "')");
                     Sql_Sorgula("insert into Ayarlar values ('ÜzerindeÇalışılıyorDurumu', '1')");
                     Sql_Sorgula("insert into Ayarlar values ('OdaklanmışGörünüm', '1')");
+                   
+                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Bugün_aa', '9')");
+                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Bugün_bb', '11')");
+                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Bugün_cc', '13')");
+                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Bugün_dd', '17')");
+                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Yarın_aa', '9')");
+                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Yarın_bb', '11')");
+                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Yarın_cc', '13')");
+                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Yarın_dd', '17')");
                     Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcılar', '')");
 
                     Sql_Sorgula("insert into Ayarlar values ('Sutunlar_Durum', '1')");
@@ -1150,7 +1213,7 @@ namespace Etkinlik_Takip
             if (!Sql_Sorgula("insert into _t" + Kendi + " values (null, " + (int)EtkinlikÖzellikleri.Tanımı + ", '" + Tanım + "')")) return 0;
             if (!Sql_Sorgula("insert into _t" + Kendi + " values (null, " + (int)EtkinlikÖzellikleri.Açıklaması + ", '" + Açıklama + "')")) return 0;
             if (!Sql_Sorgula("insert into Gorev values (" + Kendi + ", " + Sahip.ToString() + ")")) return 0;
-            
+
             if (Durum != EtkinlikDurumu.Yeni_Görev)
             {
                 if (!Sql_Sorgula("insert into _t" + Kendi + " values (DATETIME('" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "'), " + (int)Durum + ", '" + Açıklama + "')")) return 0;
@@ -1185,71 +1248,80 @@ namespace Etkinlik_Takip
                     if (!Sql_Sorgula(sorgu)) { MessageBox.Show("Beklenmeyen durum oluştu. Tekrar deneyiniz"); return; }
                     if (!Sql_Sorgula("update _t" + Sahip.ToString() + " set Aciklama = '" + textBox_Görev_Tanım.Text + "' where Durum = " + (int)EtkinlikÖzellikleri.Tanımı)) { MessageBox.Show("Beklenmeyen durum oluştu. Tekrar deneyiniz"); return; }
                     if (!Sql_Sorgula("update _t" + Sahip.ToString() + " set Aciklama = '" + textBox_Görev_Açıklama.Text + "' where Durum = " + (int)EtkinlikÖzellikleri.Açıklaması)) { MessageBox.Show("Beklenmeyen durum oluştu. Tekrar deneyiniz"); return; }
-                    
+
                 }
                 else if (Genel.Panel2 == Panel2Durumu.Hatırlatıcı)
                 {
                     DateTime d = DateTime.Now;
-                    if (Hatırlatıcı_Hatırlat_Bugün_9.Checked)
+                    if (Hatırlatıcı_Hatırlat_Bugün_a.Checked)
                     {
-                        d = new DateTime(d.Year, d.Month, d.Day, 9, 0, 0);
+                        d = new DateTime(d.Year, d.Month, d.Day, (int)Hatırlatıcı_Hatırlat_Bugün_aa.Value, 0, 0);
                     }
-                    else if (Hatırlatıcı_Hatırlat_Bugün_12.Checked)
+                    else if (Hatırlatıcı_Hatırlat_Bugün_b.Checked)
                     {
-                        d = new DateTime(d.Year, d.Month, d.Day, 12, 0, 0);
+                        d = new DateTime(d.Year, d.Month, d.Day, (int)Hatırlatıcı_Hatırlat_Bugün_bb.Value, 0, 0);
                     }
-                    else if (Hatırlatıcı_Hatırlat_Bugün_18.Checked)
+                    else if (Hatırlatıcı_Hatırlat_Bugün_c.Checked)
                     {
-                        d = new DateTime(d.Year, d.Month, d.Day, 18, 0, 0);
+                        d = new DateTime(d.Year, d.Month, d.Day, (int)Hatırlatıcı_Hatırlat_Bugün_cc.Value, 0, 0);
                     }
-                    else if (Hatırlatıcı_Hatırlat_Yarın_9.Checked)
+                    else if (Hatırlatıcı_Hatırlat_Bugün_d.Checked)
+                    {
+                        d = new DateTime(d.Year, d.Month, d.Day, (int)Hatırlatıcı_Hatırlat_Bugün_dd.Value, 0, 0);
+                    }
+                    else if (Hatırlatıcı_Hatırlat_Yarın_a.Checked)
                     {
                         d = d.AddDays(1);
-                        d = new DateTime(d.Year, d.Month, d.Day, 9, 0, 0);
+                        d = new DateTime(d.Year, d.Month, d.Day, (int)Hatırlatıcı_Hatırlat_Yarın_aa.Value, 0, 0);
                     }
-                    else if (Hatırlatıcı_Hatırlat_Yarın_12.Checked)
+                    else if (Hatırlatıcı_Hatırlat_Yarın_b.Checked)
                     {
                         d = d.AddDays(1);
-                        d = new DateTime(d.Year, d.Month, d.Day, 12, 0, 0);
+                        d = new DateTime(d.Year, d.Month, d.Day, (int)Hatırlatıcı_Hatırlat_Yarın_bb.Value, 0, 0);
                     }
-                    else if (Hatırlatıcı_Hatırlat_Yarın_18.Checked)
+                    else if (Hatırlatıcı_Hatırlat_Yarın_c.Checked)
                     {
                         d = d.AddDays(1);
-                        d = new DateTime(d.Year, d.Month, d.Day, 18, 0, 0);
+                        d = new DateTime(d.Year, d.Month, d.Day, (int)Hatırlatıcı_Hatırlat_Yarın_cc.Value, 0, 0);
+                    }
+                    else if (Hatırlatıcı_Hatırlat_Yarın_d.Checked)
+                    {
+                        d = d.AddDays(1);
+                        d = new DateTime(d.Year, d.Month, d.Day, (int)Hatırlatıcı_Hatırlat_Yarın_dd.Value, 0, 0);
                     }
                     else if (Hatırlatıcı_Hatırlat_Haftaya_Pzt.Checked)
                     {
-                        d = d.AddDays(((int)DayOfWeek.Monday - (int)d.DayOfWeek + 7) % 7);
+                        d = d.AddDays((int)DayOfWeek.Monday - (int)d.DayOfWeek + 7);
                         d = new DateTime(d.Year, d.Month, d.Day, 9, 0, 0);
                     }
                     else if (Hatırlatıcı_Hatırlat_Haftaya_Sa.Checked)
                     {
-                        d = d.AddDays(((int)DayOfWeek.Tuesday - (int)d.DayOfWeek + 7) % 7);
+                        d = d.AddDays((int)DayOfWeek.Tuesday - (int)d.DayOfWeek + 7);
                         d = new DateTime(d.Year, d.Month, d.Day, 9, 0, 0);
                     }
                     else if (Hatırlatıcı_Hatırlat_Haftaya_Çrş.Checked)
                     {
-                        d = d.AddDays(((int)DayOfWeek.Wednesday - (int)d.DayOfWeek + 7) % 7);
+                        d = d.AddDays((int)DayOfWeek.Wednesday - (int)d.DayOfWeek + 7);
                         d = new DateTime(d.Year, d.Month, d.Day, 9, 0, 0);
                     }
                     else if (Hatırlatıcı_Hatırlat_Haftaya_Per.Checked)
                     {
-                        d = d.AddDays(((int)DayOfWeek.Thursday - (int)d.DayOfWeek + 7) % 7);
+                        d = d.AddDays((int)DayOfWeek.Thursday - (int)d.DayOfWeek + 7);
                         d = new DateTime(d.Year, d.Month, d.Day, 9, 0, 0);
                     }
                     else if (Hatırlatıcı_Hatırlat_Haftaya_Cu.Checked)
                     {
-                        d = d.AddDays(((int)DayOfWeek.Friday - (int)d.DayOfWeek + 7) % 7);
+                        d = d.AddDays((int)DayOfWeek.Friday - (int)d.DayOfWeek + 7);
                         d = new DateTime(d.Year, d.Month, d.Day, 9, 0, 0);
                     }
                     else if (Hatırlatıcı_Hatırlat_Haftaya_Cts.Checked)
                     {
-                        d = d.AddDays(((int)DayOfWeek.Saturday - (int)d.DayOfWeek + 7) % 7);
+                        d = d.AddDays((int)DayOfWeek.Saturday - (int)d.DayOfWeek + 7);
                         d = new DateTime(d.Year, d.Month, d.Day, 9, 0, 0);
                     }
                     else if (Hatırlatıcı_Hatırlat_Haftaya_Pa.Checked)
                     {
-                        d = d.AddDays(((int)DayOfWeek.Sunday - (int)d.DayOfWeek + 7) % 7);
+                        d = d.AddDays(((int)DayOfWeek.Sunday - (int)d.DayOfWeek + 7) + 7);
                         d = new DateTime(d.Year, d.Month, d.Day, 9, 0, 0);
                     }
                     else if (Hatırlatıcı_Hatırlat_DahaSonra_2hafta.Checked)
@@ -1343,13 +1415,13 @@ namespace Etkinlik_Takip
             }
             else if (Genel.KaydedilmemişBilgiVar)
             {
-                DialogResult Dr = MessageBox.Show("Kaydetmeden kapatmak istediğinize emin misiniz? %1", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+                DialogResult Dr = MessageBox.Show("Kaydetmeden devam etmek istediğinize emin misiniz? %2", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
                 if (Dr == DialogResult.No) return;
                 Genel.KaydedilmemişBilgiVar = false;
 
                 Ağaç_AfterSelect(null, null);
             }
-            
+
             SayfaDüzeni_Normal();
             Panel_Aç(Panel2Durumu.Arama);
             textBox_Arama.SelectAll();
@@ -1480,12 +1552,12 @@ namespace Etkinlik_Takip
             {
                 if (Ağaç.SelectedNode == Genel.SonSeçilenDal) return;
 
-                DialogResult Dr = MessageBox.Show("Kaydetmeden kapatmak istediğinize emin misiniz? %3", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+                DialogResult Dr = MessageBox.Show("Kaydetmeden devam etmek istediğinize emin misiniz? %3", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
                 if (Dr == DialogResult.No) return;
 
                 Genel.KaydedilmemişBilgiVar = false;
             }
-            
+
             Genel.SonSeçilenDal = Ağaç.SelectedNode;
 
             if (!Genel.AğaçGüncelleniyor)
@@ -1510,7 +1582,7 @@ namespace Etkinlik_Takip
                     }
                     MenuItem_Grid_Etk_ZaAr_Filtrele_Click(null, null);
                 }
-            }     
+            }
         }
         private void Ağaç_AfterCollapse(object sender, TreeViewEventArgs e)
         {
@@ -1871,7 +1943,7 @@ namespace Etkinlik_Takip
                     }
                     else hatırlatıcı_tarih = default;
                 }
-                
+
                 if (Seviye == okunan_seviye)
                 {
                     int yeni_oluşturulan_görev = YeniGörevOluştur(Hedefler[okunan_seviye], DateTime.Now, tanım, bölümler[3], (EtkinlikDurumu)Durum);
@@ -2064,8 +2136,8 @@ namespace Etkinlik_Takip
             switch (ts.Text)
             {
                 case "Hatırlatıcı kur":
-                    Hatırlatıcı_Hatırlat_Bugün_9.Checked = true;
-                    Hatırlatıcı_Hatırlat_Bugün_9.Checked = false;
+                    Hatırlatıcı_Hatırlat_Bugün_a.Checked = true;
+                    Hatırlatıcı_Hatırlat_Bugün_a.Checked = false; //tüm seçili alanların sıfırlanması için
                     Hatırlatıcı_Tekrarla_Onay.Checked = false;
 
                     splitContainer2.Panel2Collapsed = true;
@@ -2310,31 +2382,6 @@ namespace Etkinlik_Takip
             MenuItem_Grid_Etk_ZaAr_Filtrele_Click(null, null);
         }
 
-        private void Menu_İkon_Çıkış_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-        private void notifyIcon1_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                if (WindowState == FormWindowState.Minimized)
-                {
-                    Show();
-                    WindowState = FormWindowState.Normal;
-
-                    if (!Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(new Rectangle(this.Left, this.Top, this.Width, this.Height))))
-                    {
-                        Left = 0; Top = 0; Width = 400; Height = 300;
-                    }
-                }
-                else
-                {
-                    WindowState = FormWindowState.Minimized;
-                    Hide();
-                }
-            }
-        }
         private void Grid_Listele_Tarihçe_CheckedChanged(object sender, EventArgs e)
         {
             if (Grid_Listele_Tarihçe.Checked)
@@ -2365,14 +2412,14 @@ namespace Etkinlik_Takip
             {
                 if (DateTime.TryParseExact(girilen, ş, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out DateTime hedeflenen_süre))
                 {
-                    Hatırlatıcı_Hatırlat_Diğer.Text = "Diğer -> " + ArgeMup.HazirKod.Dönüştürme.D_TarihSaat.Yazıya(hedeflenen_süre, "dd.MM.yyyy HH:mm") + " <- ( gg aa yyyy ss dd | gg aa yyyy ss | gg aa yyyy | gg aa )";
+                    Hatırlatıcı_Hatırlat_Diğer.Text = "Diğer -> " + ArgeMup.HazirKod.Dönüştürme.D_TarihSaat.Yazıya(hedeflenen_süre, "dd.MM.yyyy HH:mm") + " <- ( gg aa | gg aa yy | gg aa yy ss | gg aa yy ss dd | g/gg a/aa yy/yyyy s/ss d/dd boşluk virgül )";
                     Hatırlatıcı_Hatırlat_Diğer.Tag = hedeflenen_süre;
                     return;
                 }
                 else if (ş.EndsWith("yyyy")) ş = ş.Remove(ş.Length - 5);
                 else ş = ş.Remove(ş.Length - 3);
             }
-            Hatırlatıcı_Hatırlat_Diğer.Text = "Diğer ( gg aa yyyy ss dd | gg aa yyyy ss | gg aa yyyy | gg aa )";
+            Hatırlatıcı_Hatırlat_Diğer.Text = "Diğer ( gg aa | gg aa yy | gg aa yy ss | gg aa yy ss dd | g/gg a/aa yy/yyyy s/ss d/dd boşluk virgül )";
             Hatırlatıcı_Hatırlat_Diğer.Tag = null;
         }
         private void Hatırlatıcı_Hatırlat_Diğer_Yazı_KeyPress(object sender, KeyPressEventArgs e)
@@ -2400,6 +2447,30 @@ namespace Etkinlik_Takip
             }
 
             return 0;
+        }
+        int Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar(string TakmaAdı, object Hatırlatıcısı)
+        {
+            string SüresiDolanlar = "";
+            Hatırlatıcı_.Durum_[] Hatırlatıcılar = Hatırlatıcı.Bul();
+            int adet = 0;
+            foreach (var b in Hatırlatıcılar)
+            {
+                if (int.TryParse(b.TakmaAdı, out int sahibi))
+                {
+                    while (sahibi > 0) sahibi = int.Parse(Sql_GörevÖzelliği(sahibi, EtkinlikÖzellikleri.Sahibi));
+                    if (sahibi == (int)DalTürü.Görevler && !b.TetiklenmesiBekleniyor)
+                    {
+                        adet++;
+                        SüresiDolanlar += Environment.NewLine + Sql_Görev_TanımVeHatırlatıcıDetayı(int.Parse(b.TakmaAdı));
+                    }
+                }
+            }
+            if (!string.IsNullOrEmpty(SüresiDolanlar))
+            {
+                notifyIcon1.ShowBalloonTip(15000, "Süresi geçen hatırlatıcılar (" + adet + ")", SüresiDolanlar, ToolTipIcon.Warning);
+            }
+
+            return (int)new TimeSpan(2, 0, 0).TotalMilliseconds;
         }
     }
 }
