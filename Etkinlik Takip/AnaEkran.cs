@@ -278,7 +278,9 @@ namespace Etkinlik_Takip
                     e.Cancel = true;
 
                     if (WindowState != FormWindowState.Minimized) Tag = WindowState;
+                    Hide();
                     WindowState = FormWindowState.Minimized;
+                    Show();
                 #endif
             }
             else
