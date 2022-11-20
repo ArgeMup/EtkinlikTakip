@@ -132,7 +132,7 @@ namespace Etkinlik_Takip
 
                 Sql_Başlat();
                 Genel.AğacMenüFiltreleme = new int[EtkinlikDurumu_OkunabilirListe.Length];
-                this.Text = "Mup " + Application.ProductName + " V" + Application.ProductVersion;
+                this.Text = "Mup " + Kendi.Adı() + " V" + Kendi.Sürümü_Dosya();
 
                 while (splitContainer1.Panel2.Controls.Count > 0) splitContainer1.Panel2.Controls.RemoveAt(0);
                 splitContainer1.Panel2.Controls.Add(panel_Görev);
@@ -200,7 +200,9 @@ namespace Etkinlik_Takip
                 Panel_Aç(Panel2Durumu.Arama);
 
                 Üç_Değiştir.CheckState = (CheckState)Sql_Ayarlar_Oku("ÜzerindeÇalışılıyorDurumu", 1, 1);
-                OdaklanmışGörünüm.CheckState = (CheckState)Sql_Ayarlar_Oku("OdaklanmışGörünüm", 1, 1);
+                OdaklanmışGörünüm_Kızart.CheckState = (CheckState)Sql_Ayarlar_Oku("OdaklanmışGörünüm_Kızart", 1, 1);
+                OdaklanmışGörünüm_Genişlet.CheckState = (CheckState)Sql_Ayarlar_Oku("OdaklanmışGörünüm_Genişlet", 1, 1);
+                OdaklanmışGörünüm_DiğerleriniDaralt.CheckState = (CheckState)Sql_Ayarlar_Oku("OdaklanmışGörünüm_DiğerleriniDaralt", 1, 0);
                 Hatırlatıcı_Hatırlat_Bugün_aa.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Bugün_aa", 1, 9);
                 Hatırlatıcı_Hatırlat_Bugün_bb.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Bugün_bb", 1, 11);
                 Hatırlatıcı_Hatırlat_Bugün_cc.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Bugün_cc", 1, 13);
@@ -313,7 +315,9 @@ namespace Etkinlik_Takip
                 }
             }
             Sql_Ayarlar_Yaz("ÜzerindeÇalışılıyorDurumu", Convert.ToInt32(Üç_Değiştir.CheckState));
-            Sql_Ayarlar_Yaz("OdaklanmışGörünüm", Convert.ToInt32(OdaklanmışGörünüm.CheckState));
+            Sql_Ayarlar_Yaz("OdaklanmışGörünüm_Kızart", Convert.ToInt32(OdaklanmışGörünüm_Kızart.CheckState));
+            Sql_Ayarlar_Yaz("OdaklanmışGörünüm_Genişlet", Convert.ToInt32(OdaklanmışGörünüm_Genişlet.CheckState));
+            Sql_Ayarlar_Yaz("OdaklanmışGörünüm_DiğerleriniDaralt", Convert.ToInt32(OdaklanmışGörünüm_DiğerleriniDaralt.CheckState));
             Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Bugün_aa", Convert.ToInt32(Hatırlatıcı_Hatırlat_Bugün_aa.Value));
             Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Bugün_bb", Convert.ToInt32(Hatırlatıcı_Hatırlat_Bugün_bb.Value));
             Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Bugün_cc", Convert.ToInt32(Hatırlatıcı_Hatırlat_Bugün_cc.Value));
@@ -443,9 +447,9 @@ namespace Etkinlik_Takip
                 string dogrulama1 = (string)Sql_Ayarlar_Oku("DOGRULAMA", 0, "");
                 string dogrulama2 = (string)Sql_Ayarlar_Oku("dogrulama", 0, "");
 
-                if (dogrulama1 != "DOGrulama_" + Application.ProductVersion || dogrulama2 != "dogRULAMA_" + Application.ProductVersion)
+                if (dogrulama1 != "DOGrulama_" + Kendi.Sürümü_Dosya() || dogrulama2 != "dogRULAMA_" + Kendi.Sürümü_Dosya())
                 {
-                    if (!dogrulama1.Contains("DOGrulama") || !dogrulama2.Contains("dogRULAMA")) Sql_Sorgula("drop table Ayarlar");
+                    Sql_Sorgula("drop table Ayarlar");
                     if (!Sql_Sorgula("CREATE TABLE IF NOT EXISTS Ayarlar (Parametre TEXT PRIMARY KEY, Ayar TEXT)")) return false;
                     if (!Sql_Sorgula("CREATE TABLE IF NOT EXISTS Gorev  (No INTEGER PRIMARY KEY, Sahip INTEGER)")) return false;
                     if (!Sql_Sorgula("CREATE TABLE IF NOT EXISTS gecici (Zaman DATETIME, Durum INTEGER, Aciklama TEXT, Tanim TEXT)")) return false;
@@ -468,9 +472,12 @@ namespace Etkinlik_Takip
                     Sql_Sorgula("insert into Ayarlar values ('Ayıraç2', '1000')");
                     Sql_Sorgula("insert into Ayarlar values ('Punto', '8')");
                     Sql_Sorgula("insert into Ayarlar values ('Pencere', '" + Convert.ToString((int)FormWindowState.Normal) + "')");
+                    
                     Sql_Sorgula("insert into Ayarlar values ('ÜzerindeÇalışılıyorDurumu', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('OdaklanmışGörünüm', '1')");
-                   
+                    Sql_Sorgula("insert into Ayarlar values ('OdaklanmışGörünüm_Kızart', '1')");
+                    Sql_Sorgula("insert into Ayarlar values ('OdaklanmışGörünüm_Genişlet', '1')");
+                    Sql_Sorgula("insert into Ayarlar values ('OdaklanmışGörünüm_DiğerleriniDaralt', '0')");
+
                     Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Bugün_aa', '9')");
                     Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Bugün_bb', '11')");
                     Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Bugün_cc', '13')");
@@ -503,10 +510,10 @@ namespace Etkinlik_Takip
 
                     Sql_Sorgula("insert into Ayarlar values ('ikiz', '')");
 
-                    Sql_Sorgula("insert into Ayarlar values ('DOGRULAMA', 'DOGrulama_" + Application.ProductVersion + "')");
-                    Sql_Sorgula("insert into Ayarlar values ('dogrulama', 'dogRULAMA_" + Application.ProductVersion + "')");
-                    Sql_Ayarlar_Yaz("DOGRULAMA", "DOGrulama_" + Application.ProductVersion);
-                    Sql_Ayarlar_Yaz("dogrulama", "dogRULAMA_" + Application.ProductVersion);
+                    Sql_Sorgula("insert into Ayarlar values ('DOGRULAMA', 'DOGrulama_" + Kendi.Sürümü_Dosya() + "')");
+                    Sql_Sorgula("insert into Ayarlar values ('dogrulama', 'dogRULAMA_" + Kendi.Sürümü_Dosya() + "')");
+                    Sql_Ayarlar_Yaz("DOGRULAMA", "DOGrulama_" + Kendi.Sürümü_Dosya());
+                    Sql_Ayarlar_Yaz("dogrulama", "dogRULAMA_" + Kendi.Sürümü_Dosya());
                 }
 
                 Sql_Zamanlayıcı.Start();
@@ -1432,19 +1439,37 @@ namespace Etkinlik_Takip
 
         private void Ağaç_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (OdaklanmışGörünüm.Checked)
+            Ağaç.BeginUpdate();
+            if (OdaklanmışGörünüm_Kızart.Checked)
             {
-                Ağaç.BeginUpdate();
-                Ağaç.CollapseAll();
+                foreach (TreeNode t in Ağaç.Nodes) Sıfırla(t);
+                e.Node.ForeColor = Color.Red;
+                foreach (TreeNode n in e.Node.Nodes) n.ForeColor = e.Node.ForeColor;
 
+                void Sıfırla(TreeNode Dal)
+                {
+                    Dal.ForeColor = SystemColors.WindowText;
+
+                    foreach (TreeNode d in Dal.Nodes)
+                    {
+                        Sıfırla(d);
+                    }
+                }
+            }
+            if (OdaklanmışGörünüm_DiğerleriniDaralt.Checked)
+            {
+                Ağaç.CollapseAll();
+            }
+            if (OdaklanmışGörünüm_Genişlet.Checked)
+            {
                 TreeNode tn = e.Node;
                 while (tn != null)
                 {
                     tn.Expand();
                     tn = tn.Parent;
                 }
-                Ağaç.EndUpdate();
             }
+            Ağaç.EndUpdate();
 
             Ağaç.SelectedNode = e.Node;
         }
