@@ -105,12 +105,18 @@ namespace Etkinlik_Takip
         Sql_ Sql = new Sql_();
 
         UygulamaOncedenCalistirildiMi_ UygulamaOncedenCalistirildiMi;
+
+        class NotlarSayfası_
+        {
+            public KlavyeFareGozlemcisi_ KlavyeFareGozlemcisi = new KlavyeFareGozlemcisi_(false, false, true);
+            public NotlarEkranı Pencere = null;
+            public bool KısayolTuşunuDinliyor = false;
+        }
+        NotlarSayfası_ NotlarSayfası = new NotlarSayfası_();
         #endregion
 
         public AnaEkran()
         {
-            pak = Directory.GetCurrentDirectory() + "\\EtkinlikTakipDosyalari\\";
-
             string geci = ("Mup" + Application.ProductName + pak).Replace('\\', '.').Replace(':', '.').Replace(' ', '.');
             UygulamaOncedenCalistirildiMi = new UygulamaOncedenCalistirildiMi_();
             if (UygulamaOncedenCalistirildiMi.KontrolEt(geci))
@@ -269,6 +275,8 @@ namespace Etkinlik_Takip
                 }
                 Hatırlatıcı.Sil("Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar");
                 Hatırlatıcı.Kur("Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar", DateTime.Now.AddSeconds(15), GeriBildirim_Islemi: Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar);
+
+                NotlarSayfası_İlkAçılış();
             }
             catch (Exception) { }
         }
@@ -350,6 +358,12 @@ namespace Etkinlik_Takip
 
             Sql_Ayarlar_Yaz("ikiz", "");
             Sql_Durdur();
+
+            try
+            {
+                NotlarSayfası_Kapanış();
+            }
+            catch (Exception) { }
 
             try
             {
@@ -631,20 +645,23 @@ namespace Etkinlik_Takip
                         TrNo = new TreeNode(Sql_Görev_TanımVeHatırlatıcıDetayı(Nosu), L_TrNo.ToArray());
                         TrNo.Tag = Nosu;
 
-                        if (L_TrNo.Count > 0)
-                        {
-                            //alt dalların durumunu yansıt
-                            Dizi = new int[L_TrNo.Count];
-                            for (int i = 0; i < L_TrNo.Count; i++) Dizi[i] = L_TrNo[i].ImageIndex;
-                            //kendi durumunu ekleme iptal //Dizi[Dizi.Length - 1] = KendiDurumu;
-                            //kendi durumunu ekleme iptal //if (Dizi[Dizi.Length - 1] == (int)EtkinlikDurumu.Yeni_Görev) Dizi[Dizi.Length - 1] = Dizi[0];
-                            TrNo.ImageIndex = Dizi.Min();
-                        }
+                        Hatırlatıcı_.Durum_ Durum = Hatırlatıcı.Bul(Nosu.ToString());
+                        if (Durum != null && !Durum.TetiklenmesiBekleniyor) TrNo.ImageIndex = (int)EtkinlikDurumu.Hatırlatıcı;
                         else
                         {
-                            Hatırlatıcı_.Durum_ Durum = Hatırlatıcı.Bul(Nosu.ToString());
-                            if (Durum != null && !Durum.TetiklenmesiBekleniyor) TrNo.ImageIndex = (int)EtkinlikDurumu.Hatırlatıcı;
-                            else TrNo.ImageIndex = Convert.ToInt32(Sql_GörevÖzelliği(Nosu, EtkinlikÖzellikleri.Durumu));
+                            if (L_TrNo.Count > 0)
+                            {
+                                //alt dalların durumunu yansıt
+                                Dizi = new int[L_TrNo.Count];
+                                for (int i = 0; i < L_TrNo.Count; i++) Dizi[i] = L_TrNo[i].ImageIndex;
+                                //kendi durumunu ekleme iptal //Dizi[Dizi.Length - 1] = KendiDurumu;
+                                //kendi durumunu ekleme iptal //if (Dizi[Dizi.Length - 1] == (int)EtkinlikDurumu.Yeni_Görev) Dizi[Dizi.Length - 1] = Dizi[0];
+                                TrNo.ImageIndex = Dizi.Min();
+                            }
+                            else
+                            {
+                                TrNo.ImageIndex = Convert.ToInt32(Sql_GörevÖzelliği(Nosu, EtkinlikÖzellikleri.Durumu));
+                            }
                         }
 
                         Liste.Add(TrNo);
@@ -1492,49 +1509,74 @@ namespace Etkinlik_Takip
             TreeNode Hedef = Ağaç.GetNodeAt(targetPoint);
             TreeNode Kaynak = (TreeNode)e.Data.GetData(typeof(TreeNode));
 
-            if (Kaynak.Equals(Hedef)) return;
             if (Hedef == null) return;
-            if (Kaynak == null) return;
 
-            TreeNode pare = Kaynak;
-            DalTürü parentt_k = DalTürü.Geçersiz;
-            while (pare != null)
+            if (Kaynak == null)
             {
-                if (pare.Parent == null) parentt_k = (DalTürü)pare.Tag;
-                pare = pare.Parent;
-            }
-            if (parentt_k < DalTürü.Görevler)
-            {
-                if (parentt_k == DalTürü.ÇöpKutusu) return;
-            }
+                //panodaki yazıyı görev olarak kaydet
+                string kk = ((string)e.Data.GetData(typeof(string)));
+                if (string.IsNullOrEmpty(kk)) return;
 
-            pare = Hedef;
-            DalTürü parentt_h = DalTürü.Geçersiz;
-            while (pare != null)
-            {
-                if (pare.Parent == null) parentt_h = (DalTürü)pare.Tag;
-                else if (pare.Tag == Kaynak.Tag) return;
-                pare = pare.Parent;
-            }
-            if (parentt_h < DalTürü.Görevler)
-            {
-                if (parentt_h == DalTürü.ÇöpKutusu) return;
-            }
+                string[] kkk = kk.Split( new char[] { '\r', '\n' } );
+                if (kkk != null && kkk.Length > 0)
+                {
+                    List<string> ayıklanmış = new List<string>();
+                    foreach (string b in kkk)
+                    {
+                        if (string.IsNullOrEmpty(b)) continue;
+                        string c = b.Trim();
 
-            if ((Kaynak.Parent == Hedef) || ((DalTürü)Kaynak.Tag == DalTürü.Şablonlar)) return;
+                        if (c.StartsWith(">")) ayıklanmış.Add(c);
+                        else ayıklanmış.Add(">;Yeni görev;" + c + ";");
+                    }
 
-            if (parentt_k == DalTürü.Şablonlar || parentt_h == DalTürü.Şablonlar)
-            {
-                Ağaç_Kopyala((int)Kaynak.Tag, (int)Hedef.Tag);
+                    MenuItem_Ağaç_PanodanAl_2(ayıklanmış, (int)Hedef.Tag);
+                }
             }
             else
             {
-                string Kaynak_Adı = "Kök";
-                if (Kaynak.Parent != null) Kaynak_Adı = Sql_GörevÖzelliği((int)Kaynak.Parent.Tag, EtkinlikÖzellikleri.Tanımı);
+                if (Kaynak.Equals(Hedef)) return;
 
-                if (!Sql_Sorgula("insert into _t" + ((int)Kaynak.Tag).ToString() + " values (DATETIME('" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "'), " + ((int)EtkinlikDurumu.Güncellenen_Görev).ToString() + ", 'Ağaç dal değişikliği, o anda : " + Environment.NewLine + Kaynak_Adı + "')")) { MessageBox.Show("Beklenmeyen durum oluştu. Tekrar deneyiniz"); return; }
-                if (!Sql_Sorgula("update Gorev set Sahip = " + Convert.ToString((int)Hedef.Tag) + " where No = " + ((int)Kaynak.Tag).ToString())) { MessageBox.Show("Beklenmeyen durum oluştu. Tekrar deneyiniz"); return; }
-                Genel.AğaçDallarıDurumu_Yaz((int)Hedef.Tag, true);
+                TreeNode pare = Kaynak;
+                DalTürü parentt_k = DalTürü.Geçersiz;
+                while (pare != null)
+                {
+                    if (pare.Parent == null) parentt_k = (DalTürü)pare.Tag;
+                    pare = pare.Parent;
+                }
+                if (parentt_k < DalTürü.Görevler)
+                {
+                    if (parentt_k == DalTürü.ÇöpKutusu) return;
+                }
+
+                pare = Hedef;
+                DalTürü parentt_h = DalTürü.Geçersiz;
+                while (pare != null)
+                {
+                    if (pare.Parent == null) parentt_h = (DalTürü)pare.Tag;
+                    else if (pare.Tag == Kaynak.Tag) return;
+                    pare = pare.Parent;
+                }
+                if (parentt_h < DalTürü.Görevler)
+                {
+                    if (parentt_h == DalTürü.ÇöpKutusu) return;
+                }
+
+                if ((Kaynak.Parent == Hedef) || ((DalTürü)Kaynak.Tag == DalTürü.Şablonlar)) return;
+
+                if (parentt_k == DalTürü.Şablonlar || parentt_h == DalTürü.Şablonlar)
+                {
+                    Ağaç_Kopyala((int)Kaynak.Tag, (int)Hedef.Tag);
+                }
+                else
+                {
+                    string Kaynak_Adı = "Kök";
+                    if (Kaynak.Parent != null) Kaynak_Adı = Sql_GörevÖzelliği((int)Kaynak.Parent.Tag, EtkinlikÖzellikleri.Tanımı);
+
+                    if (!Sql_Sorgula("insert into _t" + ((int)Kaynak.Tag).ToString() + " values (DATETIME('" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "'), " + ((int)EtkinlikDurumu.Güncellenen_Görev).ToString() + ", 'Ağaç dal değişikliği, o anda : " + Environment.NewLine + Kaynak_Adı + "')")) { MessageBox.Show("Beklenmeyen durum oluştu. Tekrar deneyiniz"); return; }
+                    if (!Sql_Sorgula("update Gorev set Sahip = " + Convert.ToString((int)Hedef.Tag) + " where No = " + ((int)Kaynak.Tag).ToString())) { MessageBox.Show("Beklenmeyen durum oluştu. Tekrar deneyiniz"); return; }
+                    Genel.AğaçDallarıDurumu_Yaz((int)Hedef.Tag, true);
+                }
             }
 
             Ağaç_Güncelle(true, true, true);
@@ -1916,11 +1958,18 @@ namespace Etkinlik_Takip
             string okunan = Clipboard.GetText();
             if (string.IsNullOrEmpty(okunan)) { MessageBox.Show("Uygun değil"); return; }
 
-            int Seviye = 1;
-            List<int> Hedefler = new List<int>(); Hedefler.Add(0);
-            Hedefler.Add((int)Ağaç.SelectedNode.Tag); //ikinci kez eklenmesinin sebebi indeksin 1 den başlayacak şekilde olması 
-
             List<string> satırlar = okunan.Split('\r').ToList();
+
+            MenuItem_Ağaç_PanodanAl_2(satırlar, (int)Ağaç.SelectedNode.Tag);
+
+            Ağaç_Güncelle(true, true, false);
+        }
+        private void MenuItem_Ağaç_PanodanAl_2(List<string> satırlar, int Hedef)
+        {
+            int Seviye = 1;
+            List<int> Hedefler = new List<int>(); 
+            Hedefler.Add(0);
+            Hedefler.Add(Hedef); //ikinci kez eklenmesinin sebebi indeksin 1 den başlayacak şekilde olması 
 
             toolStripİlerleme.Value = 0;
             toolStripİlerleme.Maximum = satırlar.Count;
@@ -1964,7 +2013,7 @@ namespace Etkinlik_Takip
                         {
                             Hatırlatıcı_EklensinMi_SorulduMu = true;
 
-                            DialogResult Dr = MessageBox.Show("Hatırlatıcıları da eklemek istiyor musunuz", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                            DialogResult Dr = MessageBox.Show("Hatırlatıcıları da eklemek istiyor musunuz?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (Dr == DialogResult.No) Hatırlatıcı_EklensinMi = false;
                         }
                     }
@@ -2013,7 +2062,6 @@ namespace Etkinlik_Takip
             if (Hatırlatıcı_EklensinMi) Sql_Ayarlar_Yaz("Hatırlatıcılar", Hatırlatıcı.AyarlarıOku());
 
             toolStripİlerleme.Visible = false;
-            Ağaç_Güncelle(true, true, false);
         }
         private void MenuItem_Ağaç_PanoyaKopyala_Click(object sender, EventArgs e)
         {
@@ -2498,6 +2546,79 @@ namespace Etkinlik_Takip
             }
 
             return (int)new TimeSpan(2, 0, 0).TotalMilliseconds;
+        }
+
+        void NotlarSayfası_İlkAçılış()
+        {
+            string yol = pak + "Notlar";
+            Directory.CreateDirectory(yol);
+
+            yol += "\\KısayolTuşu.mup";
+            if (File.Exists(yol))
+            {
+                NotlarSayfası_KısayolTuşu.Text = File.ReadAllText(yol);
+            }
+
+            if (string.IsNullOrEmpty(NotlarSayfası_KısayolTuşu.Text)) return;
+
+            try
+            {
+                NotlarSayfası.KlavyeFareGozlemcisi.KısayolTuşu_Ekle(NotlarSayfası_KısayolTuşu.Text, NotlarSayfası_KısayolTuşu_Basıldı, 0);
+            }
+            catch (Exception)
+            {
+                NotlarSayfası_KısayolTuşu.Text = "";
+            }
+        }
+        void NotlarSayfası_Kapanış()
+        {
+            if (NotlarSayfası.Pencere != null) NotlarSayfası.Pencere.Close();
+        }
+        private void NotlarSayfası_Dinle_Click(object sender, EventArgs e)
+        {
+            if (NotlarSayfası.KısayolTuşunuDinliyor)
+            {
+                NotlarSayfası_Dinle.Text = "Dinle";
+                NotlarSayfası.KısayolTuşunuDinliyor = false;
+                NotlarSayfası.KlavyeFareGozlemcisi.KısayolTuşu_Tanıt_Bitir();
+
+                if (string.IsNullOrEmpty(NotlarSayfası_KısayolTuşu.Text)) return;
+                try
+                {
+                    NotlarSayfası.KlavyeFareGozlemcisi.KısayolTuşu_Ekle(NotlarSayfası_KısayolTuşu.Text, NotlarSayfası_KısayolTuşu_Basıldı, 0);
+                    string yol = pak + "Notlar\\KısayolTuşu.mup";
+                    File.WriteAllText(yol, NotlarSayfası_KısayolTuşu.Text);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    NotlarSayfası_KısayolTuşu.Text = "";
+                }
+            }
+            else
+            {
+                NotlarSayfası_Dinle.Text = "Kaydet";
+                NotlarSayfası.KısayolTuşunuDinliyor = true;
+                NotlarSayfası.KlavyeFareGozlemcisi.KısayolTuşu_Tanıt_Başlat(NotlarSayfası_KısayolTuşu_Tanıt_YeniTuşaBasıldı_Islemi_);
+            }
+        }
+        public void NotlarSayfası_KısayolTuşu_Tanıt_YeniTuşaBasıldı_Islemi_(string BasılanTuşlar)
+        {
+            NotlarSayfası_KısayolTuşu.Text = BasılanTuşlar;
+        }
+        public void NotlarSayfası_KısayolTuşu_Basıldı(int Hatırlatıcı)
+        {
+            if (NotlarSayfası.Pencere == null)
+            {
+                NotlarSayfası.Pencere = new NotlarEkranı(pak + "Notlar\\");
+                NotlarSayfası.Pencere.Font = Font;
+            }
+            
+            NotlarSayfası.Pencere.Show();
+        }
+        private void Menu_İkon_Notlar_Click(object sender, EventArgs e)
+        {
+            NotlarSayfası_KısayolTuşu_Basıldı(0);
         }
     }
 }

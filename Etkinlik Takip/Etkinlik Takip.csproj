@@ -106,14 +106,24 @@
     <Compile Include="HazirKod_Cdiyez\Karmasiklastirma.cs" />
     <Compile Include="HazirKod_Cdiyez\Kendi.cs" />
     <Compile Include="HazirKod_Cdiyez\KlasörDosya.cs" />
+    <Compile Include="HazirKod_Cdiyez\KlavyeFareGozlemcisi.cs" />
     <Compile Include="HazirKod_Cdiyez\UygulamaOncedenCalistirildiMi.cs" />
     <Compile Include="HazirKod_Cdiyez\Win32Kutuphaneleri.cs" />
     <Compile Include="HazirKod_Cdiyez\YeniYazılımKontrolü.cs" />
+    <Compile Include="NotlarEkranı.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NotlarEkranı.Designer.cs">
+      <DependentUpon>NotlarEkranı.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AnaEkran.resx">
       <DependentUpon>AnaEkran.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NotlarEkranı.resx">
+      <DependentUpon>NotlarEkranı.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -164,11 +174,6 @@
     <None Include="Resources\System.Data.SQLite.dll" />
     <None Include="Resources\SQLite.Interop_x86.dll" />
     <None Include="Resources\SQLite.Interop_x64.dll" />
-    <None Include="bin\Debug\x64\SQLite.Interop_x64.dll" />
-    <None Include="bin\Debug\x64\SQLite.Interop_64.dll" />
-    <None Include="bin\Debug\x86\SQLite.Interop_x86.dll" />
-    <None Include="bin\Debug\System.Data.SQLite.dll" />
-    <None Include="bin\Debug\x86\SQLite.Interop.dll" />
     <None Include="Resources\Secili.png" />
   </ItemGroup>
   <ItemGroup>
