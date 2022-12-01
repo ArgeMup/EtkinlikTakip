@@ -12,7 +12,28 @@ namespace Etkinlik_Takip
         string Pak;
         string AçıkOlanBaşlık = "";
         bool Çalışsın = true;
-        bool YazıDeğişti = false;
+        bool YazıDeğişti
+        {
+            get
+            {
+                return _Sayac_YazıDeğişti > 0;
+            }
+            set
+            {
+                if (value)
+                {
+                    _Sayac_YazıDeğişti++;
+                    Text = _text_YazıDeğişti + " (*" + _Sayac_YazıDeğişti + "*)";
+                }
+                else
+                {
+                    _Sayac_YazıDeğişti = 0;
+                    Text = _text_YazıDeğişti;
+                }
+            }
+        }
+        int _Sayac_YazıDeğişti = 0;
+        string _text_YazıDeğişti = "Mup " + Kendi.Adı + " Notlar V" + Kendi.Sürümü_Dosya + " ( çıkış - esc )";
         IDepo_Eleman Ayarlar = null;
 
         public NotlarEkranı(string Pak, IDepo_Eleman Ayarlar)
@@ -25,7 +46,7 @@ namespace Etkinlik_Takip
         private void Notlar_Load(object sender, EventArgs e)
         {
             Icon = Properties.Resources.Etkinlik_Takip;
-            Text = "Mup " + Kendi.Adı + " Notlar V" + Kendi.Sürümü_Dosya + " ( çıkış - esc )";
+            Text = _text_YazıDeğişti;
 
             if (!string.IsNullOrEmpty(Ayarlar.Oku("Pencere Konumu/x")))
             {
@@ -64,6 +85,10 @@ namespace Etkinlik_Takip
             {
                 Hide();
                 DosyayaKaydet(string.IsNullOrEmpty(Başlıklar.Text) ? "Genel" : Başlıklar.Text); 
+            }
+            else if (e.Control && e.KeyCode == Keys.S)
+            {
+                DosyayaKaydet(string.IsNullOrEmpty(Başlıklar.Text) ? "Genel" : Başlıklar.Text);
             }
         }
         private void NotlarEkranı_FormClosing(object sender, FormClosingEventArgs e)
