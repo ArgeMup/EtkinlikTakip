@@ -618,10 +618,18 @@ namespace Etkinlik_Takip
                             if (L_TrNo.Count > 0)
                             {
                                 //alt dalların durumunu yansıt
+
+                                ////kendini ekleyerek
+                                //kendi durumunu ekleme iptal
+                                //Dizi = new int[L_TrNo.Count + 1];
+                                //for (int i = 0; i < L_TrNo.Count; i++) Dizi[i] = L_TrNo[i].ImageIndex;
+                                //if (KendiDurumu == (int)EtkinlikDurumu.Yeni_Görev) KendiDurumu = Dizi[0];
+                                //Dizi[Dizi.Length - 1] = KendiDurumu;
+                                //TrNo.ImageIndex = Dizi.Min();
+
+                                //kendini eklemeden
                                 Dizi = new int[L_TrNo.Count];
                                 for (int i = 0; i < L_TrNo.Count; i++) Dizi[i] = L_TrNo[i].ImageIndex;
-                                //kendi durumunu ekleme iptal //Dizi[Dizi.Length - 1] = KendiDurumu;
-                                //kendi durumunu ekleme iptal //if (Dizi[Dizi.Length - 1] == (int)EtkinlikDurumu.Yeni_Görev) Dizi[Dizi.Length - 1] = Dizi[0];
                                 TrNo.ImageIndex = Dizi.Min();
                             }
                             else
@@ -680,6 +688,8 @@ namespace Etkinlik_Takip
                             {
                                 Console.WriteLine("Görev -> No:" + Nosu + " _t tablosu bulunamadı, kayıt silinemedi");
                             }
+
+                            HatırlatıcıSayfası.Hatırlatıcı.Sil(Nosu.ToString());
                         }
                     }
                     else if (Sahibi == (int)DalTürü.ÇöpKutusu)
@@ -1479,24 +1489,7 @@ namespace Etkinlik_Takip
             if (Kaynak == null)
             {
                 //panodaki yazıyı görev olarak kaydet
-                string kk = ((string)e.Data.GetData(typeof(string)));
-                if (string.IsNullOrEmpty(kk)) return;
-
-                string[] kkk = kk.Split( new char[] { '\r', '\n' } );
-                if (kkk != null && kkk.Length > 0)
-                {
-                    List<string> ayıklanmış = new List<string>();
-                    foreach (string b in kkk)
-                    {
-                        if (string.IsNullOrEmpty(b)) continue;
-                        string c = b.Trim();
-
-                        if (c.StartsWith(">")) ayıklanmış.Add(c);
-                        else ayıklanmış.Add(">;Yeni görev;" + c + ";");
-                    }
-
-                    MenuItem_Ağaç_PanodanAl_2(ayıklanmış, (int)Hedef.Tag);
-                }
+                MenuItem_Ağaç_PanodanAl_2((string)e.Data.GetData(typeof(string)), (int)Hedef.Tag);
             }
             else
             {
@@ -1919,17 +1912,31 @@ namespace Etkinlik_Takip
         }
         private void MenuItem_Ağaç_PanodanAl_Click(object sender, EventArgs e)
         {
-            string okunan = Clipboard.GetText();
-            if (string.IsNullOrEmpty(okunan)) { MessageBox.Show("Uygun değil"); return; }
+            if (Ağaç.SelectedNode == null || Ağaç.SelectedNode.Tag == null) return;
 
-            List<string> satırlar = okunan.Split('\r').ToList();
-
-            MenuItem_Ağaç_PanodanAl_2(satırlar, (int)Ağaç.SelectedNode.Tag);
+            MenuItem_Ağaç_PanodanAl_2(Clipboard.GetText(), (int)Ağaç.SelectedNode.Tag);
 
             Ağaç_Güncelle(true, true, false);
         }
-        private void MenuItem_Ağaç_PanodanAl_2(List<string> satırlar, int Hedef)
+        private void MenuItem_Ağaç_PanodanAl_2(string Girdi, int Hedef)
         {
+            if (string.IsNullOrEmpty(Girdi)) return;
+            Girdi = Girdi.Trim(' ', '\r', '\n');
+
+            string[] kkk = Girdi.Split(new char[] { '\r', '\n' });
+            if (kkk == null || kkk.Length == 0) return;
+            
+            List<string> satırlar = new List<string>();
+            foreach (string b in kkk)
+            {
+                if (string.IsNullOrEmpty(b)) continue;
+                string c = b.Trim(' ', '\r', '\n');
+
+                if (c.StartsWith(">")) satırlar.Add(c);
+                else satırlar.Add(">;Yeni görev;" + c + ";");
+            }
+            if (satırlar.Count == 0) return;
+
             int Seviye = 1;
             List<int> Hedefler = new List<int>(); 
             Hedefler.Add(0);
@@ -1943,7 +1950,7 @@ namespace Etkinlik_Takip
             bool Hatırlatıcı_EklensinMi_SorulduMu = false;
             while (satırlar.Count > 0)
             {
-                string[] bölümler = satırlar[0].Trim('\n', ' ').Replace("|", Environment.NewLine).Split(';');
+                string[] bölümler = satırlar[0].Replace("|", Environment.NewLine).Split(';');
                 satırlar.RemoveAt(0);
 
                 if (bölümler.Length <= 3) continue;
