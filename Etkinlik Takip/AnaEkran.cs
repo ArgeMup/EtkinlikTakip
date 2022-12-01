@@ -119,11 +119,12 @@ namespace Etkinlik_Takip
             public bool KısayolTuşunuDinliyor = false;
             public Ayarlar_ Ayarlar = null;
             public IDepo_Eleman Ayarlar_Notlar = null;
-            public IDepo_Eleman Ayarlar_Genel = null;
         }
         NotlarSayfası_ NotlarSayfası = new NotlarSayfası_();
+
+        IDepo_Eleman Ayarlar_Genel = null;
         #endregion
-        
+
         public AnaEkran()
         {
             string geci = ("Mup" + Application.ProductName + pak).Replace('\\', '.').Replace(':', '.').Replace(' ', '.');
@@ -170,14 +171,16 @@ namespace Etkinlik_Takip
 
                 NotlarSayfası_İlkAçılış();
 
-                numericUpDown1.Value = (int)Sql_Ayarlar_Oku("Punto", 1, (object)8);
+                numericUpDown1.Value = (decimal)Ayarlar_Genel.Oku_Sayı("Punto", 8);
                 PuntoDeğişti(null, null);
-                KullanıcıAdı.Text = (string)Sql_Ayarlar_Oku("KullanıcıAdı", 0, Kendi.KullanıcıAdı);
+                KullanıcıAdı.Text = Ayarlar_Genel.Oku("KullanıcıAdı", Kendi.KullanıcıAdı);
 
-                this.Location = new Point((int)Sql_Ayarlar_Oku("Form_Poz_X", 1, (object)20), (int)Sql_Ayarlar_Oku("Form_Poz_Y", 1, (object)20));
-                this.Width = (int)Sql_Ayarlar_Oku("Form_Genişlik", 1, (object)400);
-                this.Height = (int)Sql_Ayarlar_Oku("Form_Yükseklik", 1, (object)300);
-                this.WindowState = (FormWindowState)Sql_Ayarlar_Oku("Pencere", 1, (object)0);
+                if (!string.IsNullOrEmpty(Ayarlar_Genel.Oku("Pencere Konumu/x")))
+                {
+                    Location = new System.Drawing.Point((int)Ayarlar_Genel.Oku_Sayı("Pencere Konumu/x"), (int)Ayarlar_Genel.Oku_Sayı("Pencere Konumu/y"));
+                    Size = new System.Drawing.Size((int)Ayarlar_Genel.Oku_Sayı("Pencere Konumu/genişlik"), (int)Ayarlar_Genel.Oku_Sayı("Pencere Konumu/uzunluk"));
+                    this.WindowState = (FormWindowState)Ayarlar_Genel.Oku_Sayı("Pencere", 0);
+                }
                 this.Tag = this.WindowState;
 
                 if (!Screen.AllScreens.Any(s => s.WorkingArea.IntersectsWith(new Rectangle(this.Left, this.Top, this.Width, this.Height))))
@@ -202,44 +205,44 @@ namespace Etkinlik_Takip
                 catch (Exception) { Genel.AğaçDallarıDurumu_Yaz(0, true); }
 
                 Genel.AğaçGüncelleniyor = true;
-                Filtreleme_D1.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_ÜzerindeÇalışılıyor", 1);
-                Filtreleme_D2.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_DüşükÖncelikli", 1);
-                Filtreleme_D3.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_YeniGörev", 1);
-                Filtreleme_D4.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_Beklemede", 1);
-                Filtreleme_D5.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_BittiGeriBildirimBekleniyor", 1);
-                Filtreleme_D6.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_Diğer", 1);
-                Filtreleme_D7.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_Tamamlandı", 1);
-                Filtreleme_D8.CheckState = (CheckState)Sql_Ayarlar_Oku("Filtreleme_İptalEdildi", 1);
-                Grid_Listele_Tarihçe.CheckState = (CheckState)Sql_Ayarlar_Oku("Grid_Listele_Tarihçe", 1);
+                Filtreleme_D1.Checked = Ayarlar_Genel.Oku_Bit("Filtreleme_ÜzerindeÇalışılıyor", true);
+                Filtreleme_D2.Checked = Ayarlar_Genel.Oku_Bit("Filtreleme_DüşükÖncelikli", true);
+                Filtreleme_D3.Checked = Ayarlar_Genel.Oku_Bit("Filtreleme_YeniGörev", true);
+                Filtreleme_D4.Checked = Ayarlar_Genel.Oku_Bit("Filtreleme_Beklemede", true);
+                Filtreleme_D5.Checked = Ayarlar_Genel.Oku_Bit("Filtreleme_BittiGeriBildirimBekleniyor", true);
+                Filtreleme_D6.Checked = Ayarlar_Genel.Oku_Bit("Filtreleme_Diğer", true);
+                Filtreleme_D7.Checked = Ayarlar_Genel.Oku_Bit("Filtreleme_Tamamlandı", true);
+                Filtreleme_D8.Checked = Ayarlar_Genel.Oku_Bit("Filtreleme_İptalEdildi", true);
+                Grid_Listele_Tarihçe.Checked = Ayarlar_Genel.Oku_Bit("Grid_Listele_Tarihçe", true);
 
-                splitContainer1.SplitterDistance = (int)Sql_Ayarlar_Oku("Ayıraç1", 1);
-                splitContainer2.SplitterDistance = (int)Sql_Ayarlar_Oku("Ayıraç2", 1);
+                splitContainer1.SplitterDistance = (int)Ayarlar_Genel.Oku_Sayı("Ayıraç1", Width / 2);
+                splitContainer2.SplitterDistance = (int)Ayarlar_Genel.Oku_Sayı("Ayıraç2", Height / 2);
                 Panel_Aç(Panel2Durumu.Arama);
 
-                Üç_Değiştir.CheckState = (CheckState)Sql_Ayarlar_Oku("ÜzerindeÇalışılıyorDurumu", 1, 1);
-                OdaklanmışGörünüm_Kızart.CheckState = (CheckState)Sql_Ayarlar_Oku("OdaklanmışGörünüm_Kızart", 1, 1);
-                OdaklanmışGörünüm_Genişlet.CheckState = (CheckState)Sql_Ayarlar_Oku("OdaklanmışGörünüm_Genişlet", 1, 1);
-                OdaklanmışGörünüm_DiğerleriniDaralt.CheckState = (CheckState)Sql_Ayarlar_Oku("OdaklanmışGörünüm_DiğerleriniDaralt", 1, 0);
+                Üç_Değiştir.Checked = Ayarlar_Genel.Oku_Bit("ÜzerindeÇalışılıyorDurumu", true);
+                OdaklanmışGörünüm_Kızart.Checked = Ayarlar_Genel.Oku_Bit("OdaklanmışGörünüm_Kızart", true);
+                OdaklanmışGörünüm_Genişlet.Checked = Ayarlar_Genel.Oku_Bit("OdaklanmışGörünüm_Genişlet", true);
+                OdaklanmışGörünüm_DiğerleriniDaralt.Checked = Ayarlar_Genel.Oku_Bit("OdaklanmışGörünüm_DiğerleriniDaralt", false);
 
-                Hatırlatıcı_Hatırlat_Bugün_aa.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Bugün_aa", 1, 9);
-                Hatırlatıcı_Hatırlat_Bugün_bb.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Bugün_bb", 1, 11);
-                Hatırlatıcı_Hatırlat_Bugün_cc.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Bugün_cc", 1, 13);
-                Hatırlatıcı_Hatırlat_Bugün_dd.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Bugün_dd", 1, 17);
-                Hatırlatıcı_Hatırlat_Yarın_aa.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Yarın_aa", 1, 9);
-                Hatırlatıcı_Hatırlat_Yarın_bb.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Yarın_bb", 1, 11);
-                Hatırlatıcı_Hatırlat_Yarın_cc.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Yarın_cc", 1, 13);
-                Hatırlatıcı_Hatırlat_Yarın_dd.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Yarın_dd", 1, 17);
+                Hatırlatıcı_Hatırlat_Bugün_aa.Value = (decimal)Ayarlar_Genel.Oku_Sayı("Hatırlatıcı_Hatırlat_Bugün_aa", 9);
+                Hatırlatıcı_Hatırlat_Bugün_bb.Value = (decimal)Ayarlar_Genel.Oku_Sayı("Hatırlatıcı_Hatırlat_Bugün_bb", 11);
+                Hatırlatıcı_Hatırlat_Bugün_cc.Value = (decimal)Ayarlar_Genel.Oku_Sayı("Hatırlatıcı_Hatırlat_Bugün_cc", 13);
+                Hatırlatıcı_Hatırlat_Bugün_dd.Value = (decimal)Ayarlar_Genel.Oku_Sayı("Hatırlatıcı_Hatırlat_Bugün_dd", 17);
+                Hatırlatıcı_Hatırlat_Yarın_aa.Value = (decimal)Ayarlar_Genel.Oku_Sayı("Hatırlatıcı_Hatırlat_Yarın_aa", 9);
+                Hatırlatıcı_Hatırlat_Yarın_bb.Value = (decimal)Ayarlar_Genel.Oku_Sayı("Hatırlatıcı_Hatırlat_Yarın_bb", 11);
+                Hatırlatıcı_Hatırlat_Yarın_cc.Value = (decimal)Ayarlar_Genel.Oku_Sayı("Hatırlatıcı_Hatırlat_Yarın_cc", 13);
+                Hatırlatıcı_Hatırlat_Yarın_dd.Value = (decimal)Ayarlar_Genel.Oku_Sayı("Hatırlatıcı_Hatırlat_Yarın_dd", 17);
 
-                MenuItem_Grid_Etk_Sütünlar_Durum.CheckState = (CheckState)Sql_Ayarlar_Oku("Sutunlar_Durum", 1);
-                MenuItem_Grid_Etk_Sütünlar_İçerik.CheckState = (CheckState)Sql_Ayarlar_Oku("Sutunlar_İçerik", 1);
-                MenuItem_Grid_Etk_Sütünlar_An.CheckState = (CheckState)Sql_Ayarlar_Oku("Sutunlar_An", 1);
-                MenuItem_Grid_Etk_Sütünlar_Tarih.CheckState = (CheckState)Sql_Ayarlar_Oku("Sutunlar_Tarih", 1);
-                MenuItem_Grid_Etk_Sütünlar_Açıklama.CheckState = (CheckState)Sql_Ayarlar_Oku("Sutunlar_Açıklama", 1);
-                MenuItem_Grid_Etk_AçıklamaTekSatırda.CheckState = (CheckState)Sql_Ayarlar_Oku("Sutunlar_AçıklamaTekSatırda", 1);
-                MenuItem_Grid_Etk_Sıralama_YeniUstte.CheckState = (CheckState)Sql_Ayarlar_Oku("Sıralama_Ustteki", 1);
-                MenuItem_Grid_Etk_AyarlarSayfaınakiFiltrelemeyiKullan.CheckState = (CheckState)Sql_Ayarlar_Oku("AyarlarSayfaınakiFiltrelemeyiKullan", 1);
+                MenuItem_Grid_Etk_Sütünlar_Durum.Checked = Ayarlar_Genel.Oku_Bit("Sutunlar_Durum", true);
+                MenuItem_Grid_Etk_Sütünlar_İçerik.Checked = Ayarlar_Genel.Oku_Bit("Sutunlar_İçerik", true);
+                MenuItem_Grid_Etk_Sütünlar_An.Checked = Ayarlar_Genel.Oku_Bit("Sutunlar_An", true);
+                MenuItem_Grid_Etk_Sütünlar_Tarih.Checked = Ayarlar_Genel.Oku_Bit("Sutunlar_Tarih", true);
+                MenuItem_Grid_Etk_Sütünlar_Açıklama.Checked = Ayarlar_Genel.Oku_Bit("Sutunlar_Açıklama", true);
+                MenuItem_Grid_Etk_AçıklamaTekSatırda.Checked = Ayarlar_Genel.Oku_Bit("Sutunlar_AçıklamaTekSatırda");
+                MenuItem_Grid_Etk_Sıralama_YeniUstte.Checked = Ayarlar_Genel.Oku_Bit("Sıralama_Ustteki", true);
+                MenuItem_Grid_Etk_AyarlarSayfasındakiFiltrelemeyiKullan.Checked = Ayarlar_Genel.Oku_Bit("AyarlarSayfasındakiFiltrelemeyiKullan");
                 MenuItem_Grid_Etk_Sıralama_EskiUstte.Checked = !MenuItem_Grid_Etk_Sıralama_YeniUstte.Checked;
-                MenuItem_Grid_Etk_GörüntülenecekEtkinlikSayısı_Adet.Text = (string)Sql_Ayarlar_Oku("GörüntelenecekEtkinlikSayısı", 0);
+                MenuItem_Grid_Etk_GörüntülenecekEtkinlikSayısı_Adet.Text = Ayarlar_Genel.Oku("GörüntelenecekEtkinlikSayısı");
 
                 Sutun_Durum_G.Visible = MenuItem_Grid_Etk_Sütünlar_Durum.Checked;
                 Sutun_Durum_M.Visible = MenuItem_Grid_Etk_Sütünlar_İçerik.Checked;
@@ -320,57 +323,56 @@ namespace Etkinlik_Takip
 
             HatırlatıcıSayfası.Hatırlatıcı.AyarlarıOku(true);
 
-            Sql_Ayarlar_Yaz("KullanıcıAdı", KullanıcıAdı.Text);
-            Sql_Ayarlar_Yaz("Ayıraç1", (int)splitContainer1.SplitterDistance);
-            Sql_Ayarlar_Yaz("Ayıraç2", (int)splitContainer2.SplitterDistance);
+            Ayarlar_Genel.Yaz("KullanıcıAdı", KullanıcıAdı.Text);
+            Ayarlar_Genel.Yaz("Ayıraç1", splitContainer1.SplitterDistance);
+            Ayarlar_Genel.Yaz("Ayıraç2", splitContainer2.SplitterDistance);
 
-            Sql_Ayarlar_Yaz("Punto", (int)numericUpDown1.Value);
+            Ayarlar_Genel.Yaz("Punto", (double)numericUpDown1.Value);
             if (this.WindowState != FormWindowState.Minimized)
             {
-                Sql_Ayarlar_Yaz("Pencere", Convert.ToInt32(this.WindowState));
+                Ayarlar_Genel.Yaz("Pencere", Convert.ToInt32(this.WindowState));
 
                 if (this.WindowState == FormWindowState.Normal)
                 {
-                    Sql_Ayarlar_Yaz("Form_Poz_X", this.Location.X);
-                    Sql_Ayarlar_Yaz("Form_Poz_Y", this.Location.Y);
-                    Sql_Ayarlar_Yaz("Form_Genişlik", this.Width);
-                    Sql_Ayarlar_Yaz("Form_Yükseklik", this.Height);
+                    Ayarlar_Genel.Yaz("Pencere Konumu/x", this.Location.X);
+                    Ayarlar_Genel.Yaz("Pencere Konumu/y", this.Location.Y);
+                    Ayarlar_Genel.Yaz("Pencere Konumu/genişlik", this.Width);
+                    Ayarlar_Genel.Yaz("Pencere Konumu/uzunluk", this.Height);
                 }
             }
-            Sql_Ayarlar_Yaz("ÜzerindeÇalışılıyorDurumu", Convert.ToInt32(Üç_Değiştir.CheckState));
-            Sql_Ayarlar_Yaz("OdaklanmışGörünüm_Kızart", Convert.ToInt32(OdaklanmışGörünüm_Kızart.CheckState));
-            Sql_Ayarlar_Yaz("OdaklanmışGörünüm_Genişlet", Convert.ToInt32(OdaklanmışGörünüm_Genişlet.CheckState));
-            Sql_Ayarlar_Yaz("OdaklanmışGörünüm_DiğerleriniDaralt", Convert.ToInt32(OdaklanmışGörünüm_DiğerleriniDaralt.CheckState));
-            Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Bugün_aa", Convert.ToInt32(Hatırlatıcı_Hatırlat_Bugün_aa.Value));
-            Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Bugün_bb", Convert.ToInt32(Hatırlatıcı_Hatırlat_Bugün_bb.Value));
-            Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Bugün_cc", Convert.ToInt32(Hatırlatıcı_Hatırlat_Bugün_cc.Value));
-            Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Bugün_dd", Convert.ToInt32(Hatırlatıcı_Hatırlat_Bugün_dd.Value));
-            Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Yarın_aa", Convert.ToInt32(Hatırlatıcı_Hatırlat_Yarın_aa.Value));
-            Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Yarın_bb", Convert.ToInt32(Hatırlatıcı_Hatırlat_Yarın_bb.Value));
-            Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Yarın_cc", Convert.ToInt32(Hatırlatıcı_Hatırlat_Yarın_cc.Value));
-            Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Yarın_dd", Convert.ToInt32(Hatırlatıcı_Hatırlat_Yarın_dd.Value));
+            Ayarlar_Genel.Yaz("ÜzerindeÇalışılıyorDurumu", Üç_Değiştir.Checked);
+            Ayarlar_Genel.Yaz("OdaklanmışGörünüm_Kızart", OdaklanmışGörünüm_Kızart.Checked);
+            Ayarlar_Genel.Yaz("OdaklanmışGörünüm_Genişlet", OdaklanmışGörünüm_Genişlet.Checked);
+            Ayarlar_Genel.Yaz("OdaklanmışGörünüm_DiğerleriniDaralt", OdaklanmışGörünüm_DiğerleriniDaralt.Checked);
+            Ayarlar_Genel.Yaz("Hatırlatıcı_Hatırlat_Bugün_aa", (double)Hatırlatıcı_Hatırlat_Bugün_aa.Value);
+            Ayarlar_Genel.Yaz("Hatırlatıcı_Hatırlat_Bugün_bb", (double)Hatırlatıcı_Hatırlat_Bugün_bb.Value);
+            Ayarlar_Genel.Yaz("Hatırlatıcı_Hatırlat_Bugün_cc", (double)Hatırlatıcı_Hatırlat_Bugün_cc.Value);
+            Ayarlar_Genel.Yaz("Hatırlatıcı_Hatırlat_Bugün_dd", (double)Hatırlatıcı_Hatırlat_Bugün_dd.Value);
+            Ayarlar_Genel.Yaz("Hatırlatıcı_Hatırlat_Yarın_aa", (double)Hatırlatıcı_Hatırlat_Yarın_aa.Value);
+            Ayarlar_Genel.Yaz("Hatırlatıcı_Hatırlat_Yarın_bb", (double)Hatırlatıcı_Hatırlat_Yarın_bb.Value);
+            Ayarlar_Genel.Yaz("Hatırlatıcı_Hatırlat_Yarın_cc", (double)Hatırlatıcı_Hatırlat_Yarın_cc.Value);
+            Ayarlar_Genel.Yaz("Hatırlatıcı_Hatırlat_Yarın_dd", (double)Hatırlatıcı_Hatırlat_Yarın_dd.Value);
 
-            Sql_Ayarlar_Yaz("Filtreleme_ÜzerindeÇalışılıyor", (int)Filtreleme_D1.CheckState);
-            Sql_Ayarlar_Yaz("Filtreleme_DüşükÖncelikli", (int)Filtreleme_D2.CheckState);
-            Sql_Ayarlar_Yaz("Filtreleme_YeniGörev", (int)Filtreleme_D3.CheckState);
-            Sql_Ayarlar_Yaz("Filtreleme_Beklemede", (int)Filtreleme_D4.CheckState);
-            Sql_Ayarlar_Yaz("Filtreleme_BittiGeriBildirimBekleniyor", (int)Filtreleme_D5.CheckState);
-            Sql_Ayarlar_Yaz("Filtreleme_Diğer", (int)Filtreleme_D6.CheckState);
-            Sql_Ayarlar_Yaz("Filtreleme_Tamamlandı", (int)Filtreleme_D7.CheckState);
-            Sql_Ayarlar_Yaz("Filtreleme_İptalEdildi", (int)Filtreleme_D8.CheckState);
-            Sql_Ayarlar_Yaz("Grid_Listele_Tarihçe", (int)Grid_Listele_Tarihçe.CheckState);
+            Ayarlar_Genel.Yaz("Filtreleme_ÜzerindeÇalışılıyor", Filtreleme_D1.Checked);
+            Ayarlar_Genel.Yaz("Filtreleme_DüşükÖncelikli", Filtreleme_D2.Checked);
+            Ayarlar_Genel.Yaz("Filtreleme_YeniGörev", Filtreleme_D3.Checked);
+            Ayarlar_Genel.Yaz("Filtreleme_Beklemede", Filtreleme_D4.Checked);
+            Ayarlar_Genel.Yaz("Filtreleme_BittiGeriBildirimBekleniyor", Filtreleme_D5.Checked);
+            Ayarlar_Genel.Yaz("Filtreleme_Diğer", Filtreleme_D6.Checked);
+            Ayarlar_Genel.Yaz("Filtreleme_Tamamlandı", Filtreleme_D7.Checked);
+            Ayarlar_Genel.Yaz("Filtreleme_İptalEdildi", Filtreleme_D8.Checked);
+            Ayarlar_Genel.Yaz("Grid_Listele_Tarihçe", Grid_Listele_Tarihçe.Checked);
 
-            Sql_Ayarlar_Yaz("Sutunlar_Durum", (int)MenuItem_Grid_Etk_Sütünlar_Durum.CheckState);
-            Sql_Ayarlar_Yaz("Sutunlar_İçerik", (int)MenuItem_Grid_Etk_Sütünlar_İçerik.CheckState);
-            Sql_Ayarlar_Yaz("Sutunlar_An", (int)MenuItem_Grid_Etk_Sütünlar_An.CheckState);
-            Sql_Ayarlar_Yaz("Sutunlar_Tarih", (int)MenuItem_Grid_Etk_Sütünlar_Tarih.CheckState);
-            Sql_Ayarlar_Yaz("Sutunlar_Açıklama", (int)MenuItem_Grid_Etk_Sütünlar_Açıklama.CheckState);
-            Sql_Ayarlar_Yaz("Sutunlar_AçıklamaTekSatırda", (int)MenuItem_Grid_Etk_AçıklamaTekSatırda.CheckState);
-            Sql_Ayarlar_Yaz("Sıralama_Ustteki", (int)MenuItem_Grid_Etk_Sıralama_YeniUstte.CheckState);
-            Sql_Ayarlar_Yaz("AyarlarSayfaınakiFiltrelemeyiKullan", (int)MenuItem_Grid_Etk_AyarlarSayfaınakiFiltrelemeyiKullan.CheckState);
-            Sql_Ayarlar_Yaz("GörüntelenecekEtkinlikSayısı", (string)MenuItem_Grid_Etk_GörüntülenecekEtkinlikSayısı_Adet.Text);
+            Ayarlar_Genel.Yaz("Sutunlar_Durum", MenuItem_Grid_Etk_Sütünlar_Durum.Checked);
+            Ayarlar_Genel.Yaz("Sutunlar_İçerik", MenuItem_Grid_Etk_Sütünlar_İçerik.Checked);
+            Ayarlar_Genel.Yaz("Sutunlar_An", MenuItem_Grid_Etk_Sütünlar_An.Checked);
+            Ayarlar_Genel.Yaz("Sutunlar_Tarih", MenuItem_Grid_Etk_Sütünlar_Tarih.Checked);
+            Ayarlar_Genel.Yaz("Sutunlar_Açıklama", MenuItem_Grid_Etk_Sütünlar_Açıklama.Checked);
+            Ayarlar_Genel.Yaz("Sutunlar_AçıklamaTekSatırda", MenuItem_Grid_Etk_AçıklamaTekSatırda.Checked);
+            Ayarlar_Genel.Yaz("Sıralama_Ustteki", MenuItem_Grid_Etk_Sıralama_YeniUstte.Checked);
+            Ayarlar_Genel.Yaz("AyarlarSayfasındakiFiltrelemeyiKullan", MenuItem_Grid_Etk_AyarlarSayfasındakiFiltrelemeyiKullan.Checked);
+            Ayarlar_Genel.Yaz("GörüntelenecekEtkinlikSayısı", MenuItem_Grid_Etk_GörüntülenecekEtkinlikSayısı_Adet.Text);
 
-            Sql_Ayarlar_Yaz("ikiz", "");
             Sql_Durdur();
 
             try
@@ -475,9 +477,8 @@ namespace Etkinlik_Takip
                 string dogrulama1 = (string)Sql_Ayarlar_Oku("DOGRULAMA", 0, "");
                 string dogrulama2 = (string)Sql_Ayarlar_Oku("dogrulama", 0, "");
 
-                if (dogrulama1 != "DOGrulama_" + Kendi.Sürümü_Dosya || dogrulama2 != "dogRULAMA_" + Kendi.Sürümü_Dosya)
+                if (dogrulama1 != "DOGrulama_" || dogrulama2 != "dogRULAMA_")
                 {
-                    Sql_Sorgula("drop table Ayarlar");
                     if (!Sql_Sorgula("CREATE TABLE IF NOT EXISTS Ayarlar (Parametre TEXT PRIMARY KEY, Ayar TEXT)")) return false;
                     if (!Sql_Sorgula("CREATE TABLE IF NOT EXISTS Gorev  (No INTEGER PRIMARY KEY, Sahip INTEGER)")) return false;
                     if (!Sql_Sorgula("CREATE TABLE IF NOT EXISTS gecici (Zaman DATETIME, Durum INTEGER, Aciklama TEXT, Tanim TEXT)")) return false;
@@ -490,57 +491,12 @@ namespace Etkinlik_Takip
                     }
 
                     Sql_Sorgula("insert into Gorev values (0, 0)");
-
-                    Sql_Sorgula("insert into Ayarlar values ('KullanıcıAdı', '" + Kendi.KullanıcıAdı + "')");
-                    Sql_Sorgula("insert into Ayarlar values ('Form_Poz_X', '0')");
-                    Sql_Sorgula("insert into Ayarlar values ('Form_Poz_Y', '0')");
-                    Sql_Sorgula("insert into Ayarlar values ('Form_Genişlik', '400')");
-                    Sql_Sorgula("insert into Ayarlar values ('Form_Yükseklik', '300')");
-                    Sql_Sorgula("insert into Ayarlar values ('Ayıraç1', '200')");
-                    Sql_Sorgula("insert into Ayarlar values ('Ayıraç2', '1000')");
-                    Sql_Sorgula("insert into Ayarlar values ('Punto', '8')");
-                    Sql_Sorgula("insert into Ayarlar values ('Pencere', '" + Convert.ToString((int)FormWindowState.Normal) + "')");
-                    
-                    Sql_Sorgula("insert into Ayarlar values ('ÜzerindeÇalışılıyorDurumu', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('OdaklanmışGörünüm_Kızart', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('OdaklanmışGörünüm_Genişlet', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('OdaklanmışGörünüm_DiğerleriniDaralt', '0')");
-
-                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Bugün_aa', '9')");
-                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Bugün_bb', '11')");
-                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Bugün_cc', '13')");
-                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Bugün_dd', '17')");
-                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Yarın_aa', '9')");
-                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Yarın_bb', '11')");
-                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Yarın_cc', '13')");
-                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Yarın_dd', '17')");
-
-                    Sql_Sorgula("insert into Ayarlar values ('Sutunlar_Durum', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('Sutunlar_İçerik', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('Sutunlar_An', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('Sutunlar_Tarih', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('Sutunlar_Açıklama', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('Sutunlar_AçıklamaTekSatırda', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('Sıralama_Ustteki', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('GörüntelenecekEtkinlikSayısı', '')");
-                    Sql_Sorgula("insert into Ayarlar values ('AyarlarSayfaınakiFiltrelemeyiKullan', '1')");
-
-                    Sql_Sorgula("insert into Ayarlar values ('Filtreleme_YeniGörev', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('Filtreleme_ÜzerindeÇalışılıyor', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('Filtreleme_DüşükÖncelikli', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('Filtreleme_Beklemede', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('Filtreleme_BittiGeriBildirimBekleniyor', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('Filtreleme_Tamamlandı', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('Filtreleme_İptalEdildi', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('Filtreleme_Diğer', '1')");
-                    Sql_Sorgula("insert into Ayarlar values ('Grid_Listele_Tarihçe', '1')");
-
                     Sql_Sorgula("insert into Ayarlar values ('ikiz', '')");
 
-                    Sql_Sorgula("insert into Ayarlar values ('DOGRULAMA', 'DOGrulama_" + Kendi.Sürümü_Dosya + "')");
-                    Sql_Sorgula("insert into Ayarlar values ('dogrulama', 'dogRULAMA_" + Kendi.Sürümü_Dosya + "')");
-                    Sql_Ayarlar_Yaz("DOGRULAMA", "DOGrulama_" + Kendi.Sürümü_Dosya);
-                    Sql_Ayarlar_Yaz("dogrulama", "dogRULAMA_" + Kendi.Sürümü_Dosya);
+                    Sql_Sorgula("insert into Ayarlar values ('DOGRULAMA', 'DOGrulama_')");
+                    Sql_Sorgula("insert into Ayarlar values ('dogrulama', 'dogRULAMA_')");
+                    Sql_Ayarlar_Yaz("DOGRULAMA", "DOGrulama_");
+                    Sql_Ayarlar_Yaz("dogrulama", "dogRULAMA_");
                 }
 
                 Sql_Zamanlayıcı.Start();
@@ -549,6 +505,37 @@ namespace Etkinlik_Takip
             }
             catch (Exception ex) { MessageBox.Show(pak + "Banka\\" + Application.ProductName + ".mup dosyası hasarlı olabilir. Silinmesi gerekmektedir. (sqlite:" + ex.Message + ")"); Environment.Exit(1); }
             return false;
+
+            Object Sql_Ayarlar_Oku(string Parametre, int Yazı_0_Rakam_1, object hatadurumunda = null)
+            {
+                Object Çıktı;
+
+                if (hatadurumunda != null) Çıktı = hatadurumunda;
+                else
+                {
+                    if (Yazı_0_Rakam_1 == 1) Çıktı = 0;
+                    else Çıktı = "";
+                }
+
+                try
+                {
+                    SQLiteDataReader SQLiteDataReader_ = null;
+                    if (!Sql_Sorgula("select Ayar from Ayarlar where Parametre = '" + Parametre + "'", out SQLiteDataReader_)) return Çıktı;
+                    if (SQLiteDataReader_.Read())
+                    {
+                        if (Yazı_0_Rakam_1 == 1) Çıktı = Convert.ToInt32(SQLiteDataReader_["Ayar"]);
+                        else Çıktı = SQLiteDataReader_["Ayar"];
+                    }
+                    SQLiteDataReader_.Close();
+                }
+                catch (Exception) { }
+
+                return Çıktı;
+            }
+            bool Sql_Ayarlar_Yaz(string Parametre, string Ayar)
+            {
+                return Sql_Sorgula("update Ayarlar set Ayar = '" + Ayar + "' where Parametre = '" + Parametre + "'");
+            }
         }
         private bool Sql_Durdur()
         {
@@ -603,41 +590,7 @@ namespace Etkinlik_Takip
             catch (Exception) { }
 
             return çıktı;
-        }
-        private Object Sql_Ayarlar_Oku(string Parametre, int Yazı_0_Rakam_1, object hatadurumunda = null)
-        {
-            Object Çıktı;
-
-            if (hatadurumunda != null) Çıktı = hatadurumunda;
-            else
-            {
-                if (Yazı_0_Rakam_1 == 1) Çıktı = 0;
-                else Çıktı = "";
-            }
-
-            try
-            {
-                SQLiteDataReader SQLiteDataReader_ = null;
-                if (!Sql_Sorgula("select Ayar from Ayarlar where Parametre = '" + Parametre + "'", out SQLiteDataReader_)) return Çıktı;
-                if (SQLiteDataReader_.Read())
-                {
-                    if (Yazı_0_Rakam_1 == 1) Çıktı = Convert.ToInt32(SQLiteDataReader_["Ayar"]);
-                    else Çıktı = SQLiteDataReader_["Ayar"];
-                }
-                SQLiteDataReader_.Close();
-            }
-            catch (Exception) { }
-
-            return Çıktı;
-        }
-        private bool Sql_Ayarlar_Yaz(string Parametre, string Ayar)
-        {
-            return Sql_Sorgula("update Ayarlar set Ayar = '" + Ayar + "' where Parametre = '" + Parametre + "'");
-        }
-        private bool Sql_Ayarlar_Yaz(string Parametre, int Ayar)
-        {
-            return Sql_Sorgula("update Ayarlar set Ayar = '" + Ayar.ToString() + "' where Parametre = '" + Parametre + "'");
-        }
+        }  
         private List<TreeNode> Sql_ÜyeleriAl(int No)
         {
             List<TreeNode> Liste = new List<TreeNode>();
@@ -2336,7 +2289,7 @@ namespace Etkinlik_Takip
                         while (Dr.Read())
                         {
                             int durum_no = Convert.ToInt32(Dr["Durum"]);
-                            if (MenuItem_Grid_Etk_AyarlarSayfaınakiFiltrelemeyiKullan.Checked)
+                            if (MenuItem_Grid_Etk_AyarlarSayfasındakiFiltrelemeyiKullan.Checked)
                             {
                                 if (durum_no != (int)EtkinlikDurumu.Güncellenen_Görev)
                                 {
@@ -2459,7 +2412,7 @@ namespace Etkinlik_Takip
         {
             if ((Keys)e.KeyChar == Keys.Enter) MenuItem_Grid_Etk_ZaAr_Filtrele_Click(null, null);
         }
-        private void MenuItem_Grid_Etk_AyarlarSayfaınakiFiltrelemeyiKullan_Click(object sender, EventArgs e)
+        private void MenuItem_Grid_Etk_AyarlarSayfasındakiFiltrelemeyiKullan_Click(object sender, EventArgs e)
         {
             MenuItem_Grid_Etk_ZaAr_Filtrele_Click(null, null);
         }
@@ -2559,7 +2512,7 @@ namespace Etkinlik_Takip
         {
             NotlarSayfası.Ayarlar = new Ayarlar_(AyarlarDosyası: pak + "Notlar\\Notlar.Ayarlar");
             NotlarSayfası.Ayarlar_Notlar = NotlarSayfası.Ayarlar.Bul("Notlar Sayfası", true);
-            NotlarSayfası.Ayarlar_Genel = NotlarSayfası.Ayarlar.Bul("Ana Ekran", true);
+            Ayarlar_Genel = NotlarSayfası.Ayarlar.Bul("Ana Ekran", true);
 
             NotlarSayfası_KısayolTuşu.Text = NotlarSayfası.Ayarlar_Notlar.Oku("Kısayol Tuşu", "");
             if (string.IsNullOrEmpty(NotlarSayfası_KısayolTuşu.Text)) return;
