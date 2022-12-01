@@ -22,7 +22,6 @@ namespace Etkinlik_Takip
     {
         #region Tanımlar
         YeniYazılımKontrolü_ YeniYazılımKontrolü = new YeniYazılımKontrolü_();
-        Hatırlatıcı_ Hatırlatıcı = null;
         string pak = Directory.GetCurrentDirectory() + "\\EtkinlikTakipDosyalari\\"; //programanaklasör
         public enum Panel2Durumu { Görev, Boş_Aralık, Arama, Ayarlar, Hatırlatıcı };
         public enum EtkinlikDurumu { Hatırlatıcı, Üzerinde_Çalışılıyor, Düşük_Öncelikli, Yeni_Görev, Beklemede, Bitti_Geri_Bildirim_Bekleniyor, Diğer, Tamamlandı, İptal_Edildi, Güncellenen_Görev, Geçersiz };
@@ -106,15 +105,25 @@ namespace Etkinlik_Takip
 
         UygulamaOncedenCalistirildiMi_ UygulamaOncedenCalistirildiMi;
 
+        class HatırlatıcıSayfası_
+        {
+            public Hatırlatıcı_ Hatırlatıcı = null;
+            public Ayarlar_ Ayarlar = null;
+        }
+        HatırlatıcıSayfası_ HatırlatıcıSayfası = new HatırlatıcıSayfası_();
+
         class NotlarSayfası_
         {
             public KlavyeFareGozlemcisi_ KlavyeFareGozlemcisi = new KlavyeFareGozlemcisi_(false, false, true);
             public NotlarEkranı Pencere = null;
             public bool KısayolTuşunuDinliyor = false;
+            public Ayarlar_ Ayarlar = null;
+            public IDepo_Eleman Ayarlar_Notlar = null;
+            public IDepo_Eleman Ayarlar_Genel = null;
         }
         NotlarSayfası_ NotlarSayfası = new NotlarSayfası_();
         #endregion
-
+        
         public AnaEkran()
         {
             string geci = ("Mup" + Application.ProductName + pak).Replace('\\', '.').Replace(':', '.').Replace(' ', '.');
@@ -138,7 +147,7 @@ namespace Etkinlik_Takip
 
                 Sql_Başlat();
                 Genel.AğacMenüFiltreleme = new int[EtkinlikDurumu_OkunabilirListe.Length];
-                this.Text = "Mup " + Kendi.Adı() + " V" + Kendi.Sürümü_Dosya();
+                this.Text = "Mup " + Kendi.Adı + " V" + Kendi.Sürümü_Dosya;
 
                 while (splitContainer1.Panel2.Controls.Count > 0) splitContainer1.Panel2.Controls.RemoveAt(0);
                 splitContainer1.Panel2.Controls.Add(panel_Görev);
@@ -151,7 +160,7 @@ namespace Etkinlik_Takip
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
-        private void AnaEkran_Shown(object sender, EventArgs e)
+        private void AnaEkran_Shown(object sender, EventArgs e) 
         {
             try
             {
@@ -159,9 +168,11 @@ namespace Etkinlik_Takip
                 textBox_Görev_Tanım.Width = panel_Görev__.Width - textBox_Görev_Tanım.Left - 3;
                 textBox_Görev_Açıklama.Width = textBox_Görev_Tanım.Width;
 
+                NotlarSayfası_İlkAçılış();
+
                 numericUpDown1.Value = (int)Sql_Ayarlar_Oku("Punto", 1, (object)8);
                 PuntoDeğişti(null, null);
-                KullanıcıAdı.Text = (string)Sql_Ayarlar_Oku("KullanıcıAdı", 0, Kendi.KullanıcıAdı());
+                KullanıcıAdı.Text = (string)Sql_Ayarlar_Oku("KullanıcıAdı", 0, Kendi.KullanıcıAdı);
 
                 this.Location = new Point((int)Sql_Ayarlar_Oku("Form_Poz_X", 1, (object)20), (int)Sql_Ayarlar_Oku("Form_Poz_Y", 1, (object)20));
                 this.Width = (int)Sql_Ayarlar_Oku("Form_Genişlik", 1, (object)400);
@@ -209,6 +220,7 @@ namespace Etkinlik_Takip
                 OdaklanmışGörünüm_Kızart.CheckState = (CheckState)Sql_Ayarlar_Oku("OdaklanmışGörünüm_Kızart", 1, 1);
                 OdaklanmışGörünüm_Genişlet.CheckState = (CheckState)Sql_Ayarlar_Oku("OdaklanmışGörünüm_Genişlet", 1, 1);
                 OdaklanmışGörünüm_DiğerleriniDaralt.CheckState = (CheckState)Sql_Ayarlar_Oku("OdaklanmışGörünüm_DiğerleriniDaralt", 1, 0);
+
                 Hatırlatıcı_Hatırlat_Bugün_aa.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Bugün_aa", 1, 9);
                 Hatırlatıcı_Hatırlat_Bugün_bb.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Bugün_bb", 1, 11);
                 Hatırlatıcı_Hatırlat_Bugün_cc.Value = (int)Sql_Ayarlar_Oku("Hatırlatıcı_Hatırlat_Bugün_cc", 1, 13);
@@ -237,9 +249,10 @@ namespace Etkinlik_Takip
                 if (MenuItem_Grid_Etk_AçıklamaTekSatırda.Checked) Grid_Etkinlikler.Columns["Sutun_Açıklama"].DefaultCellStyle.WrapMode = DataGridViewTriState.False;
                 else Grid_Etkinlikler.Columns["Sutun_Açıklama"].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 
-                Hatırlatıcı = new Hatırlatıcı_((string)Sql_Ayarlar_Oku("Hatırlatıcılar", 0));
+                HatırlatıcıSayfası.Ayarlar = new Ayarlar_(AyarlarDosyası: pak + "Banka\\Hatırlatıcı.Ayarlar", DeğişiklikleriKaydetmeAralığı_Sn: 0);
+                HatırlatıcıSayfası.Hatırlatıcı = new Hatırlatıcı_(HatırlatıcıSayfası.Ayarlar.Bul("Hatırlatıcı_", true));
                 Hatırlatıcı_Tekrarla_dönem.SelectedIndex = 0;
-
+                
                 Genel.AğacMenüHatırlatıcıSayacı = new List<int>();
                 Genel.KaydedilmemişBilgiVar = false;
                 Genel.AğaçGüncelleniyor = false;
@@ -268,30 +281,30 @@ namespace Etkinlik_Takip
                     YeniYazılımKontrolü.Başlat(new Uri("https://github.com/ArgeMup/EtkinlikTakip/blob/master/Etkinlik%20Takip/bin/Release/Etkinlik%20Takip.exe?raw=true"));
                 #endif
 
-                Hatırlatıcı_.Durum_[] Hatırlatıcılar = Hatırlatıcı.Bul(false);
+                Hatırlatıcı_.Durum_[] Hatırlatıcılar = HatırlatıcıSayfası.Hatırlatıcı.Bul(false);
                 foreach (var b in Hatırlatıcılar)
                 {
-                    if (int.TryParse(b.TakmaAdı, out _)) Hatırlatıcı.Kur(b.TakmaAdı, Hatırlatıcı_GeriBildirim_İşlemi);
+                    if (int.TryParse(b.TakmaAdı, out _)) HatırlatıcıSayfası.Hatırlatıcı.Kur(b.TakmaAdı, Hatırlatıcı_GeriBildirim_İşlemi);
                 }
-                Hatırlatıcı.Sil("Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar");
-                Hatırlatıcı.Kur("Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar", DateTime.Now.AddSeconds(15), GeriBildirim_Islemi: Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar);
-
-                NotlarSayfası_İlkAçılış();
+                HatırlatıcıSayfası.Hatırlatıcı.Sil("Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar");
+                HatırlatıcıSayfası.Hatırlatıcı.Kur("Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar", DateTime.Now.AddSeconds(15), GeriBildirim_Islemi: Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar);
             }
-            catch (Exception) { }
+            catch (Exception ex) { MessageBox.Show(ex.Message); Application.Exit(); }
         }
         private void AnaEkran_FormClosing(object sender, FormClosingEventArgs e)
         {
+            #if DEBUG
+                e = new FormClosingEventArgs(CloseReason.None, false);
+            #endif
+
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                #if !DEBUG
-                    e.Cancel = true;
+                e.Cancel = true;
 
-                    if (WindowState != FormWindowState.Minimized) Tag = WindowState;
-                    Hide();
-                    WindowState = FormWindowState.Minimized;
-                    Show();
-                #endif
+                if (WindowState != FormWindowState.Minimized) Tag = WindowState;
+                Hide();
+                WindowState = FormWindowState.Minimized;
+                Show();
             }
             else
             {
@@ -304,6 +317,8 @@ namespace Etkinlik_Takip
         private void AnaEkran_FormClosed(object sender, FormClosedEventArgs e)
         {
             this.Visible = false;
+
+            HatırlatıcıSayfası.Hatırlatıcı.AyarlarıOku(true);
 
             Sql_Ayarlar_Yaz("KullanıcıAdı", KullanıcıAdı.Text);
             Sql_Ayarlar_Yaz("Ayıraç1", (int)splitContainer1.SplitterDistance);
@@ -334,7 +349,6 @@ namespace Etkinlik_Takip
             Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Yarın_bb", Convert.ToInt32(Hatırlatıcı_Hatırlat_Yarın_bb.Value));
             Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Yarın_cc", Convert.ToInt32(Hatırlatıcı_Hatırlat_Yarın_cc.Value));
             Sql_Ayarlar_Yaz("Hatırlatıcı_Hatırlat_Yarın_dd", Convert.ToInt32(Hatırlatıcı_Hatırlat_Yarın_dd.Value));
-            Sql_Ayarlar_Yaz("Hatırlatıcılar", Hatırlatıcı.AyarlarıOku(true));
 
             Sql_Ayarlar_Yaz("Filtreleme_ÜzerindeÇalışılıyor", (int)Filtreleme_D1.CheckState);
             Sql_Ayarlar_Yaz("Filtreleme_DüşükÖncelikli", (int)Filtreleme_D2.CheckState);
@@ -461,7 +475,7 @@ namespace Etkinlik_Takip
                 string dogrulama1 = (string)Sql_Ayarlar_Oku("DOGRULAMA", 0, "");
                 string dogrulama2 = (string)Sql_Ayarlar_Oku("dogrulama", 0, "");
 
-                if (dogrulama1 != "DOGrulama_" + Kendi.Sürümü_Dosya() || dogrulama2 != "dogRULAMA_" + Kendi.Sürümü_Dosya())
+                if (dogrulama1 != "DOGrulama_" + Kendi.Sürümü_Dosya || dogrulama2 != "dogRULAMA_" + Kendi.Sürümü_Dosya)
                 {
                     Sql_Sorgula("drop table Ayarlar");
                     if (!Sql_Sorgula("CREATE TABLE IF NOT EXISTS Ayarlar (Parametre TEXT PRIMARY KEY, Ayar TEXT)")) return false;
@@ -471,13 +485,13 @@ namespace Etkinlik_Takip
                     if (Sql_Sorgula("CREATE TABLE _t0 (Zaman DATETIME, Durum INTEGER, Aciklama TEXT)"))
                     {
                         Sql_Sorgula("insert into _t0 values (null, " + (int)EtkinlikÖzellikleri.OluşturulmaTarihi + ", '" + DateTime.Now.ToString() + "')");
-                        Sql_Sorgula("insert into _t0 values (null, " + (int)EtkinlikÖzellikleri.Tanımı + ", '" + Kendi.Adı() + "')");
-                        Sql_Sorgula("insert into _t0 values (null, " + (int)EtkinlikÖzellikleri.Açıklaması + ", '" + Kendi.Adı() + " oluşturuldu')");
+                        Sql_Sorgula("insert into _t0 values (null, " + (int)EtkinlikÖzellikleri.Tanımı + ", '" + Kendi.Adı + "')");
+                        Sql_Sorgula("insert into _t0 values (null, " + (int)EtkinlikÖzellikleri.Açıklaması + ", '" + Kendi.Adı + " oluşturuldu')");
                     }
 
                     Sql_Sorgula("insert into Gorev values (0, 0)");
 
-                    Sql_Sorgula("insert into Ayarlar values ('KullanıcıAdı', '" + Kendi.KullanıcıAdı() + "')");
+                    Sql_Sorgula("insert into Ayarlar values ('KullanıcıAdı', '" + Kendi.KullanıcıAdı + "')");
                     Sql_Sorgula("insert into Ayarlar values ('Form_Poz_X', '0')");
                     Sql_Sorgula("insert into Ayarlar values ('Form_Poz_Y', '0')");
                     Sql_Sorgula("insert into Ayarlar values ('Form_Genişlik', '400')");
@@ -500,7 +514,6 @@ namespace Etkinlik_Takip
                     Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Yarın_bb', '11')");
                     Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Yarın_cc', '13')");
                     Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcı_Hatırlat_Yarın_dd', '17')");
-                    Sql_Sorgula("insert into Ayarlar values ('Hatırlatıcılar', '')");
 
                     Sql_Sorgula("insert into Ayarlar values ('Sutunlar_Durum', '1')");
                     Sql_Sorgula("insert into Ayarlar values ('Sutunlar_İçerik', '1')");
@@ -524,10 +537,10 @@ namespace Etkinlik_Takip
 
                     Sql_Sorgula("insert into Ayarlar values ('ikiz', '')");
 
-                    Sql_Sorgula("insert into Ayarlar values ('DOGRULAMA', 'DOGrulama_" + Kendi.Sürümü_Dosya() + "')");
-                    Sql_Sorgula("insert into Ayarlar values ('dogrulama', 'dogRULAMA_" + Kendi.Sürümü_Dosya() + "')");
-                    Sql_Ayarlar_Yaz("DOGRULAMA", "DOGrulama_" + Kendi.Sürümü_Dosya());
-                    Sql_Ayarlar_Yaz("dogrulama", "dogRULAMA_" + Kendi.Sürümü_Dosya());
+                    Sql_Sorgula("insert into Ayarlar values ('DOGRULAMA', 'DOGrulama_" + Kendi.Sürümü_Dosya + "')");
+                    Sql_Sorgula("insert into Ayarlar values ('dogrulama', 'dogRULAMA_" + Kendi.Sürümü_Dosya + "')");
+                    Sql_Ayarlar_Yaz("DOGRULAMA", "DOGrulama_" + Kendi.Sürümü_Dosya);
+                    Sql_Ayarlar_Yaz("dogrulama", "dogRULAMA_" + Kendi.Sürümü_Dosya);
                 }
 
                 Sql_Zamanlayıcı.Start();
@@ -645,7 +658,7 @@ namespace Etkinlik_Takip
                         TrNo = new TreeNode(Sql_Görev_TanımVeHatırlatıcıDetayı(Nosu), L_TrNo.ToArray());
                         TrNo.Tag = Nosu;
 
-                        Hatırlatıcı_.Durum_ Durum = Hatırlatıcı.Bul(Nosu.ToString());
+                        Hatırlatıcı_.Durum_ Durum = HatırlatıcıSayfası.Hatırlatıcı.Bul(Nosu.ToString());
                         if (Durum != null && !Durum.TetiklenmesiBekleniyor) TrNo.ImageIndex = (int)EtkinlikDurumu.Hatırlatıcı;
                         else
                         {
@@ -765,7 +778,7 @@ namespace Etkinlik_Takip
         {
             string Tanımı = Sql_GörevÖzelliği(Görev, EtkinlikÖzellikleri.Tanımı);
 
-            Hatırlatıcı_.Durum_ D = Hatırlatıcı.Bul(Görev.ToString());
+            Hatırlatıcı_.Durum_ D = HatırlatıcıSayfası.Hatırlatıcı.Bul(Görev.ToString());
             if (D != null) Tanımı += " (H:" + D_TarihSaat.Yazıya(D.TetikleneceğiAn, "dd.MM.yyyy HH:mm") + (string.IsNullOrEmpty(D.TekrarlayıcıKomutCümlesi) ? null : " " + D.TekrarlayıcıKomutCümlesi) + ")";
 
             return Tanımı;
@@ -856,7 +869,7 @@ namespace Etkinlik_Takip
                     List<int> yeni_sayac = new List<int>();
                     foreach (var b in Genel.AğacMenüHatırlatıcıSayacı)
                     {
-                        if (Hatırlatıcı.Bul(b.ToString()) != null) yeni_sayac.Add(b);
+                        if (HatırlatıcıSayfası.Hatırlatıcı.Bul(b.ToString()) != null) yeni_sayac.Add(b);
                     }
                     Genel.AğacMenüHatırlatıcıSayacı = yeni_sayac.Distinct().ToList();
                     toolStripEtiket.Text += Genel.AğacMenüHatırlatıcıSayacı.Count.ToString() + " hatırlatıcı ";
@@ -1418,8 +1431,7 @@ namespace Etkinlik_Takip
                         }
                     }
 
-                    Hatırlatıcı.Kur(Sahip.ToString(), d, tekrarlama, Hatırlatıcı_GeriBildirim_İşlemi);
-                    Sql_Ayarlar_Yaz("Hatırlatıcılar", Hatırlatıcı.AyarlarıOku());
+                    HatırlatıcıSayfası.Hatırlatıcı.Kur(Sahip.ToString(), d, tekrarlama, Hatırlatıcı_GeriBildirim_İşlemi);
                 }
 
                 Ağaç_Güncelle(true, false, false);
@@ -1737,7 +1749,7 @@ namespace Etkinlik_Takip
                 MenuItem_Ağaç_Hatırlatıcı.Visible = true;
                 MenuItem_Ağaç_Hatırlatıcı_Kur.Visible = false;
                 MenuItem_Ağaç_Hatırlatıcı_İptalEt.Visible = false;
-                Hatırlatıcı_.Durum_ Durum = Hatırlatıcı.Bul(((int)Ağaç.SelectedNode.Tag).ToString());
+                Hatırlatıcı_.Durum_ Durum = HatırlatıcıSayfası.Hatırlatıcı.Bul(((int)Ağaç.SelectedNode.Tag).ToString());
                 if (Durum == null)
                 {
                     MenuItem_Ağaç_Hatırlatıcı.Text = "Hatırlatıcı kur";
@@ -1928,8 +1940,7 @@ namespace Etkinlik_Takip
             if (!Sql_Sorgula("drop table _t" + Kaynak)) { MessageBox.Show("Beklenmeyen durum oluştu. _t" + Kaynak + " silinemedi"); return; }
             if (!Sql_Sorgula("delete from Gorev where No = " + Kaynak)) { MessageBox.Show("Beklenmeyen durum oluştu. _t" + Kaynak + " Gorev den silinemedi"); return; }
 
-            Hatırlatıcı.Sil(Kaynak.ToString());
-            Sql_Ayarlar_Yaz("Hatırlatıcılar", Hatırlatıcı.AyarlarıOku());
+            HatırlatıcıSayfası.Hatırlatıcı.Sil(Kaynak.ToString());
         }
         void Ağaç_TamamenSil_2(TreeNode Kaynak)
         {
@@ -1941,7 +1952,7 @@ namespace Etkinlik_Takip
             if (!Sql_Sorgula("drop table _t" + (int)Kaynak.Tag)) { MessageBox.Show("Beklenmeyen durum oluştu. _t" + (int)Kaynak.Tag + " silinemedi"); return; }
             if (!Sql_Sorgula("delete from Gorev where No = " + (int)Kaynak.Tag)) { MessageBox.Show("Beklenmeyen durum oluştu. _t" + (int)Kaynak.Tag + " Gorev den silinemedi"); return; }
 
-            Hatırlatıcı.Sil(((int)Kaynak.Tag).ToString());
+            HatırlatıcıSayfası.Hatırlatıcı.Sil(((int)Kaynak.Tag).ToString());
         }
         private void MenuItem_Ağaç_GeriAl_Click(object sender, EventArgs e)
         {
@@ -2030,7 +2041,7 @@ namespace Etkinlik_Takip
 
                     if (Hatırlatıcı_EklensinMi && hatırlatıcı_tarih != default)
                     {
-                        Hatırlatıcı.Kur(yeni_oluşturulan_görev.ToString(), hatırlatıcı_tarih, tekrar_cümlesi, Hatırlatıcı_GeriBildirim_İşlemi);
+                        HatırlatıcıSayfası.Hatırlatıcı.Kur(yeni_oluşturulan_görev.ToString(), hatırlatıcı_tarih, tekrar_cümlesi, Hatırlatıcı_GeriBildirim_İşlemi);
                     }
                 }
                 else if (Seviye < okunan_seviye)
@@ -2045,7 +2056,7 @@ namespace Etkinlik_Takip
 
                     if (Hatırlatıcı_EklensinMi && hatırlatıcı_tarih != default)
                     {
-                        Hatırlatıcı.Kur(yeni_oluşturulan_görev.ToString(), hatırlatıcı_tarih, tekrar_cümlesi, Hatırlatıcı_GeriBildirim_İşlemi);
+                        HatırlatıcıSayfası.Hatırlatıcı.Kur(yeni_oluşturulan_görev.ToString(), hatırlatıcı_tarih, tekrar_cümlesi, Hatırlatıcı_GeriBildirim_İşlemi);
                     }
                 }
                 else
@@ -2058,8 +2069,6 @@ namespace Etkinlik_Takip
                 toolStripİlerleme.Value++;
                 if (Genel.Tik < Environment.TickCount) { Application.DoEvents(); Genel.Tik = Environment.TickCount + 1000; }
             }
-
-            if (Hatırlatıcı_EklensinMi) Sql_Ayarlar_Yaz("Hatırlatıcılar", Hatırlatıcı.AyarlarıOku());
 
             toolStripİlerleme.Visible = false;
         }
@@ -2223,14 +2232,12 @@ namespace Etkinlik_Takip
                     break;
 
                 case "Hatırlatıcıyı İptal et":
-                    Hatırlatıcı.Sil(((int)Ağaç.SelectedNode.Tag).ToString());
-                    Sql_Ayarlar_Yaz("Hatırlatıcılar", Hatırlatıcı.AyarlarıOku());
+                    HatırlatıcıSayfası.Hatırlatıcı.Sil(((int)Ağaç.SelectedNode.Tag).ToString());
                     Ağaç_Güncelle(true, false, false);
                     break;
 
                 case "Hatırlatıcıyı tekrar kur":
-                    Hatırlatıcı.SonrakiTetikleme_Kur(((int)Ağaç.SelectedNode.Tag).ToString());
-                    Sql_Ayarlar_Yaz("Hatırlatıcılar", Hatırlatıcı.AyarlarıOku());
+                    HatırlatıcıSayfası.Hatırlatıcı.SonrakiTetikleme_Kur(((int)Ağaç.SelectedNode.Tag).ToString(), false);
                     Ağaç_Güncelle(true, false, false);
                     break;
             }
@@ -2518,7 +2525,7 @@ namespace Etkinlik_Takip
                 }));
 
                 string tanımı = Sql_GörevÖzelliği(kendisi, EtkinlikÖzellikleri.Tanımı);
-                notifyIcon1.ShowBalloonTip(15000, Kendi.Adı() + " Hatırlatıcı", tanımı + " için kurduğunuz hatırlatıcının zamanı geçti", ToolTipIcon.Warning);
+                notifyIcon1.ShowBalloonTip(15000, Kendi.Adı + " Hatırlatıcı", tanımı + " için kurduğunuz hatırlatıcının zamanı geçti", ToolTipIcon.Warning);
             }
 
             return 0;
@@ -2526,7 +2533,7 @@ namespace Etkinlik_Takip
         int Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar(string TakmaAdı, object Hatırlatıcısı)
         {
             string SüresiDolanlar = "";
-            Hatırlatıcı_.Durum_[] Hatırlatıcılar = Hatırlatıcı.Bul();
+            Hatırlatıcı_.Durum_[] Hatırlatıcılar = HatırlatıcıSayfası.Hatırlatıcı.Bul();
             int adet = 0;
             foreach (var b in Hatırlatıcılar)
             {
@@ -2550,15 +2557,11 @@ namespace Etkinlik_Takip
 
         void NotlarSayfası_İlkAçılış()
         {
-            string yol = pak + "Notlar";
-            Directory.CreateDirectory(yol);
+            NotlarSayfası.Ayarlar = new Ayarlar_(AyarlarDosyası: pak + "Notlar\\Notlar.Ayarlar");
+            NotlarSayfası.Ayarlar_Notlar = NotlarSayfası.Ayarlar.Bul("Notlar Sayfası", true);
+            NotlarSayfası.Ayarlar_Genel = NotlarSayfası.Ayarlar.Bul("Ana Ekran", true);
 
-            yol += "\\KısayolTuşu.mup";
-            if (File.Exists(yol))
-            {
-                NotlarSayfası_KısayolTuşu.Text = File.ReadAllText(yol);
-            }
-
+            NotlarSayfası_KısayolTuşu.Text = NotlarSayfası.Ayarlar_Notlar.Oku("Kısayol Tuşu", "");
             if (string.IsNullOrEmpty(NotlarSayfası_KısayolTuşu.Text)) return;
 
             try
@@ -2572,7 +2575,7 @@ namespace Etkinlik_Takip
         }
         void NotlarSayfası_Kapanış()
         {
-            if (NotlarSayfası.Pencere != null) NotlarSayfası.Pencere.Close();
+            if (NotlarSayfası.Pencere != null) NotlarSayfası.Pencere.KapatSinyali();
         }
         private void NotlarSayfası_Dinle_Click(object sender, EventArgs e)
         {
@@ -2586,8 +2589,7 @@ namespace Etkinlik_Takip
                 try
                 {
                     NotlarSayfası.KlavyeFareGozlemcisi.KısayolTuşu_Ekle(NotlarSayfası_KısayolTuşu.Text, NotlarSayfası_KısayolTuşu_Basıldı, 0);
-                    string yol = pak + "Notlar\\KısayolTuşu.mup";
-                    File.WriteAllText(yol, NotlarSayfası_KısayolTuşu.Text);
+                    NotlarSayfası.Ayarlar_Notlar.Yaz("Kısayol Tuşu", NotlarSayfası_KısayolTuşu.Text);
                 }
                 catch (Exception ex)
                 {
@@ -2610,7 +2612,7 @@ namespace Etkinlik_Takip
         {
             if (NotlarSayfası.Pencere == null)
             {
-                NotlarSayfası.Pencere = new NotlarEkranı(pak + "Notlar\\");
+                NotlarSayfası.Pencere = new NotlarEkranı(pak + "Notlar\\", NotlarSayfası.Ayarlar_Notlar);
                 NotlarSayfası.Pencere.Font = Font;
             }
             

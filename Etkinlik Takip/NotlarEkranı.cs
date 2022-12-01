@@ -13,39 +13,24 @@ namespace Etkinlik_Takip
         string AçıkOlanBaşlık = "";
         bool Çalışsın = true;
         bool YazıDeğişti = false;
+        IDepo_Eleman Ayarlar = null;
 
-        public NotlarEkranı(string Pak)
+        public NotlarEkranı(string Pak, IDepo_Eleman Ayarlar)
         {
-            this.Pak = Pak;
             InitializeComponent();
+
+            this.Ayarlar = Ayarlar;
+            this.Pak = Pak;
         }
         private void Notlar_Load(object sender, EventArgs e)
         {
             Icon = Properties.Resources.Etkinlik_Takip;
-            Text = "Mup " + Kendi.Adı() + " Notlar V" + Kendi.Sürümü_Dosya() + " ( çıkış - esc )";
+            Text = "Mup " + Kendi.Adı + " Notlar V" + Kendi.Sürümü_Dosya + " ( çıkış - esc )";
 
-            string PencereKonumu = "";
-            if (File.Exists(Pak + "PencereKonumu.mup")) PencereKonumu = File.ReadAllText(Pak + "PencereKonumu.mup");
-            if (!string.IsNullOrEmpty(PencereKonumu))
+            if (!string.IsNullOrEmpty(Ayarlar.Oku("Pencere Konumu/x")))
             {
-                string[] dizi = PencereKonumu.Split(' ');
-                if (dizi.Length == 4)
-                {
-                    if (int.TryParse(dizi[0], out int x))
-                    {
-                        if (int.TryParse(dizi[1], out int y))
-                        {
-                            if (int.TryParse(dizi[2], out int gen))
-                            {
-                                if (int.TryParse(dizi[3], out int uzu))
-                                {
-                                    Location = new System.Drawing.Point(x, y);
-                                    Size = new System.Drawing.Size(gen, uzu);
-                                }
-                            }
-                        }
-                    }
-                }
+                Location = new System.Drawing.Point((int)Ayarlar.Oku_Sayı("Pencere Konumu/x"), (int)Ayarlar.Oku_Sayı("Pencere Konumu/y"));
+                Size = new System.Drawing.Size((int)Ayarlar.Oku_Sayı("Pencere Konumu/genişlik"), (int)Ayarlar.Oku_Sayı("Pencere Konumu/uzunluk"));
             }
 
             string[] dizi_başlıklar = Directory.GetDirectories(Pak, "*", SearchOption.TopDirectoryOnly);
@@ -63,13 +48,11 @@ namespace Etkinlik_Takip
                 Başlıklar.EndUpdate();
             }
 
-            string SonBaşlık = "";
-            if (File.Exists(Pak + "SonBaşlık.mup")) SonBaşlık = File.ReadAllText(Pak + "SonBaşlık.mup");
-            if (!string.IsNullOrEmpty(SonBaşlık))
+            Başlıklar.Text = Ayarlar.Oku("Son Başlık");
+            if (string.IsNullOrEmpty(Başlıklar.Text))
             {
-                Başlıklar.Text = SonBaşlık;
+                if (Başlıklar.Items.Count > 0) Başlıklar.SelectedIndex = 0;
             }
-            else if (Başlıklar.Items.Count > 0) Başlıklar.SelectedIndex = 0;
         }
         private void NotlarEkranı_Activated(object sender, EventArgs e)
         {
@@ -80,26 +63,29 @@ namespace Etkinlik_Takip
             if (e.KeyData == Keys.Escape)
             {
                 Hide();
-                DosyayaKaydet(String.IsNullOrEmpty(Başlıklar.Text) ? "Genel" : Başlıklar.Text); 
+                DosyayaKaydet(string.IsNullOrEmpty(Başlıklar.Text) ? "Genel" : Başlıklar.Text); 
             }
         }
         private void NotlarEkranı_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing)
+            e.Cancel = true;
+
+            Notlar_KeyDown(null, new KeyEventArgs(Keys.Escape));
+        }
+        public void KapatSinyali()
+        {
+            Çalışsın = false;
+            Notlar_KeyDown(null, new KeyEventArgs(Keys.Escape));
+
+            Ayarlar.Yaz("Son Başlık", Başlıklar.Text);
+
+            Show();
+            if (WindowState == FormWindowState.Normal)
             {
-                e.Cancel = true;
-
-                Notlar_KeyDown(null, new KeyEventArgs(Keys.Escape));
-            }
-            else
-            {
-                Çalışsın = false;
-                Notlar_KeyDown(null, new KeyEventArgs(Keys.Escape));
-
-                if (!string.IsNullOrEmpty(Başlıklar.Text)) File.WriteAllText(Pak + "SonBaşlık.mup", Başlıklar.Text);
-
-                Show();
-                if (WindowState == FormWindowState.Normal) File.WriteAllText(Pak + "PencereKonumu.mup", Location.X + " " + Location.Y + " " + Size.Width + " " + Size.Height);
+                Ayarlar.Yaz("Pencere Konumu/x", Location.X);
+                Ayarlar.Yaz("Pencere Konumu/y", Location.Y);
+                Ayarlar.Yaz("Pencere Konumu/genişlik", Size.Width);
+                Ayarlar.Yaz("Pencere Konumu/uzunluk", Size.Height);
             }
         }
 
@@ -140,6 +126,7 @@ namespace Etkinlik_Takip
             DosyayaKaydet(AçıkOlanBaşlık);
             
             AçıkOlanBaşlık = "";
+            float YakınlaştırmaDeğeri = NotlarınKendisi.ZoomFactor;
             NotlarınKendisi.Clear();
 
             if (!string.IsNullOrEmpty(Başlıklar.Text))
@@ -154,6 +141,8 @@ namespace Etkinlik_Takip
             }
 
             NotlarınKendisi.ClearUndo();
+            NotlarınKendisi.ZoomFactor = 1.0f;
+            NotlarınKendisi.ZoomFactor = YakınlaştırmaDeğeri;
             YazıDeğişti = false;
         }
 
