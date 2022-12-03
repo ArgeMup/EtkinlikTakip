@@ -108,6 +108,7 @@ namespace Etkinlik_Takip
         class HatırlatıcıSayfası_
         {
             public Hatırlatıcı_ Hatırlatıcı = null;
+            public Hatırlatıcı_ Hatırlatıcı_Kaydedilmeyen = null;
             public Ayarlar_ Ayarlar = null;
         }
         HatırlatıcıSayfası_ HatırlatıcıSayfası = new HatırlatıcıSayfası_();
@@ -177,9 +178,9 @@ namespace Etkinlik_Takip
 
                 if (!string.IsNullOrEmpty(Ayarlar_Genel.Oku("Pencere Konumu/x")))
                 {
-                    Location = new System.Drawing.Point((int)Ayarlar_Genel.Oku_Sayı("Pencere Konumu/x"), (int)Ayarlar_Genel.Oku_Sayı("Pencere Konumu/y"));
-                    Size = new System.Drawing.Size((int)Ayarlar_Genel.Oku_Sayı("Pencere Konumu/genişlik"), (int)Ayarlar_Genel.Oku_Sayı("Pencere Konumu/uzunluk"));
                     this.WindowState = (FormWindowState)Ayarlar_Genel.Oku_Sayı("Pencere", 0);
+                    Location = new System.Drawing.Point((int)Ayarlar_Genel.Oku_Sayı("Pencere Konumu/x"), (int)Ayarlar_Genel.Oku_Sayı("Pencere Konumu/y"));
+                    Size = new System.Drawing.Size((int)Ayarlar_Genel.Oku_Sayı("Pencere Konumu/genişlik"), (int)Ayarlar_Genel.Oku_Sayı("Pencere Konumu/uzunluk"));  
                 }
                 this.Tag = this.WindowState;
 
@@ -289,8 +290,8 @@ namespace Etkinlik_Takip
                 {
                     if (int.TryParse(b.TakmaAdı, out _)) HatırlatıcıSayfası.Hatırlatıcı.Kur(b.TakmaAdı, Hatırlatıcı_GeriBildirim_İşlemi);
                 }
-                HatırlatıcıSayfası.Hatırlatıcı.Sil("Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar");
-                HatırlatıcıSayfası.Hatırlatıcı.Kur("Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar", DateTime.Now.AddSeconds(15), GeriBildirim_Islemi: Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar);
+                HatırlatıcıSayfası.Hatırlatıcı_Kaydedilmeyen = new Hatırlatıcı_();
+                HatırlatıcıSayfası.Hatırlatıcı_Kaydedilmeyen.Kur("Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar", DateTime.Now.AddSeconds(15), GeriBildirim_Islemi: Hatırlatıcı_GeriBildirim_İşlemi_TümSüresiDolanlar);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); Application.Exit(); }
         }
@@ -373,24 +374,8 @@ namespace Etkinlik_Takip
             Ayarlar_Genel.Yaz("AyarlarSayfasındakiFiltrelemeyiKullan", MenuItem_Grid_Etk_AyarlarSayfasındakiFiltrelemeyiKullan.Checked);
             Ayarlar_Genel.Yaz("GörüntelenecekEtkinlikSayısı", MenuItem_Grid_Etk_GörüntülenecekEtkinlikSayısı_Adet.Text);
 
-            Sql_Durdur();
-
-            try
-            {
-                NotlarSayfası_Kapanış();
-            }
-            catch (Exception) { }
-
-            try
-            {
-                DirectoryInfo directoryInfo = new DirectoryInfo(pak + "Yedekler\\");
-                List<FileInfo> result = directoryInfo.GetFiles("*.mup", SearchOption.TopDirectoryOnly).OrderBy(t => t.CreationTime).ToList();
-                decimal Boyut = 0;
-                foreach (var item in result) Boyut += item.Length;
-                while (Boyut > 100 * 1024 * 1024 && result.Count > 15) { Boyut -= result.First().Length; result.First().Delete(); result.RemoveAt(0); }//en eski
-                if (result.Count == 0 || result.Last().LastWriteTime != File.GetLastWriteTime(pak + "Banka\\" + Application.ProductName + ".mup")) File.Copy(pak + "Banka\\" + Application.ProductName + ".mup", pak + "Yedekler\\" + DateTime.Now.ToString("_yyyyMMddhhmmss_") + Application.ProductName + ".mup", true);
-            }
-            catch (Exception) { }
+            Sql_Durdur(true);
+            NotlarSayfası_Kapanış();
 
             try
             {
@@ -399,6 +384,43 @@ namespace Etkinlik_Takip
                 File.WriteAllText(pak + "Banka\\" + Application.ProductName + ".agac", dallar);
             }
             catch (Exception) { }
+
+            #region yedekleme
+            Klasör_ ydk_ler = new Klasör_(pak + "Yedekler", Filtre_Dosya: "*.zip");
+            ydk_ler.Dosya_Sil_SayısınaVeBoyutunaGöre(15, 50 * 1024 * 1024);
+            ydk_ler.Güncelle(pak + "Yedekler", Filtre_Dosya: "*.zip");
+            
+            bool yedekle = false;
+            if (ydk_ler.Dosyalar.Count == 0) yedekle = true;
+            else
+            {
+                ydk_ler.Sırala_EskidenYeniye();
+
+                Klasör_ son_ydk = SıkıştırılmışDosya.Listele(ydk_ler.Kök + "\\" + ydk_ler.Dosyalar.Last().Yolu);
+                Klasör_ güncel = new Klasör_(pak + "Banka");
+                Klasör_.Farklılık_ farklar = güncel.Karşılaştır(son_ydk);
+                if (farklar.FarklılıkSayısı > 0)
+                {
+                    int içeriği_farklı_dosya_Sayısı = 0;
+                    foreach (Klasör_.Fark_Dosya_ a in farklar.Dosyalar)
+                    {
+                        if (!a.Aynı_Doğrulama_Kodu)
+                        {
+                            içeriği_farklı_dosya_Sayısı++;
+                            break;
+                        }
+                    }
+                    if (içeriği_farklı_dosya_Sayısı > 0) yedekle = true;
+                }
+            }
+            if (yedekle)
+            {
+                string k = pak + "Banka";
+                string h = pak + "Yedekler\\" + D_TarihSaat.Yazıya(DateTime.Now, D_TarihSaat.Şablon_DosyaAdı) + ".zip";
+
+                SıkıştırılmışDosya.Klasörden(k, h);
+            }
+            #endregion
 
             YeniYazılımKontrolü.Durdur();
             ArgeMup.HazirKod.ArkaPlan.Ortak.Çalışsın = false;
@@ -469,7 +491,7 @@ namespace Etkinlik_Takip
             try
             {
                 Sql.BağlantıMeşajıÜreteci = new SQLiteConnectionStringBuilder();
-                Sql.BağlantıMeşajıÜreteci.DataSource = pak + "Banka\\" + Application.ProductName + ".mup";
+                Sql.BağlantıMeşajıÜreteci.DataSource = pak + "Banka\\" + Kendi.Adı + ".mup";
                 Sql.BağlantıMeşajıÜreteci.JournalMode = SQLiteJournalModeEnum.Wal;
                 Sql.Bağlantı = new SQLiteConnection(Sql.BağlantıMeşajıÜreteci.ConnectionString);
                 Sql.Bağlantı.Open();
@@ -537,11 +559,19 @@ namespace Etkinlik_Takip
                 return Sql_Sorgula("update Ayarlar set Ayar = '" + Ayar + "' where Parametre = '" + Parametre + "'");
             }
         }
-        private bool Sql_Durdur()
+        private bool Sql_Durdur(bool TamamenKapat = false)
         {
             try
             {
                 Sql.Bağlantı.Close();
+
+                if (TamamenKapat)
+                {
+                    Sql.Bağlantı.Dispose();
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                }
+
                 return true;
             }
             catch (Exception) { }
@@ -2535,7 +2565,7 @@ namespace Etkinlik_Takip
         }
         void NotlarSayfası_Kapanış()
         {
-            if (NotlarSayfası.Pencere != null) NotlarSayfası.Pencere.KapatSinyali();
+            if (NotlarSayfası.Pencere != null) NotlarSayfası.Pencere.Close();
         }
         private void NotlarSayfası_Dinle_Click(object sender, EventArgs e)
         {

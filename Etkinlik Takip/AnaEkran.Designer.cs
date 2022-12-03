@@ -1716,7 +1716,7 @@
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Location = new System.Drawing.Point(40, 260);
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Margin = new System.Windows.Forms.Padding(4);
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Name = "Hatırlatıcı_Hatırlat_Diğer_Yazı";
-            this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Size = new System.Drawing.Size(1067, 23);
+            this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Size = new System.Drawing.Size(1246, 23);
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.TabIndex = 23;
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.TextChanged += new System.EventHandler(this.Hatırlatıcı_Hatırlat_Diğer_Yazı_TextChanged);
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Hatırlatıcı_Hatırlat_Diğer_Yazı_KeyPress);
@@ -2185,7 +2185,6 @@
             this.Opacity = 0D;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Bekleyiniz";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AnaEkran_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.AnaEkran_FormClosed);
             this.Load += new System.EventHandler(this.AnaEkran_Load);

@@ -38,7 +38,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;HazirKod_Cdiyez_Görsel</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;HazirKod_Cdiyez_Görsel HazirKod_Cdiyez_Sıkıştırma</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -48,7 +48,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>HazirKod_Cdiyez_Görsel</DefineConstants>
+    <DefineConstants>HazirKod_Cdiyez_Görsel HazirKod_Cdiyez_Sıkıştırma</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -110,6 +110,7 @@
     <Compile Include="HazirKod_Cdiyez\KlasörDosya.cs" />
     <Compile Include="HazirKod_Cdiyez\KlavyeFareGozlemcisi.cs" />
     <Compile Include="HazirKod_Cdiyez\Liste.cs" />
+    <Compile Include="HazirKod_Cdiyez\Sıkıştırma.cs" />
     <Compile Include="HazirKod_Cdiyez\UygulamaOncedenCalistirildiMi.cs" />
     <Compile Include="HazirKod_Cdiyez\Win32Kutuphaneleri.cs" />
     <Compile Include="HazirKod_Cdiyez\YeniYazılımKontrolü.cs" />

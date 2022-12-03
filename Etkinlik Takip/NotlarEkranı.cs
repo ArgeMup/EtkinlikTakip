@@ -93,24 +93,27 @@ namespace Etkinlik_Takip
         }
         private void NotlarEkranı_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = true;
-
-            Notlar_KeyDown(null, new KeyEventArgs(Keys.Escape));
-        }
-        public void KapatSinyali()
-        {
-            Çalışsın = false;
-            Notlar_KeyDown(null, new KeyEventArgs(Keys.Escape));
-
-            Ayarlar.Yaz("Son Başlık", Başlıklar.Text);
-
-            Show();
-            if (WindowState == FormWindowState.Normal)
+            if (e.CloseReason == CloseReason.UserClosing)
             {
-                Ayarlar.Yaz("Pencere Konumu/x", Location.X);
-                Ayarlar.Yaz("Pencere Konumu/y", Location.Y);
-                Ayarlar.Yaz("Pencere Konumu/genişlik", Size.Width);
-                Ayarlar.Yaz("Pencere Konumu/uzunluk", Size.Height);
+                e.Cancel = true;
+
+                Notlar_KeyDown(null, new KeyEventArgs(Keys.Escape));
+            }
+            else
+            {
+                Çalışsın = false;
+                Notlar_KeyDown(null, new KeyEventArgs(Keys.Escape));
+
+                Ayarlar.Yaz("Son Başlık", Başlıklar.Text);
+
+                Show();
+                if (WindowState == FormWindowState.Normal)
+                {
+                    Ayarlar.Yaz("Pencere Konumu/x", Location.X);
+                    Ayarlar.Yaz("Pencere Konumu/y", Location.Y);
+                    Ayarlar.Yaz("Pencere Konumu/genişlik", Size.Width);
+                    Ayarlar.Yaz("Pencere Konumu/uzunluk", Size.Height);
+                }
             }
         }
 
