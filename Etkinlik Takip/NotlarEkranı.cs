@@ -74,6 +74,8 @@ namespace Etkinlik_Takip
             {
                 if (Başlıklar.Items.Count > 0) Başlıklar.SelectedIndex = 0;
             }
+
+            NotlarınKendisi.ZoomFactor = (float)Ayarlar.Oku_Sayı("Yakınlaştırma Oranı", 1);
         }
         private void NotlarEkranı_Activated(object sender, EventArgs e)
         {
@@ -91,7 +93,7 @@ namespace Etkinlik_Takip
                 DosyayaKaydet(string.IsNullOrEmpty(Başlıklar.Text) ? "Genel" : Başlıklar.Text);
             }
         }
-        private void NotlarEkranı_FormClosing(object sender, FormClosingEventArgs e)
+        public void NotlarEkranı_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
@@ -105,6 +107,7 @@ namespace Etkinlik_Takip
                 Notlar_KeyDown(null, new KeyEventArgs(Keys.Escape));
 
                 Ayarlar.Yaz("Son Başlık", Başlıklar.Text);
+                Ayarlar.Yaz("Yakınlaştırma Oranı", NotlarınKendisi.ZoomFactor);
 
                 Show();
                 if (WindowState == FormWindowState.Normal)
@@ -114,6 +117,7 @@ namespace Etkinlik_Takip
                     Ayarlar.Yaz("Pencere Konumu/genişlik", Size.Width);
                     Ayarlar.Yaz("Pencere Konumu/uzunluk", Size.Height);
                 }
+                Hide();
             }
         }
 

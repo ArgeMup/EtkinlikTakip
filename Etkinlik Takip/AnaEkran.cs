@@ -15,6 +15,7 @@ using ArgeMup.HazirKod;
 using ArgeMup.HazirKod.ArkaPlan;
 using ArgeMup.HazirKod.Dönüştürme;
 using System.Threading;
+using ArgeMup.HazirKod.Ekİşlemler;
 
 namespace Etkinlik_Takip
 {
@@ -374,8 +375,8 @@ namespace Etkinlik_Takip
             Ayarlar_Genel.Yaz("AyarlarSayfasındakiFiltrelemeyiKullan", MenuItem_Grid_Etk_AyarlarSayfasındakiFiltrelemeyiKullan.Checked);
             Ayarlar_Genel.Yaz("GörüntelenecekEtkinlikSayısı", MenuItem_Grid_Etk_GörüntülenecekEtkinlikSayısı_Adet.Text);
 
-            Sql_Durdur(true);
             NotlarSayfası_Kapanış();
+            Sql_Durdur(true);
 
             try
             {
@@ -1424,6 +1425,7 @@ namespace Etkinlik_Takip
                         }
                     }
 
+                    HatırlatıcıSayfası.Hatırlatıcı.Sil(Sahip.ToString());
                     HatırlatıcıSayfası.Hatırlatıcı.Kur(Sahip.ToString(), d, tekrarlama, Hatırlatıcı_GeriBildirim_İşlemi);
                 }
 
@@ -1722,33 +1724,21 @@ namespace Etkinlik_Takip
                     MenuItem_Ağaç_Etkinlik.Checked = true;
                 }
 
-                MenuItem_Ağaç_Hatırlatıcı.Visible = true;
-                MenuItem_Ağaç_Hatırlatıcı_Kur.Visible = false;
-                MenuItem_Ağaç_Hatırlatıcı_İptalEt.Visible = false;
                 Hatırlatıcı_.Durum_ Durum = HatırlatıcıSayfası.Hatırlatıcı.Bul(((int)Ağaç.SelectedNode.Tag).ToString());
+                MenuItem_Ağaç_Hatırlatıcı.Visible = true;
                 if (Durum == null)
                 {
                     MenuItem_Ağaç_Hatırlatıcı.Text = "Hatırlatıcı kur";
+                    MenuItem_Ağaç_Hatırlatıcı_TekrarKur.Visible = false;
+                    MenuItem_Ağaç_Hatırlatıcı_İptalEt.Visible = false;
                 }
                 else
                 {
-                    if (Durum.TetiklenmesiBekleniyor)
-                    {
-                        MenuItem_Ağaç_Hatırlatıcı.Text = "Hatırlatıcıyı İptal et";
-                    }
-                    else
-                    {
-                        if (string.IsNullOrEmpty(Durum.TekrarlayıcıKomutCümlesi))
-                        {
-                            MenuItem_Ağaç_Hatırlatıcı.Text = "Hatırlatıcıyı İptal et";
-                        }
-                        else
-                        {
-                            MenuItem_Ağaç_Hatırlatıcı.Text = "Hatırlatıcı";
-                            MenuItem_Ağaç_Hatırlatıcı_Kur.Visible = true;
-                            MenuItem_Ağaç_Hatırlatıcı_İptalEt.Visible = true;
-                        }
-                    }
+                    MenuItem_Ağaç_Hatırlatıcı.Text = "Hatırlatıcı";
+                    MenuItem_Ağaç_Hatırlatıcı_TekrarKur.Visible = true;
+                    MenuItem_Ağaç_Hatırlatıcı_İptalEt.Visible = true;
+
+                    MenuItem_Ağaç_Hatırlatıcı_TekrarKur.Tag = Durum;
                 }
             }
 
@@ -2207,29 +2197,68 @@ namespace Etkinlik_Takip
             if (Ağaç.SelectedNode == null) return;
 
             ToolStripMenuItem ts = sender as ToolStripMenuItem;
+            Hatırlatıcı_.Durum_ Durum = ts.Tag as Hatırlatıcı_.Durum_;
             switch (ts.Text)
             {
                 case "Hatırlatıcı kur":
-                    Hatırlatıcı_Hatırlat_Bugün_a.Checked = true;
-                    Hatırlatıcı_Hatırlat_Bugün_a.Checked = false; //tüm seçili alanların sıfırlanması için
-                    Hatırlatıcı_Tekrarla_Onay.Checked = false;
-
-                    splitContainer2.Panel2Collapsed = true;
-                    Panel_Aç(Panel2Durumu.Hatırlatıcı);
-
-                    SayfaDüzeni_OnayRet();
-                    Genel.KaydedilmemişBilgiVar = false;
+                    _Hatırlatıcı_Görünümüne_Geç_();
                     break;
 
                 case "Hatırlatıcıyı İptal et":
+                    if (DialogResult.No == MessageBox.Show("Hatırlatıcıyı iptal etmek istiyor musunuz?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)) return;
                     HatırlatıcıSayfası.Hatırlatıcı.Sil(((int)Ağaç.SelectedNode.Tag).ToString());
                     Ağaç_Güncelle(true, false, false);
                     break;
 
                 case "Hatırlatıcıyı tekrar kur":
-                    HatırlatıcıSayfası.Hatırlatıcı.SonrakiTetikleme_Kur(((int)Ağaç.SelectedNode.Tag).ToString(), false);
-                    Ağaç_Güncelle(true, false, false);
+                    if (Durum.TetiklenmesiBekleniyor) _Hatırlatıcı_Görünümüne_Geç_();
+                    else
+                    {
+                        //geçmiş
+                        if (string.IsNullOrWhiteSpace(Durum.TekrarlayıcıKomutCümlesi)) _Hatırlatıcı_Görünümüne_Geç_();
+                        else
+                        {
+                            if (DialogResult.No == MessageBox.Show("Hatırlatıcıyı tekrar kurmak istiyor musunuz?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)) return;
+                            HatırlatıcıSayfası.Hatırlatıcı.SonrakiTetikleme_Kur(((int)Ağaç.SelectedNode.Tag).ToString(), false);
+                            Ağaç_Güncelle(true, false, false);
+                        }
+                    }
                     break;
+            }
+
+            void _Hatırlatıcı_Görünümüne_Geç_()
+            {
+                if (Durum == null)
+                {
+                    Hatırlatıcı_Hatırlat_Bugün_a.Checked = true;
+                    Hatırlatıcı_Hatırlat_Bugün_a.Checked = false; //tüm seçili alanların sıfırlanması için
+                    Hatırlatıcı_Tekrarla_Onay.Checked = false;
+                }
+                else
+                {
+                    Hatırlatıcı_Hatırlat_Diğer_Onay.Checked = true;
+                    Hatırlatıcı_Hatırlat_Diğer_Yazı.Text = Durum.TetikleneceğiAn.Yazıya("dd MM yyyy HH mm");
+
+                    if (!string.IsNullOrWhiteSpace(Durum.TekrarlayıcıKomutCümlesi))
+                    {
+                        Hatırlatıcı_Tekrarla_Onay.Checked = true;
+                        Hatırlatıcı_Tekrarla_adet.Value = int.Parse(Durum.TekrarlayıcıKomutCümlesi.Substring(2));
+
+                        switch (Durum.TekrarlayıcıKomutCümlesi[0])
+                        {
+                            case 'g': Hatırlatıcı_Tekrarla_dönem.SelectedIndex = 0; break;
+                            case 'h': Hatırlatıcı_Tekrarla_dönem.SelectedIndex = 1; break;
+                            case 'a': Hatırlatıcı_Tekrarla_dönem.SelectedIndex = 2; break;
+                            case 'y': Hatırlatıcı_Tekrarla_dönem.SelectedIndex = 3; break;
+                        }
+                    }
+                    else Hatırlatıcı_Tekrarla_Onay.Checked = false;
+                }
+
+                splitContainer2.Panel2Collapsed = true;
+                Panel_Aç(Panel2Durumu.Hatırlatıcı);
+                SayfaDüzeni_OnayRet();
+                Genel.KaydedilmemişBilgiVar = false;
             }
         }
 
@@ -2486,6 +2515,8 @@ namespace Etkinlik_Takip
                 {
                     Hatırlatıcı_Hatırlat_Diğer.Text = "Diğer -> " + ArgeMup.HazirKod.Dönüştürme.D_TarihSaat.Yazıya(hedeflenen_süre, "dd.MM.yyyy HH:mm") + " <- ( gg aa | gg aa yy | gg aa yy ss | gg aa yy ss dd | g/gg a/aa yy/yyyy s/ss d/dd boşluk virgül )";
                     Hatırlatıcı_Hatırlat_Diğer.Tag = hedeflenen_süre;
+
+                    Genel_KaydedilmemişBilgiVar(null, null);
                     return;
                 }
                 else if (ş.EndsWith("yyyy")) ş = ş.Remove(ş.Length - 5);
@@ -2565,7 +2596,9 @@ namespace Etkinlik_Takip
         }
         void NotlarSayfası_Kapanış()
         {
-            if (NotlarSayfası.Pencere != null) NotlarSayfası.Pencere.Close();
+            if (NotlarSayfası.Pencere != null) NotlarSayfası.Pencere.NotlarEkranı_FormClosing(null, new FormClosingEventArgs(CloseReason.None, false));
+
+            NotlarSayfası.Ayarlar.DeğişiklikleriKaydet(true);
         }
         private void NotlarSayfası_Dinle_Click(object sender, EventArgs e)
         {

@@ -42,8 +42,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnaEkran));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Ağaç = new Etkinlik_Takip.AnaEkran.ÇiftTamponluTreeView();
             this.Menu_Ağaç = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.MenuItem_Ağaç_Görev = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,7 +61,7 @@
             this.MenuItem_Ağaç_İptalEdildi = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.MenuItem_Ağaç_Hatırlatıcı = new System.Windows.Forms.ToolStripMenuItem();
-            this.MenuItem_Ağaç_Hatırlatıcı_Kur = new System.Windows.Forms.ToolStripMenuItem();
+            this.MenuItem_Ağaç_Hatırlatıcı_TekrarKur = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_Ağaç_Hatırlatıcı_İptalEt = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_Ağaç_TümEtkinliklerinListele = new System.Windows.Forms.ToolStripMenuItem();
             this.MenuItem_Ağaç_TümünüAç = new System.Windows.Forms.ToolStripMenuItem();
@@ -259,7 +259,7 @@
             this.Ağaç.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Ağaç.Name = "Ağaç";
             this.Ağaç.SelectedImageIndex = 0;
-            this.Ağaç.Size = new System.Drawing.Size(74, 498);
+            this.Ağaç.Size = new System.Drawing.Size(131, 498);
             this.Ağaç.TabIndex = 1;
             this.Ağaç.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.Ağaç_AfterCollapse);
             this.Ağaç.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.Ağaç_AfterExpand);
@@ -415,19 +415,19 @@
             // MenuItem_Ağaç_Hatırlatıcı
             // 
             this.MenuItem_Ağaç_Hatırlatıcı.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.MenuItem_Ağaç_Hatırlatıcı_Kur,
+            this.MenuItem_Ağaç_Hatırlatıcı_TekrarKur,
             this.MenuItem_Ağaç_Hatırlatıcı_İptalEt});
             this.MenuItem_Ağaç_Hatırlatıcı.Name = "MenuItem_Ağaç_Hatırlatıcı";
             this.MenuItem_Ağaç_Hatırlatıcı.Size = new System.Drawing.Size(284, 26);
             this.MenuItem_Ağaç_Hatırlatıcı.Text = " ... Hatırlatıcı ... Kur ... İptal et ... ";
             this.MenuItem_Ağaç_Hatırlatıcı.Click += new System.EventHandler(this.MenuItem_Ağaç_Hatırlatıcı_Kur_İptalEt_Click);
             // 
-            // MenuItem_Ağaç_Hatırlatıcı_Kur
+            // MenuItem_Ağaç_Hatırlatıcı_TekrarKur
             // 
-            this.MenuItem_Ağaç_Hatırlatıcı_Kur.Name = "MenuItem_Ağaç_Hatırlatıcı_Kur";
-            this.MenuItem_Ağaç_Hatırlatıcı_Kur.Size = new System.Drawing.Size(234, 26);
-            this.MenuItem_Ağaç_Hatırlatıcı_Kur.Text = "Hatırlatıcıyı tekrar kur";
-            this.MenuItem_Ağaç_Hatırlatıcı_Kur.Click += new System.EventHandler(this.MenuItem_Ağaç_Hatırlatıcı_Kur_İptalEt_Click);
+            this.MenuItem_Ağaç_Hatırlatıcı_TekrarKur.Name = "MenuItem_Ağaç_Hatırlatıcı_TekrarKur";
+            this.MenuItem_Ağaç_Hatırlatıcı_TekrarKur.Size = new System.Drawing.Size(234, 26);
+            this.MenuItem_Ağaç_Hatırlatıcı_TekrarKur.Text = "Hatırlatıcıyı tekrar kur";
+            this.MenuItem_Ağaç_Hatırlatıcı_TekrarKur.Click += new System.EventHandler(this.MenuItem_Ağaç_Hatırlatıcı_Kur_İptalEt_Click);
             // 
             // MenuItem_Ağaç_Hatırlatıcı_İptalEt
             // 
@@ -514,8 +514,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(599, 502);
-            this.splitContainer1.SplitterDistance = 78;
+            this.splitContainer1.Size = new System.Drawing.Size(840, 502);
+            this.splitContainer1.SplitterDistance = 135;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 3;
             // 
@@ -530,7 +530,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(512, 498);
+            this.tabControl1.Size = new System.Drawing.Size(696, 498);
             this.tabControl1.TabIndex = 4;
             this.tabControl1.Visible = false;
             // 
@@ -680,14 +680,14 @@
             this.Grid_Etkinlikler.AllowUserToDeleteRows = false;
             this.Grid_Etkinlikler.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.Grid_Etkinlikler.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Grid_Etkinlikler.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Grid_Etkinlikler.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.Grid_Etkinlikler.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Grid_Etkinlikler.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Sutun_Gorev,
@@ -752,8 +752,8 @@
             // Sutun_Açıklama
             // 
             this.Sutun_Açıklama.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.Sutun_Açıklama.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.Sutun_Açıklama.DefaultCellStyle = dataGridViewCellStyle6;
             this.Sutun_Açıklama.HeaderText = "Açıklama";
             this.Sutun_Açıklama.MinimumWidth = 8;
             this.Sutun_Açıklama.Name = "Sutun_Açıklama";
@@ -1409,7 +1409,7 @@
             this.tabPage5.Margin = new System.Windows.Forms.Padding(4);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage5.Size = new System.Drawing.Size(504, 469);
+            this.tabPage5.Size = new System.Drawing.Size(688, 469);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Hatırlatıcı";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -1465,7 +1465,7 @@
             this.panel_Hatırlatıcı.Location = new System.Drawing.Point(4, 4);
             this.panel_Hatırlatıcı.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.panel_Hatırlatıcı.Name = "panel_Hatırlatıcı";
-            this.panel_Hatırlatıcı.Size = new System.Drawing.Size(496, 461);
+            this.panel_Hatırlatıcı.Size = new System.Drawing.Size(680, 461);
             this.panel_Hatırlatıcı.TabIndex = 2;
             // 
             // Hatırlatıcı_Hatırlat_Yarın_dd
@@ -1708,6 +1708,7 @@
             this.Hatırlatıcı_Tekrarla_dönem.Name = "Hatırlatıcı_Tekrarla_dönem";
             this.Hatırlatıcı_Tekrarla_dönem.Size = new System.Drawing.Size(113, 24);
             this.Hatırlatıcı_Tekrarla_dönem.TabIndex = 26;
+            this.Hatırlatıcı_Tekrarla_dönem.SelectedIndexChanged += new System.EventHandler(this.Genel_KaydedilmemişBilgiVar);
             // 
             // Hatırlatıcı_Hatırlat_Diğer_Yazı
             // 
@@ -1716,7 +1717,7 @@
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Location = new System.Drawing.Point(40, 260);
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Margin = new System.Windows.Forms.Padding(4);
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Name = "Hatırlatıcı_Hatırlat_Diğer_Yazı";
-            this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Size = new System.Drawing.Size(1246, 23);
+            this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Size = new System.Drawing.Size(585, 23);
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.TabIndex = 23;
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.TextChanged += new System.EventHandler(this.Hatırlatıcı_Hatırlat_Diğer_Yazı_TextChanged);
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Hatırlatıcı_Hatırlat_Diğer_Yazı_KeyPress);
@@ -1744,6 +1745,7 @@
             0,
             0,
             0});
+            this.Hatırlatıcı_Tekrarla_adet.ValueChanged += new System.EventHandler(this.Genel_KaydedilmemişBilgiVar);
             // 
             // Hatırlatıcı_Hatırlat_DahaSonra_6ay
             // 
@@ -2073,7 +2075,7 @@
             this.statusStrip1.Location = new System.Drawing.Point(0, 502);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(3, 0, 19, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(599, 26);
+            this.statusStrip1.Size = new System.Drawing.Size(840, 26);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -2175,7 +2177,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(599, 528);
+            this.ClientSize = new System.Drawing.Size(840, 528);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -2379,7 +2381,7 @@
         private System.Windows.Forms.ComboBox Hatırlatıcı_Tekrarla_dönem;
         private System.Windows.Forms.NumericUpDown Hatırlatıcı_Tekrarla_adet;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Ağaç_Hatırlatıcı;
-        private System.Windows.Forms.ToolStripMenuItem MenuItem_Ağaç_Hatırlatıcı_Kur;
+        private System.Windows.Forms.ToolStripMenuItem MenuItem_Ağaç_Hatırlatıcı_TekrarKur;
         private System.Windows.Forms.ToolStripMenuItem MenuItem_Ağaç_Hatırlatıcı_İptalEt;
         private System.Windows.Forms.CheckBox Hatırlatıcı_Tekrarla_Onay;
         private System.Windows.Forms.Label Hatırlatıcı_Hatırlat_Diğer;

@@ -38,19 +38,24 @@
             this.Belirginleştir_Kızart = new System.Windows.Forms.ToolStripMenuItem();
             this.Belirginleştir_Sarart = new System.Windows.Forms.ToolStripMenuItem();
             this.Belirginleştir_Beyazlat = new System.Windows.Forms.ToolStripMenuItem();
+            this.Ayraç = new System.Windows.Forms.SplitContainer();
             this.Belirginleştir.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Ayraç)).BeginInit();
+            this.Ayraç.Panel1.SuspendLayout();
+            this.Ayraç.Panel2.SuspendLayout();
+            this.Ayraç.SuspendLayout();
             this.SuspendLayout();
             // 
             // Başlıklar
             // 
-            this.Başlıklar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.Başlıklar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Başlıklar.FormattingEnabled = true;
             this.Başlıklar.HorizontalScrollbar = true;
-            this.Başlıklar.Location = new System.Drawing.Point(2, 2);
-            this.Başlıklar.Margin = new System.Windows.Forms.Padding(2);
+            this.Başlıklar.ItemHeight = 16;
+            this.Başlıklar.Location = new System.Drawing.Point(0, 0);
+            this.Başlıklar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Başlıklar.Name = "Başlıklar";
-            this.Başlıklar.Size = new System.Drawing.Size(91, 264);
+            this.Başlıklar.Size = new System.Drawing.Size(139, 335);
             this.Başlıklar.Sorted = true;
             this.Başlıklar.TabIndex = 0;
             this.toolTip1.SetToolTip(this.Başlıklar, "Notlara dair ana başlıklar");
@@ -58,11 +63,11 @@
             // 
             // Ekle
             // 
-            this.Ekle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Ekle.Location = new System.Drawing.Point(2, 290);
-            this.Ekle.Margin = new System.Windows.Forms.Padding(2);
+            this.Ekle.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.Ekle.Location = new System.Drawing.Point(0, 357);
+            this.Ekle.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Ekle.Name = "Ekle";
-            this.Ekle.Size = new System.Drawing.Size(90, 19);
+            this.Ekle.Size = new System.Drawing.Size(139, 23);
             this.Ekle.TabIndex = 3;
             this.Ekle.Text = "Ekle";
             this.toolTip1.SetToolTip(this.Ekle, "Varolan yazıları kaydedip yeni bir başlık açar");
@@ -71,27 +76,26 @@
             // 
             // YeniBaşlık
             // 
-            this.YeniBaşlık.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.YeniBaşlık.Location = new System.Drawing.Point(2, 271);
-            this.YeniBaşlık.Margin = new System.Windows.Forms.Padding(2);
+            this.YeniBaşlık.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.YeniBaşlık.Location = new System.Drawing.Point(0, 335);
+            this.YeniBaşlık.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.YeniBaşlık.Name = "YeniBaşlık";
-            this.YeniBaşlık.Size = new System.Drawing.Size(91, 20);
+            this.YeniBaşlık.Size = new System.Drawing.Size(139, 22);
             this.YeniBaşlık.TabIndex = 2;
             this.toolTip1.SetToolTip(this.YeniBaşlık, "Yeni başlık");
             // 
             // NotlarınKendisi
             // 
-            this.NotlarınKendisi.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.NotlarınKendisi.AcceptsTab = true;
             this.NotlarınKendisi.AutoWordSelection = true;
             this.NotlarınKendisi.ContextMenuStrip = this.Belirginleştir;
+            this.NotlarınKendisi.Dock = System.Windows.Forms.DockStyle.Fill;
             this.NotlarınKendisi.EnableAutoDragDrop = true;
             this.NotlarınKendisi.HideSelection = false;
-            this.NotlarınKendisi.Location = new System.Drawing.Point(97, 2);
-            this.NotlarınKendisi.Margin = new System.Windows.Forms.Padding(2);
+            this.NotlarınKendisi.Location = new System.Drawing.Point(0, 0);
+            this.NotlarınKendisi.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.NotlarınKendisi.Name = "NotlarınKendisi";
-            this.NotlarınKendisi.Size = new System.Drawing.Size(536, 307);
+            this.NotlarınKendisi.Size = new System.Drawing.Size(694, 380);
             this.NotlarınKendisi.TabIndex = 1;
             this.NotlarınKendisi.Text = "";
             this.toolTip1.SetToolTip(this.NotlarınKendisi, "Kaydedip çıkmak için - esc tuşu kullanılabilir\r\nYazılar seçilip\r\n\tağacın bir dalı" +
@@ -134,17 +138,34 @@
             this.Belirginleştir_Beyazlat.Text = "Beyazlat";
             this.Belirginleştir_Beyazlat.Click += new System.EventHandler(this.Belirginleştir_X_Click);
             // 
+            // Ayraç
+            // 
+            this.Ayraç.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.Ayraç.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Ayraç.Location = new System.Drawing.Point(0, 0);
+            this.Ayraç.Name = "Ayraç";
+            // 
+            // Ayraç.Panel1
+            // 
+            this.Ayraç.Panel1.Controls.Add(this.Başlıklar);
+            this.Ayraç.Panel1.Controls.Add(this.YeniBaşlık);
+            this.Ayraç.Panel1.Controls.Add(this.Ekle);
+            // 
+            // Ayraç.Panel2
+            // 
+            this.Ayraç.Panel2.Controls.Add(this.NotlarınKendisi);
+            this.Ayraç.Size = new System.Drawing.Size(845, 384);
+            this.Ayraç.SplitterDistance = 143;
+            this.Ayraç.TabIndex = 4;
+            // 
             // NotlarEkranı
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(634, 312);
-            this.Controls.Add(this.NotlarınKendisi);
-            this.Controls.Add(this.YeniBaşlık);
-            this.Controls.Add(this.Ekle);
-            this.Controls.Add(this.Başlıklar);
+            this.ClientSize = new System.Drawing.Size(845, 384);
+            this.Controls.Add(this.Ayraç);
             this.KeyPreview = true;
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MinimizeBox = false;
             this.Name = "NotlarEkranı";
             this.ShowInTaskbar = false;
@@ -156,8 +177,12 @@
             this.Shown += new System.EventHandler(this.NotlarEkranı_Activated);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Notlar_KeyDown);
             this.Belirginleştir.ResumeLayout(false);
+            this.Ayraç.Panel1.ResumeLayout(false);
+            this.Ayraç.Panel1.PerformLayout();
+            this.Ayraç.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Ayraç)).EndInit();
+            this.Ayraç.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -172,5 +197,6 @@
         private System.Windows.Forms.ToolStripMenuItem Belirginleştir_Kızart;
         private System.Windows.Forms.ToolStripMenuItem Belirginleştir_Sarart;
         private System.Windows.Forms.ToolStripMenuItem Belirginleştir_Beyazlat;
+        private System.Windows.Forms.SplitContainer Ayraç;
     }
 }
