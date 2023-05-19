@@ -108,16 +108,10 @@ namespace Etkinlik_Takip
 
                 Ayarlar.Yaz("Son Başlık", Başlıklar.Text);
                 Ayarlar.Yaz("Yakınlaştırma Oranı", NotlarınKendisi.ZoomFactor);
-
-                Show();
-                if (WindowState == FormWindowState.Normal)
-                {
-                    Ayarlar.Yaz("Pencere Konumu/x", Location.X);
-                    Ayarlar.Yaz("Pencere Konumu/y", Location.Y);
-                    Ayarlar.Yaz("Pencere Konumu/genişlik", Size.Width);
-                    Ayarlar.Yaz("Pencere Konumu/uzunluk", Size.Height);
-                }
-                Hide();
+                Ayarlar.Yaz("Pencere Konumu/x", Location.X);
+                Ayarlar.Yaz("Pencere Konumu/y", Location.Y);
+                Ayarlar.Yaz("Pencere Konumu/genişlik", Size.Width);
+                Ayarlar.Yaz("Pencere Konumu/uzunluk", Size.Height);
             }
         }
 
