@@ -64,7 +64,7 @@ namespace Etkinlik_Takip
 
                     Başlıklar.Items.Add(kesilmiş);
 
-                    Dosya.Sil_SayısınaGöre(b, 15, "*.mup");
+                    Dosya.Sil_SayısınaGöre(b, 15, new string[] { "*.mup" });
                 }
                 Başlıklar.EndUpdate();
             }

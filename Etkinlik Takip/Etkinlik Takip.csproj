@@ -80,6 +80,7 @@
     </Reference>
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -99,6 +100,7 @@
     <Compile Include="HazirKod_Cdiyez\ArkaPlan.cs" />
     <Compile Include="HazirKod_Cdiyez\Ayarlar.cs" />
     <Compile Include="HazirKod_Cdiyez\Depo.cs" />
+    <Compile Include="HazirKod_Cdiyez\Değişken.cs" />
     <Compile Include="HazirKod_Cdiyez\DonanımHaberleşmesi.cs" />
     <Compile Include="HazirKod_Cdiyez\DonanımHaberleşmesi_Udp.cs" />
     <Compile Include="HazirKod_Cdiyez\DoğrulamaKodu.cs" />
@@ -110,7 +112,9 @@
     <Compile Include="HazirKod_Cdiyez\KlasörDosya.cs" />
     <Compile Include="HazirKod_Cdiyez\KlavyeFareGozlemcisi.cs" />
     <Compile Include="HazirKod_Cdiyez\Liste.cs" />
+    <Compile Include="HazirKod_Cdiyez\Matematiksel.cs" />
     <Compile Include="HazirKod_Cdiyez\Sıkıştırma.cs" />
+    <Compile Include="HazirKod_Cdiyez\Temkinliİşlemler.cs" />
     <Compile Include="HazirKod_Cdiyez\UygulamaOncedenCalistirildiMi.cs" />
     <Compile Include="HazirKod_Cdiyez\Win32Kutuphaneleri.cs" />
     <Compile Include="HazirKod_Cdiyez\YeniYazılımKontrolü.cs" />
