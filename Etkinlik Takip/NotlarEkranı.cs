@@ -6,8 +6,6 @@ using ArgeMup.HazirKod.Dönüştürme;
 using System.Drawing;
 using System.Collections.Generic;
 using ArgeMup.HazirKod.Ekİşlemler;
-using System.Linq;
-using System.Security.AccessControl;
 
 namespace Etkinlik_Takip
 {

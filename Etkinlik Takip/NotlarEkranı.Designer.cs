@@ -53,7 +53,7 @@
             this.NotlarınKendisi.Location = new System.Drawing.Point(0, 0);
             this.NotlarınKendisi.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.NotlarınKendisi.Name = "NotlarınKendisi";
-            this.NotlarınKendisi.Size = new System.Drawing.Size(694, 380);
+            this.NotlarınKendisi.Size = new System.Drawing.Size(637, 380);
             this.NotlarınKendisi.TabIndex = 1;
             this.NotlarınKendisi.Text = "";
             this.toolTip1.SetToolTip(this.NotlarınKendisi, "Kaydedip çıkmak için - esc tuşu kullanılabilir\r\nYazılar seçilip\r\n\tağacın bir dalı" +
@@ -107,7 +107,7 @@
             // 
             this.Ayraç.Panel2.Controls.Add(this.NotlarınKendisi);
             this.Ayraç.Size = new System.Drawing.Size(845, 384);
-            this.Ayraç.SplitterDistance = 143;
+            this.Ayraç.SplitterDistance = 200;
             this.Ayraç.TabIndex = 4;
             // 
             // NotlarEkranı

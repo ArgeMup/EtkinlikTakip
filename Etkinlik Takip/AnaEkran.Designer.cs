@@ -42,8 +42,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnaEkran));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Ağaç = new Etkinlik_Takip.AnaEkran.ÇiftTamponluTreeView();
             this.Menu_Ağaç = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.MenuItem_Ağaç_Görev = new System.Windows.Forms.ToolStripMenuItem();
@@ -208,6 +208,7 @@
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.Menu_İkon_Çıkış = new System.Windows.Forms.ToolStripMenuItem();
             this.Sql_Zamanlayıcı = new System.Windows.Forms.Timer(this.components);
+            this.toolStripTamamlananlarıGösterGizle = new System.Windows.Forms.ToolStripDropDownButton();
             this.Menu_Ağaç.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -541,7 +542,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabPage1.Size = new System.Drawing.Size(504, 469);
+            this.tabPage1.Size = new System.Drawing.Size(688, 469);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Görev";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -554,7 +555,7 @@
             this.panel_Görev.Location = new System.Drawing.Point(3, 2);
             this.panel_Görev.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel_Görev.Name = "panel_Görev";
-            this.panel_Görev.Size = new System.Drawing.Size(498, 465);
+            this.panel_Görev.Size = new System.Drawing.Size(682, 465);
             this.panel_Görev.TabIndex = 4;
             // 
             // splitContainer2
@@ -573,7 +574,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.Grid_Etkinlikler);
-            this.splitContainer2.Size = new System.Drawing.Size(498, 465);
+            this.splitContainer2.Size = new System.Drawing.Size(682, 465);
             this.splitContainer2.SplitterDistance = 315;
             this.splitContainer2.TabIndex = 3;
             // 
@@ -591,7 +592,7 @@
             this.panel_Görev__.Location = new System.Drawing.Point(0, 0);
             this.panel_Görev__.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.panel_Görev__.Name = "panel_Görev__";
-            this.panel_Görev__.Size = new System.Drawing.Size(494, 311);
+            this.panel_Görev__.Size = new System.Drawing.Size(678, 311);
             this.panel_Görev__.TabIndex = 2;
             // 
             // Grid_Listele_Tarihçe
@@ -632,7 +633,7 @@
             this.textBox_Görev_Açıklama.Multiline = true;
             this.textBox_Görev_Açıklama.Name = "textBox_Görev_Açıklama";
             this.textBox_Görev_Açıklama.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox_Görev_Açıklama.Size = new System.Drawing.Size(394, 239);
+            this.textBox_Görev_Açıklama.Size = new System.Drawing.Size(578, 239);
             this.textBox_Görev_Açıklama.TabIndex = 11;
             this.textBox_Görev_Açıklama.TextChanged += new System.EventHandler(this.Genel_KaydedilmemişBilgiVar);
             // 
@@ -643,7 +644,7 @@
             this.textBox_Görev_Tanım.Location = new System.Drawing.Point(96, 37);
             this.textBox_Görev_Tanım.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_Görev_Tanım.Name = "textBox_Görev_Tanım";
-            this.textBox_Görev_Tanım.Size = new System.Drawing.Size(394, 23);
+            this.textBox_Görev_Tanım.Size = new System.Drawing.Size(578, 23);
             this.textBox_Görev_Tanım.TabIndex = 10;
             this.textBox_Görev_Tanım.TextChanged += new System.EventHandler(this.Genel_KaydedilmemişBilgiVar);
             // 
@@ -680,14 +681,14 @@
             this.Grid_Etkinlikler.AllowUserToDeleteRows = false;
             this.Grid_Etkinlikler.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.Grid_Etkinlikler.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Grid_Etkinlikler.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Grid_Etkinlikler.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.Grid_Etkinlikler.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Grid_Etkinlikler.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Sutun_Gorev,
@@ -705,7 +706,7 @@
             this.Grid_Etkinlikler.RowHeadersWidth = 62;
             this.Grid_Etkinlikler.RowTemplate.Height = 24;
             this.Grid_Etkinlikler.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.Grid_Etkinlikler.Size = new System.Drawing.Size(494, 142);
+            this.Grid_Etkinlikler.Size = new System.Drawing.Size(678, 142);
             this.Grid_Etkinlikler.TabIndex = 12;
             // 
             // Sutun_Gorev
@@ -752,8 +753,8 @@
             // Sutun_Açıklama
             // 
             this.Sutun_Açıklama.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.Sutun_Açıklama.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.Sutun_Açıklama.DefaultCellStyle = dataGridViewCellStyle5;
             this.Sutun_Açıklama.HeaderText = "Açıklama";
             this.Sutun_Açıklama.MinimumWidth = 8;
             this.Sutun_Açıklama.Name = "Sutun_Açıklama";
@@ -1022,7 +1023,7 @@
             this.tabPage3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabPage3.Size = new System.Drawing.Size(504, 469);
+            this.tabPage3.Size = new System.Drawing.Size(688, 469);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Arama";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1035,7 +1036,7 @@
             this.panel_Arama.Location = new System.Drawing.Point(3, 2);
             this.panel_Arama.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.panel_Arama.Name = "panel_Arama";
-            this.panel_Arama.Size = new System.Drawing.Size(498, 465);
+            this.panel_Arama.Size = new System.Drawing.Size(682, 465);
             this.panel_Arama.TabIndex = 3;
             // 
             // Arama
@@ -1055,7 +1056,7 @@
             this.Arama.ReadOnly = true;
             this.Arama.RowHeadersWidth = 62;
             this.Arama.RowTemplate.Height = 24;
-            this.Arama.Size = new System.Drawing.Size(498, 442);
+            this.Arama.Size = new System.Drawing.Size(682, 442);
             this.Arama.TabIndex = 11;
             this.Arama.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Arama_CellClick);
             this.Arama.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Arama_CellDoubleClick);
@@ -1073,7 +1074,7 @@
             this.textBox_Arama.Location = new System.Drawing.Point(0, 0);
             this.textBox_Arama.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_Arama.Name = "textBox_Arama";
-            this.textBox_Arama.Size = new System.Drawing.Size(498, 23);
+            this.textBox_Arama.Size = new System.Drawing.Size(682, 23);
             this.textBox_Arama.TabIndex = 10;
             this.BaloncukluUyari.SetToolTip(this.textBox_Arama, "En az 2 harf içermelidir");
             this.textBox_Arama.TextChanged += new System.EventHandler(this.textBox_Arama_TextChanged);
@@ -1086,7 +1087,7 @@
             this.tabPage4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabPage4.Size = new System.Drawing.Size(504, 469);
+            this.tabPage4.Size = new System.Drawing.Size(688, 469);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Ayarlar";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1106,7 +1107,7 @@
             this.panel_Ayarlar.Location = new System.Drawing.Point(3, 2);
             this.panel_Ayarlar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel_Ayarlar.Name = "panel_Ayarlar";
-            this.panel_Ayarlar.Size = new System.Drawing.Size(498, 465);
+            this.panel_Ayarlar.Size = new System.Drawing.Size(682, 465);
             this.panel_Ayarlar.TabIndex = 0;
             // 
             // groupBox2
@@ -2071,6 +2072,7 @@
             this.toolStripArama,
             this.toolStripİlerleme,
             this.toolStripEtiket,
+            this.toolStripTamamlananlarıGösterGizle,
             this.toolStripAyarlar});
             this.statusStrip1.Location = new System.Drawing.Point(0, 502);
             this.statusStrip1.Name = "statusStrip1";
@@ -2110,7 +2112,7 @@
             // toolStripEtiket
             // 
             this.toolStripEtiket.Name = "toolStripEtiket";
-            this.toolStripEtiket.Size = new System.Drawing.Size(495, 20);
+            this.toolStripEtiket.Size = new System.Drawing.Size(571, 20);
             this.toolStripEtiket.Spring = true;
             this.toolStripEtiket.Text = "sdf";
             // 
@@ -2172,6 +2174,17 @@
             // 
             this.Sql_Zamanlayıcı.Interval = 60000;
             this.Sql_Zamanlayıcı.Tick += new System.EventHandler(this.Sql_Zamanlayıcı_Tick);
+            // 
+            // toolStripTamamlananlarıGösterGizle
+            // 
+            this.toolStripTamamlananlarıGösterGizle.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripTamamlananlarıGösterGizle.Image = global::Etkinlik_Takip.Properties.Resources.G_Durum_7;
+            this.toolStripTamamlananlarıGösterGizle.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripTamamlananlarıGösterGizle.Name = "toolStripTamamlananlarıGösterGizle";
+            this.toolStripTamamlananlarıGösterGizle.ShowDropDownArrow = false;
+            this.toolStripTamamlananlarıGösterGizle.Size = new System.Drawing.Size(24, 24);
+            this.toolStripTamamlananlarıGösterGizle.Text = "toolStripDropDownButton1";
+            this.toolStripTamamlananlarıGösterGizle.Click += new System.EventHandler(this.toolStripTamamlananlarıGösterGizle_Click);
             // 
             // AnaEkran
             // 
@@ -2409,6 +2422,7 @@
         private System.Windows.Forms.TextBox NotlarSayfası_KısayolTuşu;
         private System.Windows.Forms.ToolStripMenuItem Menu_İkon_Notlar;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripDropDownButton toolStripTamamlananlarıGösterGizle;
     }
 }
 

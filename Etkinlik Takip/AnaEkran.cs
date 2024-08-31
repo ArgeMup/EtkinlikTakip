@@ -428,6 +428,8 @@ namespace Etkinlik_Takip
         }
         private void AnaEkran_Resize(object sender, EventArgs e)
         {
+            Genel.Panel2 = Panel2Durumu.Boş_Aralık;
+
             if (WindowState == FormWindowState.Minimized)
             {
                 if (Genel.KaydedilmemişBilgiVar)
@@ -833,6 +835,8 @@ namespace Etkinlik_Takip
                 if (Ağaç.Nodes[1].IsExpanded) Şablonlar_Açık_Kalsın = true;
             }
 
+            int SeçiliOlanDalınNumarası = Ağaç.SelectedNode == null || Ağaç.SelectedNode.Tag == null ? 0 : (int)Ağaç.SelectedNode.Tag;
+
             Genel.AğaçGüncelleniyor = true;
 
             Ağaç.BeginUpdate();
@@ -907,6 +911,28 @@ namespace Etkinlik_Takip
             Ağaç.EndUpdate();
 
             Genel.AğaçGüncelleniyor = false;
+
+            //secili dalın tekrardan seçili duruma getirilmesi
+            if (SeçiliOlanDalınNumarası > 0)
+            {                         
+                _Bul_Kontrol_Et_Ve_Seç_(Ağaç.Nodes[0]);
+
+                bool _Bul_Kontrol_Et_Ve_Seç_(TreeNode _trn_)
+                {
+                    if ((int)_trn_.Tag == SeçiliOlanDalınNumarası)
+                    {
+                        Ağaç.SelectedNode = _trn_;
+                        return true;
+                    }
+
+                    foreach (TreeNode _dal_ in _trn_.Nodes)
+                    {
+                        if (_Bul_Kontrol_Et_Ve_Seç_(_dal_)) return true;
+                    }
+
+                    return false;
+                }
+            }
 
             string not = this.Text + Environment.NewLine + toolStripEtiket.Text;
             if (not.Length > 63) notifyIcon1.Text = not.Substring(0, 63);
@@ -1460,6 +1486,10 @@ namespace Etkinlik_Takip
             textBox_Arama.SelectAll();
             textBox_Arama.Focus();
         }
+        private void toolStripTamamlananlarıGösterGizle_Click(object sender, EventArgs e)
+        {
+            Filtreleme_D7.Checked = !Filtreleme_D7.Checked;
+        }
 
         private void Ağaç_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
@@ -1846,6 +1876,19 @@ namespace Etkinlik_Takip
                     Dr.Close();
                 }
             }
+
+            if (Durum == EtkinlikDurumu.Tamamlandı || Durum == EtkinlikDurumu.İptal_Edildi)
+            {
+		        List<Hatırlatıcı_.Durum_> D_ler = HatırlatıcıSayfası.Hatırlatıcı.Bul(TakmaAdıKıstası: Sahip.ToString());
+		        if (D_ler.Count > 0)
+		        {
+		            DialogResult Dr = MessageBox.Show("Hatırlatıcıyı iptal etmek istiyor musunuz?", Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+		            if (Dr == DialogResult.Yes)
+		            {
+		                HatırlatıcıSayfası.Hatırlatıcı.Sil(Sahip.ToString());
+		            }
+		    	}
+		    }
 
             MenuItem_Ağaç_Tanım.Text = "";
             MenuItem_Ağaç_Açıklama.Text = "";
