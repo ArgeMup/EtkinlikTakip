@@ -29,9 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.Başlıklar = new System.Windows.Forms.ListBox();
-            this.Ekle = new System.Windows.Forms.Button();
-            this.YeniBaşlık = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.NotlarınKendisi = new System.Windows.Forms.RichTextBox();
             this.Belirginleştir = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -41,48 +38,9 @@
             this.Ayraç = new System.Windows.Forms.SplitContainer();
             this.Belirginleştir.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Ayraç)).BeginInit();
-            this.Ayraç.Panel1.SuspendLayout();
             this.Ayraç.Panel2.SuspendLayout();
             this.Ayraç.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // Başlıklar
-            // 
-            this.Başlıklar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Başlıklar.FormattingEnabled = true;
-            this.Başlıklar.HorizontalScrollbar = true;
-            this.Başlıklar.ItemHeight = 16;
-            this.Başlıklar.Location = new System.Drawing.Point(0, 0);
-            this.Başlıklar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Başlıklar.Name = "Başlıklar";
-            this.Başlıklar.Size = new System.Drawing.Size(139, 335);
-            this.Başlıklar.Sorted = true;
-            this.Başlıklar.TabIndex = 0;
-            this.toolTip1.SetToolTip(this.Başlıklar, "Notlara dair ana başlıklar");
-            this.Başlıklar.SelectedIndexChanged += new System.EventHandler(this.Başlıklar_SelectedIndexChanged);
-            // 
-            // Ekle
-            // 
-            this.Ekle.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.Ekle.Location = new System.Drawing.Point(0, 357);
-            this.Ekle.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Ekle.Name = "Ekle";
-            this.Ekle.Size = new System.Drawing.Size(139, 23);
-            this.Ekle.TabIndex = 3;
-            this.Ekle.Text = "Ekle";
-            this.toolTip1.SetToolTip(this.Ekle, "Varolan yazıları kaydedip yeni bir başlık açar");
-            this.Ekle.UseVisualStyleBackColor = true;
-            this.Ekle.Click += new System.EventHandler(this.Ekle_Click);
-            // 
-            // YeniBaşlık
-            // 
-            this.YeniBaşlık.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.YeniBaşlık.Location = new System.Drawing.Point(0, 335);
-            this.YeniBaşlık.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.YeniBaşlık.Name = "YeniBaşlık";
-            this.YeniBaşlık.Size = new System.Drawing.Size(139, 22);
-            this.YeniBaşlık.TabIndex = 2;
-            this.toolTip1.SetToolTip(this.YeniBaşlık, "Yeni başlık");
             // 
             // NotlarınKendisi
             // 
@@ -145,12 +103,6 @@
             this.Ayraç.Location = new System.Drawing.Point(0, 0);
             this.Ayraç.Name = "Ayraç";
             // 
-            // Ayraç.Panel1
-            // 
-            this.Ayraç.Panel1.Controls.Add(this.Başlıklar);
-            this.Ayraç.Panel1.Controls.Add(this.YeniBaşlık);
-            this.Ayraç.Panel1.Controls.Add(this.Ekle);
-            // 
             // Ayraç.Panel2
             // 
             this.Ayraç.Panel2.Controls.Add(this.NotlarınKendisi);
@@ -177,8 +129,6 @@
             this.Shown += new System.EventHandler(this.NotlarEkranı_Activated);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Notlar_KeyDown);
             this.Belirginleştir.ResumeLayout(false);
-            this.Ayraç.Panel1.ResumeLayout(false);
-            this.Ayraç.Panel1.PerformLayout();
             this.Ayraç.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.Ayraç)).EndInit();
             this.Ayraç.ResumeLayout(false);
@@ -187,11 +137,7 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.ListBox Başlıklar;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.Button Ekle;
-        private System.Windows.Forms.TextBox YeniBaşlık;
         private System.Windows.Forms.RichTextBox NotlarınKendisi;
         private System.Windows.Forms.ContextMenuStrip Belirginleştir;
         private System.Windows.Forms.ToolStripMenuItem Belirginleştir_Kızart;

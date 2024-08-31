@@ -4,6 +4,10 @@ using System.IO;
 using System.Windows.Forms;
 using ArgeMup.HazirKod.Dönüştürme;
 using System.Drawing;
+using System.Collections.Generic;
+using ArgeMup.HazirKod.Ekİşlemler;
+using System.Linq;
+using System.Security.AccessControl;
 
 namespace Etkinlik_Takip
 {
@@ -35,10 +39,15 @@ namespace Etkinlik_Takip
         int _Sayac_YazıDeğişti = 0;
         string _text_YazıDeğişti = "Mup " + Kendi.Adı + " Notlar V" + Kendi.Sürümü_Dosya + " ( çıkış - esc )";
         IDepo_Eleman Ayarlar = null;
+        ArgeMup.HazirKod.Ekranlar.ListeKutusu Başlıklar = new ArgeMup.HazirKod.Ekranlar.ListeKutusu();
 
         public NotlarEkranı(string Pak, IDepo_Eleman Ayarlar)
         {
             InitializeComponent();
+
+            Ayraç.Panel1.Controls.Add(Başlıklar);
+            Başlıklar.Dock = DockStyle.Fill;
+            Başlıklar.GeriBildirim_İşlemi += Başlıklar_GeriBildirim_İşlemi;
 
             this.Ayarlar = Ayarlar;
             this.Pak = Pak;
@@ -54,26 +63,20 @@ namespace Etkinlik_Takip
                 Size = new System.Drawing.Size((int)Ayarlar.Oku_Sayı("Pencere Konumu/genişlik"), (int)Ayarlar.Oku_Sayı("Pencere Konumu/uzunluk"));
             }
 
-            string[] dizi_başlıklar = Directory.GetDirectories(Pak, "*", SearchOption.TopDirectoryOnly);
-            if (dizi_başlıklar != null && dizi_başlıklar.Length > 0)
+            List<string> Başlık_lar = new List<string>(Ayarlar["Tüm Başlıklar"].İçeriği);
+            foreach (string b in Klasör.Listele_Klasör(Pak, "*", SearchOption.TopDirectoryOnly))
             {
-                Başlıklar.BeginUpdate();
-                foreach (string b in dizi_başlıklar)
-                {
-                    string kesilmiş = b.Substring(Pak.Length);
+                string kesilmiş = b.Substring(Pak.Length);
 
-                    Başlıklar.Items.Add(kesilmiş);
+                if (!Başlık_lar.Contains(kesilmiş)) Başlık_lar.Add(kesilmiş);
 
-                    Dosya.Sil_SayısınaGöre(b, 15, new string[] { "*.mup" });
-                }
-                Başlıklar.EndUpdate();
+                Dosya.Sil_SayısınaGöre(b, 15, new string[] { "*.mup" });
             }
+            
+            Başlıklar.Başlat(null, Başlık_lar, "Konu başlıkları", new ArgeMup.HazirKod.Ekranlar.ListeKutusu.Ayarlar_(Gizlenebilir: false));
 
-            Başlıklar.Text = Ayarlar.Oku("Son Başlık");
-            if (string.IsNullOrEmpty(Başlıklar.Text))
-            {
-                if (Başlıklar.Items.Count > 0) Başlıklar.SelectedIndex = 0;
-            }
+            Başlıklar.SeçilenEleman_Adı = Ayarlar.Oku("Son Başlık");
+            if (string.IsNullOrEmpty(Başlıklar.SeçilenEleman_Adı) && Başlıklar.Tüm_Elemanlar.Count > 0) Başlıklar.SeçilenEleman_Adı = Başlıklar.Tüm_Elemanlar[0];
 
             NotlarınKendisi.ZoomFactor = (float)Ayarlar.Oku_Sayı("Yakınlaştırma Oranı", 1);
         }
@@ -86,11 +89,11 @@ namespace Etkinlik_Takip
             if (e.KeyData == Keys.Escape)
             {
                 Hide();
-                DosyayaKaydet(string.IsNullOrEmpty(Başlıklar.Text) ? "Genel" : Başlıklar.Text); 
+                DosyayaKaydet(string.IsNullOrEmpty(Başlıklar.SeçilenEleman_Adı) ? "Genel" : Başlıklar.SeçilenEleman_Adı); 
             }
             else if (e.Control && e.KeyCode == Keys.S)
             {
-                DosyayaKaydet(string.IsNullOrEmpty(Başlıklar.Text) ? "Genel" : Başlıklar.Text);
+                DosyayaKaydet(string.IsNullOrEmpty(Başlıklar.SeçilenEleman_Adı) ? "Genel" : Başlıklar.SeçilenEleman_Adı);
             }
         }
         public void NotlarEkranı_FormClosing(object sender, FormClosingEventArgs e)
@@ -106,7 +109,8 @@ namespace Etkinlik_Takip
                 Çalışsın = false;
                 Notlar_KeyDown(null, new KeyEventArgs(Keys.Escape));
 
-                Ayarlar.Yaz("Son Başlık", Başlıklar.Text);
+                Ayarlar["Tüm Başlıklar"].İçeriği = Başlıklar.Tüm_Elemanlar.ToArray();
+                Ayarlar.Yaz("Son Başlık", Başlıklar.SeçilenEleman_Adı);
                 Ayarlar.Yaz("Yakınlaştırma Oranı", NotlarınKendisi.ZoomFactor);
                 Ayarlar.Yaz("Pencere Konumu/x", Location.X);
                 Ayarlar.Yaz("Pencere Konumu/y", Location.Y);
@@ -139,39 +143,6 @@ namespace Etkinlik_Takip
             return false;
         }
 
-        private void Ekle_Click(object sender, EventArgs e)
-        {
-            YazıDeğişti = true;
-            if (!DosyayaKaydet(YeniBaşlık.Text)) return;
-            
-            if (!Başlıklar.Items.Contains(YeniBaşlık.Text)) Başlıklar.Items.Add(YeniBaşlık.Text);
-        }
-
-        private void Başlıklar_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            DosyayaKaydet(AçıkOlanBaşlık);
-            
-            AçıkOlanBaşlık = "";
-            float YakınlaştırmaDeğeri = NotlarınKendisi.ZoomFactor;
-            NotlarınKendisi.Clear();
-
-            if (!string.IsNullOrEmpty(Başlıklar.Text))
-            {
-                string dsy = Pak + Başlıklar.Text + "\\" + Başlıklar.Text + ".rtf";
-                if (File.Exists(dsy))
-                {
-                    NotlarınKendisi.LoadFile(dsy);
-                }
-
-                AçıkOlanBaşlık = Başlıklar.Text;
-            }
-
-            NotlarınKendisi.ClearUndo();
-            NotlarınKendisi.ZoomFactor = 1.0f;
-            NotlarınKendisi.ZoomFactor = YakınlaştırmaDeğeri;
-            YazıDeğişti = false;
-        }
-
         private void Belirginleştir_X_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem tsmi = sender as ToolStripMenuItem;
@@ -196,6 +167,59 @@ namespace Etkinlik_Takip
         private void NotlarınKendisi_TextChanged(object sender, EventArgs e)
         {
             YazıDeğişti = true;
+        }
+
+        private bool Başlıklar_GeriBildirim_İşlemi(string Adı, ArgeMup.HazirKod.Ekranlar.ListeKutusu.İşlemTürü Türü, string YeniAdı)
+        {
+            if (Adı.BoşMu()) return false;
+
+            switch (Türü)
+            {
+                case ArgeMup.HazirKod.Ekranlar.ListeKutusu.İşlemTürü.YeniEklendi:
+                    YazıDeğişti = true;
+                    return DosyayaKaydet(Adı);
+
+                case ArgeMup.HazirKod.Ekranlar.ListeKutusu.İşlemTürü.ElemanSeçildi:
+                    DosyayaKaydet(AçıkOlanBaşlık);
+
+                    AçıkOlanBaşlık = "";
+                    float YakınlaştırmaDeğeri = NotlarınKendisi.ZoomFactor;
+                    NotlarınKendisi.Clear();
+
+                    if (!string.IsNullOrEmpty(Başlıklar.SeçilenEleman_Adı))
+                    {
+                        string dsy = Pak + Başlıklar.SeçilenEleman_Adı + "\\" + Başlıklar.SeçilenEleman_Adı + ".rtf";
+                        if (File.Exists(dsy))
+                        {
+                            NotlarınKendisi.LoadFile(dsy);
+                        }
+
+                        AçıkOlanBaşlık = Başlıklar.SeçilenEleman_Adı;
+                    }
+
+                    NotlarınKendisi.ClearUndo();
+                    NotlarınKendisi.ZoomFactor = 1.0f;
+                    NotlarınKendisi.ZoomFactor = YakınlaştırmaDeğeri;
+                    YazıDeğişti = false;
+                    return true;
+
+                case ArgeMup.HazirKod.Ekranlar.ListeKutusu.İşlemTürü.AdıDeğiştirildi:
+                    string kaynak = Pak + Adı + "\\";
+                    string hedef = Pak + YeniAdı + "\\";
+                    Directory.Move(kaynak, hedef);
+                    File.Move(hedef + Adı + ".rtf", hedef + YeniAdı + ".rtf");
+                    return true;
+
+                case ArgeMup.HazirKod.Ekranlar.ListeKutusu.İşlemTürü.KonumDeğişikliğiKaydedildi:
+                    return true;
+
+                case ArgeMup.HazirKod.Ekranlar.ListeKutusu.İşlemTürü.Silindi:
+                    string kls = Pak + Adı + "\\";
+                    YazıDeğişti = false;
+                    return Temkinli.Klasör.Sil(kls);
+            }
+
+            return false;
         }
     }
 }
