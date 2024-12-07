@@ -43,7 +43,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnaEkran));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Ağaç = new Etkinlik_Takip.AnaEkran.ÇiftTamponluTreeView();
             this.Menu_Ağaç = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.MenuItem_Ağaç_Görev = new System.Windows.Forms.ToolStripMenuItem();
@@ -200,6 +200,14 @@
             this.toolStripArama = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripİlerleme = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripEtiket = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStrip_GösterGizle_ÜzerindeÇalışılıyor = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStrip_GösterGizle_DüşükÖncelikli = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStrip_GösterGizle_YeniGörev = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStrip_GösterGizle_Beklemede = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStrip_GösterGizle_BittiGeriBildirimBekleniyor = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStrip_GösterGizle_Diğer = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStrip_GösterGizle_Tamamlandı = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStrip_GösterGizle_İptalEdildi = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripAyarlar = new System.Windows.Forms.ToolStripDropDownButton();
             this.BaloncukluUyari = new System.Windows.Forms.ToolTip(this.components);
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
@@ -208,7 +216,6 @@
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.Menu_İkon_Çıkış = new System.Windows.Forms.ToolStripMenuItem();
             this.Sql_Zamanlayıcı = new System.Windows.Forms.Timer(this.components);
-            this.toolStripTamamlananlarıGösterGizle = new System.Windows.Forms.ToolStripDropDownButton();
             this.Menu_Ağaç.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -260,7 +267,7 @@
             this.Ağaç.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Ağaç.Name = "Ağaç";
             this.Ağaç.SelectedImageIndex = 0;
-            this.Ağaç.Size = new System.Drawing.Size(131, 498);
+            this.Ağaç.Size = new System.Drawing.Size(130, 498);
             this.Ağaç.TabIndex = 1;
             this.Ağaç.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.Ağaç_AfterCollapse);
             this.Ağaç.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.Ağaç_AfterExpand);
@@ -516,7 +523,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
             this.splitContainer1.Size = new System.Drawing.Size(840, 502);
-            this.splitContainer1.SplitterDistance = 135;
+            this.splitContainer1.SplitterDistance = 134;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 3;
             // 
@@ -531,7 +538,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(696, 498);
+            this.tabControl1.Size = new System.Drawing.Size(697, 498);
             this.tabControl1.TabIndex = 4;
             this.tabControl1.Visible = false;
             // 
@@ -542,7 +549,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabPage1.Size = new System.Drawing.Size(688, 469);
+            this.tabPage1.Size = new System.Drawing.Size(689, 469);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Görev";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -555,7 +562,7 @@
             this.panel_Görev.Location = new System.Drawing.Point(3, 2);
             this.panel_Görev.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel_Görev.Name = "panel_Görev";
-            this.panel_Görev.Size = new System.Drawing.Size(682, 465);
+            this.panel_Görev.Size = new System.Drawing.Size(683, 465);
             this.panel_Görev.TabIndex = 4;
             // 
             // splitContainer2
@@ -574,8 +581,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.Grid_Etkinlikler);
-            this.splitContainer2.Size = new System.Drawing.Size(682, 465);
-            this.splitContainer2.SplitterDistance = 315;
+            this.splitContainer2.Size = new System.Drawing.Size(683, 465);
+            this.splitContainer2.SplitterDistance = 313;
             this.splitContainer2.TabIndex = 3;
             // 
             // panel_Görev__
@@ -592,7 +599,7 @@
             this.panel_Görev__.Location = new System.Drawing.Point(0, 0);
             this.panel_Görev__.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.panel_Görev__.Name = "panel_Görev__";
-            this.panel_Görev__.Size = new System.Drawing.Size(678, 311);
+            this.panel_Görev__.Size = new System.Drawing.Size(679, 309);
             this.panel_Görev__.TabIndex = 2;
             // 
             // Grid_Listele_Tarihçe
@@ -602,7 +609,7 @@
             this.Grid_Listele_Tarihçe.AutoSize = true;
             this.Grid_Listele_Tarihçe.Checked = true;
             this.Grid_Listele_Tarihçe.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.Grid_Listele_Tarihçe.Location = new System.Drawing.Point(1, 284);
+            this.Grid_Listele_Tarihçe.Location = new System.Drawing.Point(1, 281);
             this.Grid_Listele_Tarihçe.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Grid_Listele_Tarihçe.Name = "Grid_Listele_Tarihçe";
             this.Grid_Listele_Tarihçe.Size = new System.Drawing.Size(66, 27);
@@ -633,7 +640,7 @@
             this.textBox_Görev_Açıklama.Multiline = true;
             this.textBox_Görev_Açıklama.Name = "textBox_Görev_Açıklama";
             this.textBox_Görev_Açıklama.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox_Görev_Açıklama.Size = new System.Drawing.Size(578, 239);
+            this.textBox_Görev_Açıklama.Size = new System.Drawing.Size(579, 236);
             this.textBox_Görev_Açıklama.TabIndex = 11;
             this.textBox_Görev_Açıklama.TextChanged += new System.EventHandler(this.Genel_KaydedilmemişBilgiVar);
             // 
@@ -644,7 +651,7 @@
             this.textBox_Görev_Tanım.Location = new System.Drawing.Point(96, 37);
             this.textBox_Görev_Tanım.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_Görev_Tanım.Name = "textBox_Görev_Tanım";
-            this.textBox_Görev_Tanım.Size = new System.Drawing.Size(578, 23);
+            this.textBox_Görev_Tanım.Size = new System.Drawing.Size(579, 23);
             this.textBox_Görev_Tanım.TabIndex = 10;
             this.textBox_Görev_Tanım.TextChanged += new System.EventHandler(this.Genel_KaydedilmemişBilgiVar);
             // 
@@ -706,7 +713,7 @@
             this.Grid_Etkinlikler.RowHeadersWidth = 62;
             this.Grid_Etkinlikler.RowTemplate.Height = 24;
             this.Grid_Etkinlikler.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.Grid_Etkinlikler.Size = new System.Drawing.Size(678, 142);
+            this.Grid_Etkinlikler.Size = new System.Drawing.Size(679, 144);
             this.Grid_Etkinlikler.TabIndex = 12;
             // 
             // Sutun_Gorev
@@ -753,8 +760,8 @@
             // Sutun_Açıklama
             // 
             this.Sutun_Açıklama.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.Sutun_Açıklama.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.Sutun_Açıklama.DefaultCellStyle = dataGridViewCellStyle2;
             this.Sutun_Açıklama.HeaderText = "Açıklama";
             this.Sutun_Açıklama.MinimumWidth = 8;
             this.Sutun_Açıklama.Name = "Sutun_Açıklama";
@@ -1023,7 +1030,7 @@
             this.tabPage3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabPage3.Size = new System.Drawing.Size(688, 469);
+            this.tabPage3.Size = new System.Drawing.Size(687, 462);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Arama";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1036,7 +1043,7 @@
             this.panel_Arama.Location = new System.Drawing.Point(3, 2);
             this.panel_Arama.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.panel_Arama.Name = "panel_Arama";
-            this.panel_Arama.Size = new System.Drawing.Size(682, 465);
+            this.panel_Arama.Size = new System.Drawing.Size(681, 458);
             this.panel_Arama.TabIndex = 3;
             // 
             // Arama
@@ -1056,7 +1063,7 @@
             this.Arama.ReadOnly = true;
             this.Arama.RowHeadersWidth = 62;
             this.Arama.RowTemplate.Height = 24;
-            this.Arama.Size = new System.Drawing.Size(682, 442);
+            this.Arama.Size = new System.Drawing.Size(681, 435);
             this.Arama.TabIndex = 11;
             this.Arama.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Arama_CellClick);
             this.Arama.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Arama_CellDoubleClick);
@@ -1074,7 +1081,7 @@
             this.textBox_Arama.Location = new System.Drawing.Point(0, 0);
             this.textBox_Arama.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_Arama.Name = "textBox_Arama";
-            this.textBox_Arama.Size = new System.Drawing.Size(682, 23);
+            this.textBox_Arama.Size = new System.Drawing.Size(681, 23);
             this.textBox_Arama.TabIndex = 10;
             this.BaloncukluUyari.SetToolTip(this.textBox_Arama, "En az 2 harf içermelidir");
             this.textBox_Arama.TextChanged += new System.EventHandler(this.textBox_Arama_TextChanged);
@@ -1087,7 +1094,7 @@
             this.tabPage4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabPage4.Size = new System.Drawing.Size(688, 469);
+            this.tabPage4.Size = new System.Drawing.Size(687, 462);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Ayarlar";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1107,7 +1114,7 @@
             this.panel_Ayarlar.Location = new System.Drawing.Point(3, 2);
             this.panel_Ayarlar.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel_Ayarlar.Name = "panel_Ayarlar";
-            this.panel_Ayarlar.Size = new System.Drawing.Size(682, 465);
+            this.panel_Ayarlar.Size = new System.Drawing.Size(681, 458);
             this.panel_Ayarlar.TabIndex = 0;
             // 
             // groupBox2
@@ -1153,8 +1160,6 @@
             // OdaklanmışGörünüm_Kızart
             // 
             this.OdaklanmışGörünüm_Kızart.AutoSize = true;
-            this.OdaklanmışGörünüm_Kızart.Checked = true;
-            this.OdaklanmışGörünüm_Kızart.CheckState = System.Windows.Forms.CheckState.Checked;
             this.OdaklanmışGörünüm_Kızart.Location = new System.Drawing.Point(8, 22);
             this.OdaklanmışGörünüm_Kızart.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.OdaklanmışGörünüm_Kızart.Name = "OdaklanmışGörünüm_Kızart";
@@ -1407,10 +1412,10 @@
             // 
             this.tabPage5.Controls.Add(this.panel_Hatırlatıcı);
             this.tabPage5.Location = new System.Drawing.Point(4, 25);
-            this.tabPage5.Margin = new System.Windows.Forms.Padding(4);
+            this.tabPage5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage5.Size = new System.Drawing.Size(688, 469);
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabPage5.Size = new System.Drawing.Size(687, 462);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Hatırlatıcı";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -1466,7 +1471,7 @@
             this.panel_Hatırlatıcı.Location = new System.Drawing.Point(4, 4);
             this.panel_Hatırlatıcı.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.panel_Hatırlatıcı.Name = "panel_Hatırlatıcı";
-            this.panel_Hatırlatıcı.Size = new System.Drawing.Size(680, 461);
+            this.panel_Hatırlatıcı.Size = new System.Drawing.Size(679, 454);
             this.panel_Hatırlatıcı.TabIndex = 2;
             // 
             // Hatırlatıcı_Hatırlat_Yarın_dd
@@ -1653,7 +1658,7 @@
             // 
             this.Hatırlatıcı_Tekrarla_Onay.AutoSize = true;
             this.Hatırlatıcı_Tekrarla_Onay.Location = new System.Drawing.Point(13, 329);
-            this.Hatırlatıcı_Tekrarla_Onay.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Tekrarla_Onay.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Tekrarla_Onay.Name = "Hatırlatıcı_Tekrarla_Onay";
             this.Hatırlatıcı_Tekrarla_Onay.Size = new System.Drawing.Size(18, 17);
             this.Hatırlatıcı_Tekrarla_Onay.TabIndex = 24;
@@ -1664,7 +1669,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_Diğer_Onay.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_Diğer_Onay.Location = new System.Drawing.Point(13, 263);
-            this.Hatırlatıcı_Hatırlat_Diğer_Onay.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Diğer_Onay.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Diğer_Onay.Name = "Hatırlatıcı_Hatırlat_Diğer_Onay";
             this.Hatırlatıcı_Hatırlat_Diğer_Onay.Size = new System.Drawing.Size(17, 16);
             this.Hatırlatıcı_Hatırlat_Diğer_Onay.TabIndex = 22;
@@ -1686,7 +1691,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_DahaSonra_1yıl.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_DahaSonra_1yıl.Location = new System.Drawing.Point(427, 193);
-            this.Hatırlatıcı_Hatırlat_DahaSonra_1yıl.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_DahaSonra_1yıl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_DahaSonra_1yıl.Name = "Hatırlatıcı_Hatırlat_DahaSonra_1yıl";
             this.Hatırlatıcı_Hatırlat_DahaSonra_1yıl.Size = new System.Drawing.Size(56, 21);
             this.Hatırlatıcı_Hatırlat_DahaSonra_1yıl.TabIndex = 21;
@@ -1705,7 +1710,7 @@
             "Ayda",
             "Yılda"});
             this.Hatırlatıcı_Tekrarla_dönem.Location = new System.Drawing.Point(191, 325);
-            this.Hatırlatıcı_Tekrarla_dönem.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Tekrarla_dönem.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Tekrarla_dönem.Name = "Hatırlatıcı_Tekrarla_dönem";
             this.Hatırlatıcı_Tekrarla_dönem.Size = new System.Drawing.Size(113, 24);
             this.Hatırlatıcı_Tekrarla_dönem.TabIndex = 26;
@@ -1716,9 +1721,9 @@
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Location = new System.Drawing.Point(40, 260);
-            this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Name = "Hatırlatıcı_Hatırlat_Diğer_Yazı";
-            this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Size = new System.Drawing.Size(585, 23);
+            this.Hatırlatıcı_Hatırlat_Diğer_Yazı.Size = new System.Drawing.Size(849, 23);
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.TabIndex = 23;
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.TextChanged += new System.EventHandler(this.Hatırlatıcı_Hatırlat_Diğer_Yazı_TextChanged);
             this.Hatırlatıcı_Hatırlat_Diğer_Yazı.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Hatırlatıcı_Hatırlat_Diğer_Yazı_KeyPress);
@@ -1726,7 +1731,7 @@
             // Hatırlatıcı_Tekrarla_adet
             // 
             this.Hatırlatıcı_Tekrarla_adet.Location = new System.Drawing.Point(93, 325);
-            this.Hatırlatıcı_Tekrarla_adet.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Tekrarla_adet.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Tekrarla_adet.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -1752,7 +1757,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_DahaSonra_6ay.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_DahaSonra_6ay.Location = new System.Drawing.Point(365, 193);
-            this.Hatırlatıcı_Hatırlat_DahaSonra_6ay.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_DahaSonra_6ay.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_DahaSonra_6ay.Name = "Hatırlatıcı_Hatırlat_DahaSonra_6ay";
             this.Hatırlatıcı_Hatırlat_DahaSonra_6ay.Size = new System.Drawing.Size(53, 21);
             this.Hatırlatıcı_Hatırlat_DahaSonra_6ay.TabIndex = 20;
@@ -1765,7 +1770,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_Haftaya_Pa.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_Haftaya_Pa.Location = new System.Drawing.Point(437, 139);
-            this.Hatırlatıcı_Hatırlat_Haftaya_Pa.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Haftaya_Pa.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Haftaya_Pa.Name = "Hatırlatıcı_Hatırlat_Haftaya_Pa";
             this.Hatırlatıcı_Hatırlat_Haftaya_Pa.Size = new System.Drawing.Size(46, 21);
             this.Hatırlatıcı_Hatırlat_Haftaya_Pa.TabIndex = 14;
@@ -1778,7 +1783,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_DahaSonra_3ay.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_DahaSonra_3ay.Location = new System.Drawing.Point(305, 193);
-            this.Hatırlatıcı_Hatırlat_DahaSonra_3ay.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_DahaSonra_3ay.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_DahaSonra_3ay.Name = "Hatırlatıcı_Hatırlat_DahaSonra_3ay";
             this.Hatırlatıcı_Hatırlat_DahaSonra_3ay.Size = new System.Drawing.Size(53, 21);
             this.Hatırlatıcı_Hatırlat_DahaSonra_3ay.TabIndex = 19;
@@ -1791,7 +1796,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_DahaSonra_2ay.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_DahaSonra_2ay.Location = new System.Drawing.Point(243, 193);
-            this.Hatırlatıcı_Hatırlat_DahaSonra_2ay.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_DahaSonra_2ay.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_DahaSonra_2ay.Name = "Hatırlatıcı_Hatırlat_DahaSonra_2ay";
             this.Hatırlatıcı_Hatırlat_DahaSonra_2ay.Size = new System.Drawing.Size(53, 21);
             this.Hatırlatıcı_Hatırlat_DahaSonra_2ay.TabIndex = 18;
@@ -1804,7 +1809,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_DahaSonra_1ay.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_DahaSonra_1ay.Location = new System.Drawing.Point(179, 193);
-            this.Hatırlatıcı_Hatırlat_DahaSonra_1ay.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_DahaSonra_1ay.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_DahaSonra_1ay.Name = "Hatırlatıcı_Hatırlat_DahaSonra_1ay";
             this.Hatırlatıcı_Hatırlat_DahaSonra_1ay.Size = new System.Drawing.Size(57, 21);
             this.Hatırlatıcı_Hatırlat_DahaSonra_1ay.TabIndex = 17;
@@ -1817,7 +1822,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_Yarın_d.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_Yarın_d.Location = new System.Drawing.Point(296, 85);
-            this.Hatırlatıcı_Hatırlat_Yarın_d.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Yarın_d.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Yarın_d.Name = "Hatırlatıcı_Hatırlat_Yarın_d";
             this.Hatırlatıcı_Hatırlat_Yarın_d.Size = new System.Drawing.Size(17, 16);
             this.Hatırlatıcı_Hatırlat_Yarın_d.TabIndex = 7;
@@ -1829,7 +1834,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_Yarın_c.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_Yarın_c.Location = new System.Drawing.Point(201, 85);
-            this.Hatırlatıcı_Hatırlat_Yarın_c.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Yarın_c.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Yarın_c.Name = "Hatırlatıcı_Hatırlat_Yarın_c";
             this.Hatırlatıcı_Hatırlat_Yarın_c.Size = new System.Drawing.Size(17, 16);
             this.Hatırlatıcı_Hatırlat_Yarın_c.TabIndex = 6;
@@ -1841,7 +1846,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_DahaSonra_3hafta.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_DahaSonra_3hafta.Location = new System.Drawing.Point(95, 193);
-            this.Hatırlatıcı_Hatırlat_DahaSonra_3hafta.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_DahaSonra_3hafta.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_DahaSonra_3hafta.Name = "Hatırlatıcı_Hatırlat_DahaSonra_3hafta";
             this.Hatırlatıcı_Hatırlat_DahaSonra_3hafta.Size = new System.Drawing.Size(75, 21);
             this.Hatırlatıcı_Hatırlat_DahaSonra_3hafta.TabIndex = 16;
@@ -1854,7 +1859,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_Haftaya_Cts.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_Haftaya_Cts.Location = new System.Drawing.Point(368, 139);
-            this.Hatırlatıcı_Hatırlat_Haftaya_Cts.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Haftaya_Cts.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Haftaya_Cts.Name = "Hatırlatıcı_Hatırlat_Haftaya_Cts";
             this.Hatırlatıcı_Hatırlat_Haftaya_Cts.Size = new System.Drawing.Size(49, 21);
             this.Hatırlatıcı_Hatırlat_Haftaya_Cts.TabIndex = 13;
@@ -1867,7 +1872,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_DahaSonra_2hafta.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_DahaSonra_2hafta.Location = new System.Drawing.Point(12, 193);
-            this.Hatırlatıcı_Hatırlat_DahaSonra_2hafta.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_DahaSonra_2hafta.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_DahaSonra_2hafta.Name = "Hatırlatıcı_Hatırlat_DahaSonra_2hafta";
             this.Hatırlatıcı_Hatırlat_DahaSonra_2hafta.Size = new System.Drawing.Size(75, 21);
             this.Hatırlatıcı_Hatırlat_DahaSonra_2hafta.TabIndex = 15;
@@ -1880,7 +1885,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_Yarın_b.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_Yarın_b.Location = new System.Drawing.Point(107, 85);
-            this.Hatırlatıcı_Hatırlat_Yarın_b.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Yarın_b.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Yarın_b.Name = "Hatırlatıcı_Hatırlat_Yarın_b";
             this.Hatırlatıcı_Hatırlat_Yarın_b.Size = new System.Drawing.Size(17, 16);
             this.Hatırlatıcı_Hatırlat_Yarın_b.TabIndex = 5;
@@ -1892,7 +1897,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_Haftaya_Cu.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_Haftaya_Cu.Location = new System.Drawing.Point(305, 139);
-            this.Hatırlatıcı_Hatırlat_Haftaya_Cu.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Haftaya_Cu.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Haftaya_Cu.Name = "Hatırlatıcı_Hatırlat_Haftaya_Cu";
             this.Hatırlatıcı_Hatırlat_Haftaya_Cu.Size = new System.Drawing.Size(46, 21);
             this.Hatırlatıcı_Hatırlat_Haftaya_Cu.TabIndex = 12;
@@ -1916,7 +1921,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_Haftaya_Per.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_Haftaya_Per.Location = new System.Drawing.Point(229, 139);
-            this.Hatırlatıcı_Hatırlat_Haftaya_Per.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Haftaya_Per.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Haftaya_Per.Name = "Hatırlatıcı_Hatırlat_Haftaya_Per";
             this.Hatırlatıcı_Hatırlat_Haftaya_Per.Size = new System.Drawing.Size(51, 21);
             this.Hatırlatıcı_Hatırlat_Haftaya_Per.TabIndex = 11;
@@ -1929,7 +1934,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_Yarın_a.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_Yarın_a.Location = new System.Drawing.Point(12, 85);
-            this.Hatırlatıcı_Hatırlat_Yarın_a.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Yarın_a.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Yarın_a.Name = "Hatırlatıcı_Hatırlat_Yarın_a";
             this.Hatırlatıcı_Hatırlat_Yarın_a.Size = new System.Drawing.Size(17, 16);
             this.Hatırlatıcı_Hatırlat_Yarın_a.TabIndex = 4;
@@ -1941,7 +1946,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_Haftaya_Çrş.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_Haftaya_Çrş.Location = new System.Drawing.Point(155, 139);
-            this.Hatırlatıcı_Hatırlat_Haftaya_Çrş.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Haftaya_Çrş.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Haftaya_Çrş.Name = "Hatırlatıcı_Hatırlat_Haftaya_Çrş";
             this.Hatırlatıcı_Hatırlat_Haftaya_Çrş.Size = new System.Drawing.Size(50, 21);
             this.Hatırlatıcı_Hatırlat_Haftaya_Çrş.TabIndex = 10;
@@ -1964,7 +1969,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_Haftaya_Sa.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_Haftaya_Sa.Location = new System.Drawing.Point(85, 139);
-            this.Hatırlatıcı_Hatırlat_Haftaya_Sa.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Haftaya_Sa.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Haftaya_Sa.Name = "Hatırlatıcı_Hatırlat_Haftaya_Sa";
             this.Hatırlatıcı_Hatırlat_Haftaya_Sa.Size = new System.Drawing.Size(46, 21);
             this.Hatırlatıcı_Hatırlat_Haftaya_Sa.TabIndex = 9;
@@ -1987,7 +1992,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_Haftaya_Pzt.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_Haftaya_Pzt.Location = new System.Drawing.Point(12, 139);
-            this.Hatırlatıcı_Hatırlat_Haftaya_Pzt.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Haftaya_Pzt.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Haftaya_Pzt.Name = "Hatırlatıcı_Hatırlat_Haftaya_Pzt";
             this.Hatırlatıcı_Hatırlat_Haftaya_Pzt.Size = new System.Drawing.Size(49, 21);
             this.Hatırlatıcı_Hatırlat_Haftaya_Pzt.TabIndex = 8;
@@ -2020,7 +2025,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_Bugün_d.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_Bugün_d.Location = new System.Drawing.Point(296, 31);
-            this.Hatırlatıcı_Hatırlat_Bugün_d.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Bugün_d.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Bugün_d.Name = "Hatırlatıcı_Hatırlat_Bugün_d";
             this.Hatırlatıcı_Hatırlat_Bugün_d.Size = new System.Drawing.Size(17, 16);
             this.Hatırlatıcı_Hatırlat_Bugün_d.TabIndex = 3;
@@ -2032,7 +2037,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_Bugün_c.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_Bugün_c.Location = new System.Drawing.Point(201, 31);
-            this.Hatırlatıcı_Hatırlat_Bugün_c.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Bugün_c.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Bugün_c.Name = "Hatırlatıcı_Hatırlat_Bugün_c";
             this.Hatırlatıcı_Hatırlat_Bugün_c.Size = new System.Drawing.Size(17, 16);
             this.Hatırlatıcı_Hatırlat_Bugün_c.TabIndex = 2;
@@ -2044,7 +2049,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_Bugün_b.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_Bugün_b.Location = new System.Drawing.Point(107, 31);
-            this.Hatırlatıcı_Hatırlat_Bugün_b.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Bugün_b.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Bugün_b.Name = "Hatırlatıcı_Hatırlat_Bugün_b";
             this.Hatırlatıcı_Hatırlat_Bugün_b.Size = new System.Drawing.Size(17, 16);
             this.Hatırlatıcı_Hatırlat_Bugün_b.TabIndex = 1;
@@ -2056,7 +2061,7 @@
             // 
             this.Hatırlatıcı_Hatırlat_Bugün_a.AutoSize = true;
             this.Hatırlatıcı_Hatırlat_Bugün_a.Location = new System.Drawing.Point(12, 31);
-            this.Hatırlatıcı_Hatırlat_Bugün_a.Margin = new System.Windows.Forms.Padding(4);
+            this.Hatırlatıcı_Hatırlat_Bugün_a.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Hatırlatıcı_Hatırlat_Bugün_a.Name = "Hatırlatıcı_Hatırlat_Bugün_a";
             this.Hatırlatıcı_Hatırlat_Bugün_a.Size = new System.Drawing.Size(17, 16);
             this.Hatırlatıcı_Hatırlat_Bugün_a.TabIndex = 0;
@@ -2072,7 +2077,14 @@
             this.toolStripArama,
             this.toolStripİlerleme,
             this.toolStripEtiket,
-            this.toolStripTamamlananlarıGösterGizle,
+            this.toolStrip_GösterGizle_ÜzerindeÇalışılıyor,
+            this.toolStrip_GösterGizle_DüşükÖncelikli,
+            this.toolStrip_GösterGizle_YeniGörev,
+            this.toolStrip_GösterGizle_Beklemede,
+            this.toolStrip_GösterGizle_BittiGeriBildirimBekleniyor,
+            this.toolStrip_GösterGizle_Diğer,
+            this.toolStrip_GösterGizle_Tamamlandı,
+            this.toolStrip_GösterGizle_İptalEdildi,
             this.toolStripAyarlar});
             this.statusStrip1.Location = new System.Drawing.Point(0, 502);
             this.statusStrip1.Name = "statusStrip1";
@@ -2106,15 +2118,112 @@
             // 
             this.toolStripİlerleme.AutoSize = false;
             this.toolStripİlerleme.Name = "toolStripİlerleme";
-            this.toolStripİlerleme.Size = new System.Drawing.Size(100, 18);
+            this.toolStripİlerleme.Size = new System.Drawing.Size(100, 22);
             this.toolStripİlerleme.Visible = false;
             // 
             // toolStripEtiket
             // 
             this.toolStripEtiket.Name = "toolStripEtiket";
-            this.toolStripEtiket.Size = new System.Drawing.Size(571, 20);
+            this.toolStripEtiket.Size = new System.Drawing.Size(544, 20);
             this.toolStripEtiket.Spring = true;
             this.toolStripEtiket.Text = "sdf";
+            // 
+            // toolStrip_GösterGizle_ÜzerindeÇalışılıyor
+            // 
+            this.toolStrip_GösterGizle_ÜzerindeÇalışılıyor.BackColor = System.Drawing.SystemColors.Control;
+            this.toolStrip_GösterGizle_ÜzerindeÇalışılıyor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStrip_GösterGizle_ÜzerindeÇalışılıyor.Image = global::Etkinlik_Takip.Properties.Resources.G_Durum_1;
+            this.toolStrip_GösterGizle_ÜzerindeÇalışılıyor.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_GösterGizle_ÜzerindeÇalışılıyor.Name = "toolStrip_GösterGizle_ÜzerindeÇalışılıyor";
+            this.toolStrip_GösterGizle_ÜzerindeÇalışılıyor.ShowDropDownArrow = false;
+            this.toolStrip_GösterGizle_ÜzerindeÇalışılıyor.Size = new System.Drawing.Size(24, 24);
+            this.toolStrip_GösterGizle_ÜzerindeÇalışılıyor.Text = "toolStripDropDownButton1";
+            this.toolStrip_GösterGizle_ÜzerindeÇalışılıyor.ToolTipText = "sffs";
+            this.toolStrip_GösterGizle_ÜzerindeÇalışılıyor.Click += new System.EventHandler(this.toolStrip_GösterGizle_ÜzerindeÇalışılıyor_Click);
+            // 
+            // toolStrip_GösterGizle_DüşükÖncelikli
+            // 
+            this.toolStrip_GösterGizle_DüşükÖncelikli.BackColor = System.Drawing.SystemColors.Control;
+            this.toolStrip_GösterGizle_DüşükÖncelikli.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStrip_GösterGizle_DüşükÖncelikli.Image = global::Etkinlik_Takip.Properties.Resources.G_Durum_2;
+            this.toolStrip_GösterGizle_DüşükÖncelikli.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_GösterGizle_DüşükÖncelikli.Name = "toolStrip_GösterGizle_DüşükÖncelikli";
+            this.toolStrip_GösterGizle_DüşükÖncelikli.ShowDropDownArrow = false;
+            this.toolStrip_GösterGizle_DüşükÖncelikli.Size = new System.Drawing.Size(24, 24);
+            this.toolStrip_GösterGizle_DüşükÖncelikli.Text = "toolStripDropDownButton1";
+            this.toolStrip_GösterGizle_DüşükÖncelikli.Click += new System.EventHandler(this.toolStrip_GösterGizle_DüşükÖncelikli_Click);
+            // 
+            // toolStrip_GösterGizle_YeniGörev
+            // 
+            this.toolStrip_GösterGizle_YeniGörev.BackColor = System.Drawing.SystemColors.Control;
+            this.toolStrip_GösterGizle_YeniGörev.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStrip_GösterGizle_YeniGörev.Image = global::Etkinlik_Takip.Properties.Resources.G_Durum_3;
+            this.toolStrip_GösterGizle_YeniGörev.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_GösterGizle_YeniGörev.Name = "toolStrip_GösterGizle_YeniGörev";
+            this.toolStrip_GösterGizle_YeniGörev.ShowDropDownArrow = false;
+            this.toolStrip_GösterGizle_YeniGörev.Size = new System.Drawing.Size(24, 24);
+            this.toolStrip_GösterGizle_YeniGörev.Text = "toolStripDropDownButton1";
+            this.toolStrip_GösterGizle_YeniGörev.Click += new System.EventHandler(this.toolStrip_GösterGizle_YeniGörev_Click);
+            // 
+            // toolStrip_GösterGizle_Beklemede
+            // 
+            this.toolStrip_GösterGizle_Beklemede.BackColor = System.Drawing.SystemColors.Control;
+            this.toolStrip_GösterGizle_Beklemede.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStrip_GösterGizle_Beklemede.Image = global::Etkinlik_Takip.Properties.Resources.G_Durum_4;
+            this.toolStrip_GösterGizle_Beklemede.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_GösterGizle_Beklemede.Name = "toolStrip_GösterGizle_Beklemede";
+            this.toolStrip_GösterGizle_Beklemede.ShowDropDownArrow = false;
+            this.toolStrip_GösterGizle_Beklemede.Size = new System.Drawing.Size(24, 24);
+            this.toolStrip_GösterGizle_Beklemede.Text = "toolStripDropDownButton1";
+            this.toolStrip_GösterGizle_Beklemede.Click += new System.EventHandler(this.toolStrip_GösterGizle_Beklemede_Click);
+            // 
+            // toolStrip_GösterGizle_BittiGeriBildirimBekleniyor
+            // 
+            this.toolStrip_GösterGizle_BittiGeriBildirimBekleniyor.BackColor = System.Drawing.SystemColors.Control;
+            this.toolStrip_GösterGizle_BittiGeriBildirimBekleniyor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStrip_GösterGizle_BittiGeriBildirimBekleniyor.Image = global::Etkinlik_Takip.Properties.Resources.G_Durum_5;
+            this.toolStrip_GösterGizle_BittiGeriBildirimBekleniyor.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_GösterGizle_BittiGeriBildirimBekleniyor.Name = "toolStrip_GösterGizle_BittiGeriBildirimBekleniyor";
+            this.toolStrip_GösterGizle_BittiGeriBildirimBekleniyor.ShowDropDownArrow = false;
+            this.toolStrip_GösterGizle_BittiGeriBildirimBekleniyor.Size = new System.Drawing.Size(24, 24);
+            this.toolStrip_GösterGizle_BittiGeriBildirimBekleniyor.Text = "toolStripDropDownButton1";
+            this.toolStrip_GösterGizle_BittiGeriBildirimBekleniyor.Click += new System.EventHandler(this.toolStrip_GösterGizle_BittiGeriBildirimBekleniyor_Click);
+            // 
+            // toolStrip_GösterGizle_Diğer
+            // 
+            this.toolStrip_GösterGizle_Diğer.BackColor = System.Drawing.SystemColors.Control;
+            this.toolStrip_GösterGizle_Diğer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStrip_GösterGizle_Diğer.Image = global::Etkinlik_Takip.Properties.Resources.G_Durum_6;
+            this.toolStrip_GösterGizle_Diğer.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_GösterGizle_Diğer.Name = "toolStrip_GösterGizle_Diğer";
+            this.toolStrip_GösterGizle_Diğer.ShowDropDownArrow = false;
+            this.toolStrip_GösterGizle_Diğer.Size = new System.Drawing.Size(24, 24);
+            this.toolStrip_GösterGizle_Diğer.Text = "toolStripDropDownButton1";
+            this.toolStrip_GösterGizle_Diğer.Click += new System.EventHandler(this.toolStrip_GösterGizle_Diğer_Click);
+            // 
+            // toolStrip_GösterGizle_Tamamlandı
+            // 
+            this.toolStrip_GösterGizle_Tamamlandı.BackColor = System.Drawing.SystemColors.Control;
+            this.toolStrip_GösterGizle_Tamamlandı.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStrip_GösterGizle_Tamamlandı.Image = global::Etkinlik_Takip.Properties.Resources.G_Durum_7;
+            this.toolStrip_GösterGizle_Tamamlandı.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_GösterGizle_Tamamlandı.Name = "toolStrip_GösterGizle_Tamamlandı";
+            this.toolStrip_GösterGizle_Tamamlandı.ShowDropDownArrow = false;
+            this.toolStrip_GösterGizle_Tamamlandı.Size = new System.Drawing.Size(24, 24);
+            this.toolStrip_GösterGizle_Tamamlandı.Text = "toolStripDropDownButton1";
+            this.toolStrip_GösterGizle_Tamamlandı.Click += new System.EventHandler(this.toolStrip_GösterGizle_Tamamlandı_Click);
+            // 
+            // toolStrip_GösterGizle_İptalEdildi
+            // 
+            this.toolStrip_GösterGizle_İptalEdildi.BackColor = System.Drawing.SystemColors.Control;
+            this.toolStrip_GösterGizle_İptalEdildi.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStrip_GösterGizle_İptalEdildi.Image = global::Etkinlik_Takip.Properties.Resources.G_Durum_8;
+            this.toolStrip_GösterGizle_İptalEdildi.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStrip_GösterGizle_İptalEdildi.Name = "toolStrip_GösterGizle_İptalEdildi";
+            this.toolStrip_GösterGizle_İptalEdildi.ShowDropDownArrow = false;
+            this.toolStrip_GösterGizle_İptalEdildi.Size = new System.Drawing.Size(24, 24);
+            this.toolStrip_GösterGizle_İptalEdildi.Text = "toolStripDropDownButton1";
+            this.toolStrip_GösterGizle_İptalEdildi.Click += new System.EventHandler(this.toolStrip_GösterGizle_İptalEdildi_Click);
             // 
             // toolStripAyarlar
             // 
@@ -2174,17 +2283,6 @@
             // 
             this.Sql_Zamanlayıcı.Interval = 60000;
             this.Sql_Zamanlayıcı.Tick += new System.EventHandler(this.Sql_Zamanlayıcı_Tick);
-            // 
-            // toolStripTamamlananlarıGösterGizle
-            // 
-            this.toolStripTamamlananlarıGösterGizle.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripTamamlananlarıGösterGizle.Image = global::Etkinlik_Takip.Properties.Resources.G_Durum_7;
-            this.toolStripTamamlananlarıGösterGizle.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripTamamlananlarıGösterGizle.Name = "toolStripTamamlananlarıGösterGizle";
-            this.toolStripTamamlananlarıGösterGizle.ShowDropDownArrow = false;
-            this.toolStripTamamlananlarıGösterGizle.Size = new System.Drawing.Size(24, 24);
-            this.toolStripTamamlananlarıGösterGizle.Text = "toolStripDropDownButton1";
-            this.toolStripTamamlananlarıGösterGizle.Click += new System.EventHandler(this.toolStripTamamlananlarıGösterGizle_Click);
             // 
             // AnaEkran
             // 
@@ -2422,7 +2520,14 @@
         private System.Windows.Forms.TextBox NotlarSayfası_KısayolTuşu;
         private System.Windows.Forms.ToolStripMenuItem Menu_İkon_Notlar;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripDropDownButton toolStripTamamlananlarıGösterGizle;
+        private System.Windows.Forms.ToolStripDropDownButton toolStrip_GösterGizle_Tamamlandı;
+        private System.Windows.Forms.ToolStripDropDownButton toolStrip_GösterGizle_ÜzerindeÇalışılıyor;
+        private System.Windows.Forms.ToolStripDropDownButton toolStrip_GösterGizle_DüşükÖncelikli;
+        private System.Windows.Forms.ToolStripDropDownButton toolStrip_GösterGizle_YeniGörev;
+        private System.Windows.Forms.ToolStripDropDownButton toolStrip_GösterGizle_Beklemede;
+        private System.Windows.Forms.ToolStripDropDownButton toolStrip_GösterGizle_BittiGeriBildirimBekleniyor;
+        private System.Windows.Forms.ToolStripDropDownButton toolStrip_GösterGizle_Diğer;
+        private System.Windows.Forms.ToolStripDropDownButton toolStrip_GösterGizle_İptalEdildi;
     }
 }
 

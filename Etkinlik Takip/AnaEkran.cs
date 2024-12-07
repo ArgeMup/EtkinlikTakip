@@ -158,8 +158,6 @@ namespace Etkinlik_Takip
                 splitContainer1.Panel2.Controls.Add(panel_Ayarlar);
                 splitContainer1.Panel2.Controls.Add(panel_Hatırlatıcı);
                 Genel.Panel2 = Panel2Durumu.Ayarlar;
-                Panel_Aç(Panel2Durumu.Görev);
-                SayfaDüzeni_Normal();
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
@@ -270,6 +268,9 @@ namespace Etkinlik_Takip
                 });
                 Ağaç_Güncelle(true, true, true);
                 Filtreleme_DurumDeğişikliği(null, null);
+
+                Panel_Aç(Panel2Durumu.Görev);
+                SayfaDüzeni_Normal();
 
                 Visible = true;
                 while (Opacity < 1)
@@ -984,6 +985,16 @@ namespace Etkinlik_Takip
             Genel.AğacMenüFiltreleme[(int)EtkinlikDurumu.Diğer] = (int)Filtreleme_D6.CheckState;
             Genel.AğacMenüFiltreleme[(int)EtkinlikDurumu.Tamamlandı] = (int)Filtreleme_D7.CheckState;
             Genel.AğacMenüFiltreleme[(int)EtkinlikDurumu.İptal_Edildi] = (int)Filtreleme_D8.CheckState;
+
+            toolStrip_GösterGizle_ÜzerindeÇalışılıyor.BackColor = Filtreleme_D1.Checked ? SystemColors.Control : SystemColors.GrayText;
+            toolStrip_GösterGizle_DüşükÖncelikli.BackColor = Filtreleme_D2.Checked ? SystemColors.Control : SystemColors.GrayText;
+            toolStrip_GösterGizle_YeniGörev.BackColor = Filtreleme_D3.Checked ? SystemColors.Control : SystemColors.GrayText;
+            toolStrip_GösterGizle_Beklemede.BackColor = Filtreleme_D4.Checked ? SystemColors.Control : SystemColors.GrayText;
+            toolStrip_GösterGizle_BittiGeriBildirimBekleniyor.BackColor = Filtreleme_D5.Checked ? SystemColors.Control : SystemColors.GrayText;
+            toolStrip_GösterGizle_Diğer.BackColor = Filtreleme_D6.Checked ? SystemColors.Control : SystemColors.GrayText;
+            toolStrip_GösterGizle_Tamamlandı.BackColor = Filtreleme_D7.Checked ? SystemColors.Control : SystemColors.GrayText;
+            toolStrip_GösterGizle_İptalEdildi.BackColor = Filtreleme_D8.Checked ? SystemColors.Control : SystemColors.GrayText;
+
             Ağaç_Güncelle(false, false, false, true);
         }
         private void FiltrelemeTumu_CheckedChanged(object sender, EventArgs e)
@@ -1481,14 +1492,54 @@ namespace Etkinlik_Takip
                 Ağaç_AfterSelect(null, null);
             }
 
+            if (Genel.Panel2 == Panel2Durumu.Arama)
+            {
+            	//İkinci kez arama tuşuna basılır ise kapalı olanları aç
+                if (!Filtreleme_D1.Checked) Filtreleme_D1.Checked = true;
+                if (!Filtreleme_D2.Checked) Filtreleme_D2.Checked = true;
+                if (!Filtreleme_D3.Checked) Filtreleme_D3.Checked = true;
+                if (!Filtreleme_D4.Checked) Filtreleme_D4.Checked = true;
+                if (!Filtreleme_D5.Checked) Filtreleme_D5.Checked = true;
+                if (!Filtreleme_D6.Checked) Filtreleme_D6.Checked = true;
+                if (!Filtreleme_D7.Checked) Filtreleme_D7.Checked = true;
+                if (!Filtreleme_D8.Checked) Filtreleme_D8.Checked = true;
+            }
             SayfaDüzeni_Normal();
             Panel_Aç(Panel2Durumu.Arama);
             textBox_Arama.SelectAll();
             textBox_Arama.Focus();
         }
-        private void toolStripTamamlananlarıGösterGizle_Click(object sender, EventArgs e)
+        private void toolStrip_GösterGizle_ÜzerindeÇalışılıyor_Click(object sender, EventArgs e)
+        {
+            Filtreleme_D1.Checked = !Filtreleme_D1.Checked;
+        }
+        private void toolStrip_GösterGizle_DüşükÖncelikli_Click(object sender, EventArgs e)
+        {
+            Filtreleme_D2.Checked = !Filtreleme_D2.Checked;
+        }
+        private void toolStrip_GösterGizle_YeniGörev_Click(object sender, EventArgs e)
+        {
+            Filtreleme_D3.Checked = !Filtreleme_D3.Checked;
+        }
+        private void toolStrip_GösterGizle_Beklemede_Click(object sender, EventArgs e)
+        {
+            Filtreleme_D4.Checked = !Filtreleme_D4.Checked;
+        }
+        private void toolStrip_GösterGizle_BittiGeriBildirimBekleniyor_Click(object sender, EventArgs e)
+        {
+            Filtreleme_D5.Checked = !Filtreleme_D5.Checked;
+        }
+        private void toolStrip_GösterGizle_Diğer_Click(object sender, EventArgs e)
+        {
+            Filtreleme_D6.Checked = !Filtreleme_D6.Checked;
+        }
+        private void toolStrip_GösterGizle_Tamamlandı_Click(object sender, EventArgs e)
         {
             Filtreleme_D7.Checked = !Filtreleme_D7.Checked;
+        }
+        private void toolStrip_GösterGizle_İptalEdildi_Click(object sender, EventArgs e)
+        {
+            Filtreleme_D8.Checked = !Filtreleme_D8.Checked;
         }
 
         private void Ağaç_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -2137,6 +2188,16 @@ namespace Etkinlik_Takip
             {
                 if (Genel.GözGezdirmeÇalışıyor) return;
                 if ((int)Ağaç.SelectedNode.Tag < 0) return;
+
+                if (!Filtreleme_D1.Checked) toolStrip_GösterGizle_ÜzerindeÇalışılıyor.BackColor = Color.Red;
+                if (!Filtreleme_D2.Checked) toolStrip_GösterGizle_DüşükÖncelikli.BackColor = Color.Red;
+                if (!Filtreleme_D3.Checked) toolStrip_GösterGizle_YeniGörev.BackColor = Color.Red;
+                if (!Filtreleme_D4.Checked) toolStrip_GösterGizle_Beklemede.BackColor = Color.Red;
+                if (!Filtreleme_D5.Checked) toolStrip_GösterGizle_BittiGeriBildirimBekleniyor.BackColor = Color.Red;
+                if (!Filtreleme_D6.Checked) toolStrip_GösterGizle_Diğer.BackColor = Color.Red;
+                if (!Filtreleme_D7.Checked) toolStrip_GösterGizle_Tamamlandı.BackColor = Color.Red;
+                if (!Filtreleme_D8.Checked) toolStrip_GösterGizle_İptalEdildi.BackColor = Color.Red;
+                Application.DoEvents();
 
                 splitContainer2.Panel2Collapsed = false;
                 Panel_Aç(Panel2Durumu.Görev);
